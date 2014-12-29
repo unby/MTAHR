@@ -1,0 +1,15 @@
+E:\OneDrive\учеба\диплом\app\ManagementTaskAndHummanResource\UtilsMTHR\bin\Debug\UtilsMTHR.exe.config
+E:\OneDrive\учеба\диплом\app\ManagementTaskAndHummanResource\UtilsMTHR\bin\Debug\UtilsMTHR.exe
+E:\OneDrive\учеба\диплом\app\ManagementTaskAndHummanResource\UtilsMTHR\bin\Debug\UtilsMTHR.pdb
+E:\OneDrive\учеба\диплом\app\ManagementTaskAndHummanResource\UtilsMTHR\bin\Debug\BaseType.dll
+E:\OneDrive\учеба\диплом\app\ManagementTaskAndHummanResource\UtilsMTHR\bin\Debug\EntityFramework.dll
+E:\OneDrive\учеба\диплом\app\ManagementTaskAndHummanResource\UtilsMTHR\bin\Debug\EntityFramework.SqlServer.dll
+E:\OneDrive\учеба\диплом\app\ManagementTaskAndHummanResource\UtilsMTHR\bin\Debug\NLog.dll
+E:\OneDrive\учеба\диплом\app\ManagementTaskAndHummanResource\UtilsMTHR\bin\Debug\BaseType.pdb
+E:\OneDrive\учеба\диплом\app\ManagementTaskAndHummanResource\UtilsMTHR\bin\Debug\EntityFramework.xml
+E:\OneDrive\учеба\диплом\app\ManagementTaskAndHummanResource\UtilsMTHR\bin\Debug\EntityFramework.SqlServer.xml
+E:\OneDrive\учеба\диплом\app\ManagementTaskAndHummanResource\UtilsMTHR\bin\Debug\NLog.xml
+E:\OneDrive\учеба\диплом\app\ManagementTaskAndHummanResource\UtilsMTHR\obj\Debug\UtilsMTHR.csprojResolveAssemblyReference.cache
+E:\OneDrive\учеба\диплом\app\ManagementTaskAndHummanResource\UtilsMTHR\obj\Debug\UtilsMTHR.exe
+E:\OneDrive\учеба\диплом\app\ManagementTaskAndHummanResource\UtilsMTHR\obj\Debug\UtilsMTHR.pdb
+E:\OneDrive\учеба\диплом\app\ManagementTaskAndHummanResource\UtilsMTHR\bin\Debug\NLog.config

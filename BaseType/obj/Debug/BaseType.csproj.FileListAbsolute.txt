@@ -1,0 +1,15 @@
+E:\OneDrive\учеба\диплом\app\ManagementTaskAndHummanResource\BaseType\bin\Debug\BaseType.dll.config
+E:\OneDrive\учеба\диплом\app\ManagementTaskAndHummanResource\BaseType\bin\Debug\BaseType.dll
+E:\OneDrive\учеба\диплом\app\ManagementTaskAndHummanResource\BaseType\bin\Debug\BaseType.pdb
+E:\OneDrive\учеба\диплом\app\ManagementTaskAndHummanResource\BaseType\bin\Debug\EntityFramework.dll
+E:\OneDrive\учеба\диплом\app\ManagementTaskAndHummanResource\BaseType\bin\Debug\EntityFramework.SqlServer.dll
+E:\OneDrive\учеба\диплом\app\ManagementTaskAndHummanResource\BaseType\bin\Debug\NLog.dll
+E:\OneDrive\учеба\диплом\app\ManagementTaskAndHummanResource\BaseType\bin\Debug\EntityFramework.xml
+E:\OneDrive\учеба\диплом\app\ManagementTaskAndHummanResource\BaseType\bin\Debug\EntityFramework.SqlServer.xml
+E:\OneDrive\учеба\диплом\app\ManagementTaskAndHummanResource\BaseType\bin\Debug\NLog.xml
+E:\OneDrive\учеба\диплом\app\ManagementTaskAndHummanResource\BaseType\obj\Debug\BaseType.dll
+E:\OneDrive\учеба\диплом\app\ManagementTaskAndHummanResource\BaseType\obj\Debug\BaseType.pdb
+E:\OneDrive\учеба\диплом\app\ManagementTaskAndHummanResource\BaseType\obj\Debug\BaseType.Migrations.Initial.resources
+E:\OneDrive\учеба\диплом\app\ManagementTaskAndHummanResource\BaseType\obj\Debug\BaseType.csproj.GenerateResource.Cache
+E:\OneDrive\учеба\диплом\app\ManagementTaskAndHummanResource\BaseType\bin\Debug\NLog.config
+E:\OneDrive\учеба\диплом\app\ManagementTaskAndHummanResource\BaseType\obj\Debug\BaseType.csprojResolveAssemblyReference.cache

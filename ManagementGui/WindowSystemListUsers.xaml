@@ -1,0 +1,178 @@
+﻿<Controls:MetroWindow x:Class="ManagementGui.WindowSystemListUsers"
+        xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:avalonDock="http://avalondock.codeplex.com"
+        xmlns:ignore="http://www.ignore.com"
+        xmlns:xcad="http://schemas.xceed.com/wpf/xaml/avalondock"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        xmlns:xcdg="http://schemas.xceed.com/wpf/xaml/datagrid"
+        mc:Ignorable="d ignore"
+        Title="Список пользователей модуля 'Управление подразделением'" Height="406.015" Width="700">
+    <Window.Resources>
+        <!-- DataTemplate to display an Employee object -->
+        <DataTemplate x:Key="employeeDataTemplate">
+            <Grid MaxHeight="30"
+               VerticalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <Image Margin="0, 0, 5, 0"
+                   Source="{Binding Photo, Converter={StaticResource imageConverter}, NotifyOnValidationError=False, ValidatesOnDataErrors=False}" />
+
+                <StackPanel Grid.Column="1"
+                        Orientation="Horizontal"
+                        VerticalAlignment="Center">
+                    <TextBlock Text="{Binding FirstName, NotifyOnValidationError=False, ValidatesOnDataErrors=False}" />
+                    <TextBlock Text=" " />
+                    <TextBlock Text="{Binding LastName, NotifyOnValidationError=False, ValidatesOnDataErrors=False}" />
+                </StackPanel>
+            </Grid>
+        </DataTemplate>
+
+        <!-- DataTemplate to display the $ in Freight column -->
+        <DataTemplate x:Key="freightDataTemplate">
+            <TextBlock Text="{Binding StringFormat=\{0:C\}}"
+                    VerticalAlignment="Center" />
+        </DataTemplate>
+
+        <!-- DataTemplate to display a Country -->
+        <DataTemplate x:Key="countryDataTemplate">
+            <StackPanel Orientation="Horizontal"
+                     VerticalAlignment="Center"
+                     Margin="5,0,0,0">
+                <!--The flagPathConverter resource changes the value of a
+                               group (e.g., "Canada") to an image. -->
+                <Image MaxHeight="15"
+                   Margin="0, 0, 5, 0"
+                   Source="{Binding Converter={StaticResource flagPathConverter}}" />
+
+                <TextBlock Text="{Binding}"
+                       TextTrimming="WordEllipsis"
+                       VerticalAlignment="Center" />
+            </StackPanel>
+        </DataTemplate>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <Menu Grid.Row="0" Name="Menu">
+            <MenuItem Name="DivisionMI" Header="Подразделение">
+                <MenuItem Name="MICreateDivision" Click="MICreateDivision_OnClick" Header="Создать рабочию группу"></MenuItem>
+                <MenuItem Header="Open"></MenuItem>
+                <MenuItem Header="Save"></MenuItem>
+                <MenuItem Header="SaveAs..."></MenuItem>
+                <Separator></Separator>
+                <MenuItem Header="Exit"></MenuItem>
+            </MenuItem>
+            <MenuItem Name="UsersMI"  Header="Персонал">
+                <MenuItem Header="Добавить пользователя"></MenuItem>
+                <MenuItem Header="Redo"></MenuItem>
+                <Separator></Separator>
+                <MenuItem Header="Cut"></MenuItem>
+                <MenuItem Header="Copy"></MenuItem>
+                <MenuItem Header="Paste"></MenuItem>
+            </MenuItem>
+
+        </Menu>
+        <xcad:DockingManager Grid.Row="1" x:Name="dockingManager">
+            <xcad:LayoutRoot>
+                <xcad:LayoutPanel Orientation="Horizontal">
+                    <xcad:LayoutDocumentPane>
+                        <xcad:LayoutDocument  ContentId="DivisionAndUser" Title="Подразделения и сотрудники">
+                            <Grid>
+                               <Grid>
+                                    <Grid.Resources>
+                                        <xcdg:DataGridCollectionViewSource x:Key="cvsOrders" Source="{Binding}">
+                                            <xcdg:DataGridCollectionViewSource.GroupDescriptions>
+                                                <PropertyGroupDescription PropertyName="Divisions" />
+                                                <PropertyGroupDescription PropertyName="Users" />
+                                            </xcdg:DataGridCollectionViewSource.GroupDescriptions>
+                                        </xcdg:DataGridCollectionViewSource>
+                                    </Grid.Resources>
+
+                                    <xcdg:DataGridControl x:Name="_dataGrid" ItemsSource="{Binding Source={StaticResource cvsOrders}}" 
+                              AllowDrag="True">
+                                        <xcdg:DataGridControl.View>
+                                            <xcdg:TableflowView FixedColumnCount="2" />
+                                        </xcdg:DataGridControl.View>
+
+                                        <xcdg:DataGridControl.Columns>
+                                            <xcdg:Column FieldName="OrderID"
+                             Title="Order"
+                             Width="100"
+                             IsMainColumn="True">
+                                            </xcdg:Column>
+
+                                            <xcdg:Column FieldName="Employee"
+                             Title="Employee"
+                             Width="160"
+                             CellContentTemplate="{StaticResource employeeDataTemplate}" 
+                             GroupValueTemplate="{StaticResource employeeDataTemplate}"/>
+
+                                            <xcdg:Column FieldName="Customer.CompanyName"
+                             Title="Customer"
+                             Width="185"/>
+
+                                            <xcdg:Column FieldName="OrderDate"
+                             Title="Order Date"
+                             Width="120" />
+
+                                            <xcdg:Column FieldName="Shipper.CompanyName"
+                             Title="Ship Via" />
+
+                                            <xcdg:Column FieldName="Freight"
+                             Width="100"
+                             CellContentTemplate="{StaticResource freightDataTemplate}"
+                             GroupValueTemplate="{StaticResource freightDataTemplate}"/>
+
+                                            <xcdg:Column FieldName="ShipCity"
+                             Title="City"
+                             Width="80" />
+
+                                            <xcdg:Column FieldName="ShipCountry"
+                             Title="Country"
+                             CellContentTemplate="{StaticResource countryDataTemplate}"
+                             GroupValueTemplate="{StaticResource countryDataTemplate}"/>
+
+                                            <xcdg:Column FieldName="ShipAddress"
+                             Title="Address"
+                             Width="200" />
+
+                                        </xcdg:DataGridControl.Columns>
+                                    </xcdg:DataGridControl>
+                                </Grid>
+                            </Grid>
+                     </xcad:LayoutDocument>
+                  </xcad:LayoutDocumentPane>
+
+                    <xcad:LayoutAnchorablePane DockWidth="150">
+                        <xcad:LayoutAnchorable Title="Параметры ползователя">
+                            <Grid>
+
+
+                                <xctk:PropertyGrid  x:Name="UserPropertyGrid" SelectedObject="{Binding}" />
+                            </Grid>
+                        </xcad:LayoutAnchorable>
+                    </xcad:LayoutAnchorablePane>
+                </xcad:LayoutPanel>
+                <xcad:LayoutRoot.LeftSide>
+                    <xcad:LayoutAnchorSide>
+                        <xcad:LayoutAnchorGroup>
+                            <xcad:LayoutAnchorable Title="Autohidden Content">
+                                <TextBox/>
+                            </xcad:LayoutAnchorable>
+                        </xcad:LayoutAnchorGroup>
+                    </xcad:LayoutAnchorSide>
+                </xcad:LayoutRoot.LeftSide>
+            </xcad:LayoutRoot>
+        </xcad:DockingManager>
+    </Grid>
+
+</Controls:MetroWindow>

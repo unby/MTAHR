@@ -1,0 +1,136 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{55E85DFB-2292-42C7-BE1A-F62E8DEEC828}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>BaseType</RootNamespace>
+    <AssemblyName>BaseType</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework">
+      <HintPath>..\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer">
+      <HintPath>..\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="NLog">
+      <HintPath>..\packages\NLog.3.1.0.0\lib\net45\NLog.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Common\IMemento.cs" />
+    <Compile Include="Common\Program.cs" />
+    <Compile Include="Common\RelayCommand.cs" />
+    <Compile Include="Common\RoundStack.cs" />
+    <Compile Include="DataContext.cs" />
+    <Compile Include="Entity.cs" />
+    <Compile Include="MessageType.cs" />
+    <Compile Include="Migrations\201411040707014_Initial.cs" />
+    <Compile Include="Migrations\201411040707014_Initial.Designer.cs">
+      <DependentUpon>201411040707014_Initial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201412011951588_appjournal-edit.cs" />
+    <Compile Include="Migrations\201412011951588_appjournal-edit.Designer.cs">
+      <DependentUpon>201412011951588_appjournal-edit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201412071504580_xen.cs" />
+    <Compile Include="Migrations\201412071504580_xen.Designer.cs">
+      <DependentUpon>201412071504580_xen.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201412101602274_ss1.cs" />
+    <Compile Include="Migrations\201412101602274_ss1.Designer.cs">
+      <DependentUpon>201412101602274_ss1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201412111827479_ss2.cs" />
+    <Compile Include="Migrations\201412111827479_ss2.Designer.cs">
+      <DependentUpon>201412111827479_ss2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201412131546283_ss3.cs" />
+    <Compile Include="Migrations\201412131546283_ss3.Designer.cs">
+      <DependentUpon>201412131546283_ss3.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Operation.cs" />
+    <Compile Include="SQLServerRoleUser.cs" />
+    <Compile Include="Project.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Property.cs" />
+    <Compile Include="Task.cs" />
+    <Compile Include="User.cs" />
+    <Compile Include="Utils\EntityValidate.cs" />
+    <Compile Include="Utils\ExternalMethod.cs" />
+    <Compile Include="WorkProfile.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
+    <Content Include="NLog.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Include="NLog.xsd">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201411040707014_Initial.resx">
+      <DependentUpon>201411040707014_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201412011951588_appjournal-edit.resx">
+      <DependentUpon>201412011951588_appjournal-edit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201412071504580_xen.resx">
+      <DependentUpon>201412071504580_xen.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201412101602274_ss1.resx">
+      <DependentUpon>201412101602274_ss1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201412111827479_ss2.resx">
+      <DependentUpon>201412111827479_ss2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201412131546283_ss3.resx">
+      <DependentUpon>201412131546283_ss3.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
