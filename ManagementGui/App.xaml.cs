@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using System.Data.Entity;
+using System.Windows;
+using BaseType;
 using GalaSoft.MvvmLight.Threading;
 
 namespace ManagementGui
@@ -10,7 +12,10 @@ namespace ManagementGui
     {
         static App()
         {
-            DispatcherHelper.Initialize();
+
+            Database.SetInitializer<ApplicationDbContext>(null);
+           // DispatcherHelper.Initialize();
         }
+       
     }
 }

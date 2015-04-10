@@ -1,0 +1,92 @@
+﻿<UserControl xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity" 
+             xmlns:baseType="clr-namespace:BaseType;assembly=BaseType"
+             x:Class="ManagementGui.View.Document.ProjectManage"
+             xmlns:local="clr-namespace:ManagementGui.ViewModel.Validation"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             xmlns:converters="clr-namespace:ManagementGui.View.ViewConverter"
+             xmlns:static="clr-namespace:ManagementGui.Config"
+             xmlns:viewModel="clr-namespace:ManagementGui.ViewModel"
+             mc:Ignorable="d" MinWidth="600"   MinHeight="500" Background="#FFFFFFFF">
+    <i:Interaction.Behaviors>
+        <local:ValidationExceptionBehavior />
+    </i:Interaction.Behaviors>
+    <UserControl.DataContext>
+        <viewModel:ProjectManageViewModel />
+    </UserControl.DataContext>
+    <UserControl.Resources>    
+        <ObjectDataProvider x:Key="StProject"
+                            MethodName="GetValues" 
+                            ObjectType="{x:Type sys:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="baseType:ProjectStatus" />
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+        <converters:EnumDescriptionConverter x:Key="EnumItemsConverter"/>
+        <Style TargetType="{x:Type TextBlock}">
+            <Setter Property="Margin"
+                    Value="4" />
+        </Style>
+        <Style TargetType="{x:Type TextBox}">
+            <Setter Property="Margin"
+                    Value="4" />
+            <Style.Triggers>
+                <Trigger Property="Validation.HasError" Value="true">
+                    <Setter Property="ToolTip" Value="{Binding RelativeSource={RelativeSource Self}, Path=(Validation.Errors)[0].ErrorContent}" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
+    <ScrollViewer>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+            </Grid.RowDefinitions>
+            <StackPanel Height="35" Grid.Row="0" Orientation="Horizontal">
+                <Button Margin="5" Command="{Binding Update}">Сохранить изменения</Button>
+                <Button Margin="5" Command="{Binding SetDefaultProject}">Назначить проект по умолчанию</Button>
+                <Button Margin="5" Command="{Binding ReloadProject}">Загрузить проект</Button>
+                <Button Margin="5" Command="{Binding EditMyProfile}">Отредактировать мой профиль</Button>
+            </StackPanel>
+            <ListBox Grid.Row="1" Height="160" SelectedItem="{Binding CurrentProject, Mode=TwoWay}" ItemsSource="{Binding Source={x:Static static:WorkEnviroment.UserProjects}}"></ListBox>
+            <Grid Grid.Row="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition MaxWidth="250"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Label Grid.Column="0" Grid.Row="0" Content="Название"/>
+                <Label Grid.Column="0" Grid.Row="1" Content="Цель"/>
+                <Label Grid.Column="0" Grid.Row="2" Content="Комментарий"/>
+                <Label Grid.Column="0"  Grid.Row="3" Content="Статус"/>
+                <TextBox Grid.Column="1" Grid.Row="0" Text="{Binding CurrentProject.Name, Mode=TwoWay}"></TextBox>
+                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding CurrentProject.Purpose, Mode=TwoWay}" MaxHeight="210" MinHeight="80" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Visible"  ></TextBox>
+                <TextBox Grid.Column="1" Grid.Row="2" Text="{Binding CurrentProject.Comment, Mode=TwoWay}"></TextBox>
+                <ComboBox Grid.Row="3" Grid.Column="1" IsSynchronizedWithCurrentItem="True" x:Name="TypeAuthentication"
+                ItemsSource="{Binding Source={StaticResource StProject}}"
+                SelectedItem="{Binding CurrentProject.Status,UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                   SelectedIndex="-1"  VerticalAlignment="Top" Margin="10,0,0,0" HorizontalAlignment="Left" Width="105">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <Label  Content="{Binding Path=.,Mode=OneWay, Converter={StaticResource EnumItemsConverter}}"
+                                Height="Auto"
+                                Margin="0" 
+                                VerticalAlignment="Center"/>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+            </Grid>
+        </Grid>
+    </ScrollViewer>
+</UserControl>

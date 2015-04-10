@@ -1,0 +1,87 @@
+﻿<controls:MetroWindow x:Class="ManagementGui.View.NotivicationWindow"
+        xmlns:controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:ignore="http://www.ignore.com"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" 
+        xmlns:properties="clr-namespace:ManagementGui.Utils.AttachedProperty"
+        xmlns:converter="clr-namespace:ManagementGui.View.ViewConverter"
+        xmlns:static="clr-namespace:ManagementGui.Config"
+        xmlns:viewModel="clr-namespace:ManagementGui.ViewModel"
+        properties:CloseDialog.DialogResult="{Binding IsDialogClose}"
+        mc:Ignorable="d ignore"
+        
+        Width="500" Height="250"    
+        Title="{Binding Notivication.Task.NameTask}"
+        Icon="/mainicon.ico">
+    <Window.DataContext>
+        <viewModel:NotivicationViewModel/>
+    </Window.DataContext>
+    <Window.Resources>
+        <!--<viewModel:NotivicationViewModel x:Key="NotivicationViewModel"/>
+        <utils:EnumDescriptionConverter x:Key="EnumItemsConverter"/>
+        <ObjectDataProvider x:Key="enumDateFormatData" MethodName="GetValues" ObjectType="{x:Type sys:Enum}">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="xctk:DateTimeFormat"/>
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
+            <ObjectDataProvider x:Key="enumVisibility" MethodName="GetValues" ObjectType="{x:Type sys:Enum}">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="Visibility" />
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
+            <ObjectDataProvider x:Key="enumKind" MethodName="GetValues" ObjectType="{x:Type sys:Enum}">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="sys:DateTimeKind" />
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>-->
+        <converter:HtmlToFlowDocumentConverter  x:Key="HtmlToFlowDocumentConverter"/>
+        <converter:UserToTextConverter x:Key="UserToTextConverter"/>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition Height="40"></RowDefinition>
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Horizontal" Margin="2">
+            <Label> Получатель</Label>
+            <Label Content="{Binding Notivication.To.LoginName}"></Label>
+        </StackPanel>
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30"></RowDefinition>
+                <RowDefinition></RowDefinition>
+            </Grid.RowDefinitions>
+
+            <xctk:DateTimePicker Grid.Row="0" 
+                                 Minimum="{Binding Source={x:Static static:WorkEnviroment.NotivicationStartDateTime}}" 
+                                 Value="{Binding TimeSend, Mode=TwoWay}"
+                                 
+                                 VerticalAlignment="Top"
+                                 IsReadOnly="False"
+                                 Format="FullDateTime" Height="30"/>
+
+            <!--<xctk:RichTextBox Name="RichTextBox" Text="{Binding  Description, 
+                    Converter={StaticResource HtmlToFlowDocumentConverter}, 
+                     Mode=TwoWay}"  Grid.Row="1"  BorderBrush="Gray">
+                    <xctk:RichTextBoxFormatBarManager.FormatBar>
+                        <xctk:RichTextBoxFormatBar />
+                    </xctk:RichTextBoxFormatBarManager.FormatBar>
+                    <xctk:RichTextBox.Document>
+                        <FlowDocument>
+
+                        </FlowDocument>
+                    </xctk:RichTextBox.Document>
+                </xctk:RichTextBox>-->
+            <TextBox  Grid.Row="1" Text="{Binding Notivication.Description}" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Visible"/>
+
+        </Grid>
+        <StackPanel Grid.Row="2"  Orientation="Horizontal" HorizontalAlignment="Center">
+            <Button Margin="5" Width="80" Command="{Binding Save}">Сохранить</Button>
+            <Button Margin="5" Width="80" Command="{Binding Cancel}">Отмена</Button>
+        </StackPanel>
+    </Grid>
+</controls:MetroWindow>

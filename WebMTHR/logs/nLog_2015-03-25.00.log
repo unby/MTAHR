@@ -1,0 +1,6 @@
+time;message;logger;level
+2015-03-24 22:44:18.2046;EmailSenderMTHR иницализирован;WebMTHR.EmailSender.EmailSenderMTHR;Info
+2015-03-24 22:47:47.0549;EmailSenderMTHR запущен первый вызов таймера Task;WebMTHR.EmailSender.EmailSenderMTHR;Info
+2015-03-24 22:48:25.3483;Ошибка выполения операции;WebMTHR.EmailSender.EmailSenderMTHR;Error
+2015-03-24 22:53:03.2967;EmailSenderMTHR иницализирован;WebMTHR.EmailSender.EmailSenderMTHR;Info
+2015-03-24 22:56:08.1250;EmailSenderMTHR иницализирован;WebMTHR.EmailSender.EmailSenderMTHR;Info

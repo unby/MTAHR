@@ -1,0 +1,22 @@
+﻿@model WebMTHR.Models.StartPageViewModel
+@{
+    ViewBag.Title = "MTHR";
+}
+
+<div class="jumbotron">
+    <h1>MTHR</h1>
+    <p class="lead">Текст про программу надо подумать.</p>
+</div>
+
+<div class="row">
+    <p>@Model.Helper</p>
+    @foreach (var item in Model.Themes)
+    {
+        <div class="col-md-4">
+            <h2>@item.Name</h2>
+            <p>@item.Description </p>
+            @if (!string.IsNullOrEmpty(item.Link)){
+                <p><a class="btn btn-default" href="@item.Link">Посетить проект &raquo;</a></p>}
+        </div>      
+    }
+</div>

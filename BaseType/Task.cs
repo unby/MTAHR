@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BaseType
 {
@@ -13,60 +11,85 @@ namespace BaseType
     {
         [Required]
         public Guid Author { get; set; }
+        [Required]
+        public Guid Project { get; set; }
+
         [Key][Required]
         public Guid IdTask { get; set; }
         public DateTime DateCreate { get; set; }
         public DateTime DateFinish { get; set; }
         public DateTime DateUpdate { get; set; }
-        public DateTime DateFisrtNotification { get; set; }
-        public DateTime DateLastNotification { get; set; }
-        public DateTime DateEndNotofication { get; set; }
-        public DateTime DateClose { get; set; }
+        public DateTime? DateClose { get; set; }
+        public int TaskRating { get; set; }
         [Required]
+        [StringLength(160)]
         public string NameTask { get; set; }
+        [StringLength(300)]
         public string Result { get; set; }
+        [StringLength(700)]
         public string Description { get; set; }
+        [StringLength(600)]
         public string Comment { get; set; }
         public Guid ParentTask { get; set; }
-        [Required]
-        public User Performer { get; set; }
+
         public StatusTask Status { get; set; }
-        public IObservable<TaskComment> CommentsToTaskObservable { get; set; }
+        public virtual ICollection<TaskMembers> WorkGroup { get; set; }
+        public virtual ICollection<Notivication> Notivications { get; set; }
+        public virtual ICollection<TaskComment> TaskComments { get; set; }
+
+        public override string ToString()
+        {
+            return NameTask;
+        }
     }
 
     public enum StatusTask
     {
-        Complete,
-        Open,
-        Suspended,
-        Cancelled,
-        Response,
-        Request
+        [Description("Выполнена")]
+        Complete =0,
+        [Description("В работе")]
+        Open =1,
+        [Description("Приостановлена")]
+        Suspended=-1,
+        [Description("Отменена")]
+        Cancelled=-2,
+        [Description("Получен ответ")]
+        Response=2,
+        [Description("Запрошен ответ")]
+        Request=3
     }
-[Serializable]
+
+    [Serializable]
     public class AppJurnal
     {
-        
+
         public Guid IdTask { get; set; }
+
         [Key]
         public Guid IdEntry { get; set; }
+
         [Required]
         public DateTime DateEntry { get; set; }
+
         [Required]
         public string Message { get; set; }
 
-    public MessageType MessageType { get; set; }
-    public int MessageCode { get; set; }
+        public MessageType MessageType { get; set; }
+        public int MessageCode { get; set; }
     }
+
     [Serializable]
     public class TaskComment
 {
-        [Key,Column(Order = 0)]
-        public Guid IdComment { get; set; }
-        [Key, Column(Order = 1)]
-        public Guid IdTask { get; set; }
+        [Key]
+        public Guid TaskCommentId { get; set; }
+        [Required]
+        public virtual Task Task { get; set; }
+        [Required]
         public string Message { get; set; }
-        public User AuthorUser { get; set; }
+        [Required]
+        public virtual ApplicationUser AuthorApplicationUser { get; set; }
+        [Required]
         public DateTime DateMessage { get; set; }
 }
 }

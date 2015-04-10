@@ -1,0 +1,31 @@
+time;message;logger;level;description
+2015-03-28 14:40:02.6144;EmailSenderMTHR иницализирован;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-03-28 14:43:31.6222;EmailSenderMTHR запущен первый вызов таймера Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-03-28 14:43:49.3611;Ошибка отправки сообщений таймер остановлен, проверте доступ к файлу шаблона и перезапустите службу;WebMTHR.EmailSender.EmailSenderMTHR;Error;"System.IO.FileNotFoundException: Файл 'C:\Program Files (x86)\IIS Express\TaskNotificationTemplate.htm' не найден.
+Имя файла: 'C:\Program Files (x86)\IIS Express\TaskNotificationTemplate.htm'
+   в System.IO.__Error.WinIOError(Int32 errorCode, String maybeFullPath)
+   в System.IO.FileStream.Init(String path, FileMode mode, FileAccess access, Int32 rights, Boolean useRights, FileShare share, Int32 bufferSize, FileOptions options, SECURITY_ATTRIBUTES secAttrs, String msgPath, Boolean bFromProxy, Boolean useLongPath, Boolean checkHost)
+   в System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize, FileOptions options, String msgPath, Boolean bFromProxy, Boolean useLongPath, Boolean checkHost)
+   в System.IO.StreamReader..ctor(String path, Encoding encoding, Boolean detectEncodingFromByteOrderMarks, Int32 bufferSize, Boolean checkHost)
+   в System.IO.File.InternalReadAllText(String path, Encoding encoding, Boolean checkHost)
+   в System.IO.File.ReadAllText(String path, Encoding encoding)
+   в WebMTHR.EmailSender.SenderUtils.GetTemplate(String nameTemplate) в c:\Users\Руслан\Desktop\MTAHR\WebMTHR\EmailSender\SenderUtils.cs:строка 19
+   в WebMTHR.EmailSender.SendMailFirst..ctor(ISenderParam param) в c:\Users\Руслан\Desktop\MTAHR\WebMTHR\EmailSender\SendMailFirst.cs:строка 44
+   в WebMTHR.EmailSender.EmailSenderMTHR.TimerCall(Object state) в c:\Users\Руслан\Desktop\MTAHR\WebMTHR\EmailSender\EmailSenderMTHR.cs:строка 35"
+2015-03-28 15:01:23.1795;Не зарегестрированый пользователь Microsoft.AspNet.Identity.UserLoginInfo ekbslayn@gmail.com System.Security.Claims.ClaimsIdentity, пытается получить доступ;WebMTHR.Controllers.AccountController;Warn;
+2015-03-28 15:04:22.3397;EmailSenderMTHR иницализирован;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-03-28 15:05:26.1675;Не зарегестрированый пользователь Microsoft.AspNet.Identity.UserLoginInfo ekbslayn@gmail.com System.Security.Claims.ClaimsIdentity, пытается получить доступ;WebMTHR.Controllers.AccountController;Warn;
+2015-03-28 15:23:31.3572;EmailSenderMTHR иницализирован;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-03-28 15:26:44.1126;EmailSenderMTHR запущен первый вызов таймера Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-03-28 15:26:44.2417;Не зарегестрированый пользователь Microsoft.AspNet.Identity.UserLoginInfo ekbslayn@gmail.com System.Security.Claims.ClaimsIdentity, пытается получить доступ;WebMTHR.Controllers.AccountController;Warn;
+2015-03-28 15:26:46.1572;Ошибка отправки сообщений таймер остановлен, проверте доступ к файлу шаблона и перезапустите службу;WebMTHR.EmailSender.EmailSenderMTHR;Error;"System.IO.FileNotFoundException: Файл 'C:\Program Files (x86)\IIS Express\TaskNotificationTemplate.htm' не найден.
+Имя файла: 'C:\Program Files (x86)\IIS Express\TaskNotificationTemplate.htm'
+   в System.IO.__Error.WinIOError(Int32 errorCode, String maybeFullPath)
+   в System.IO.FileStream.Init(String path, FileMode mode, FileAccess access, Int32 rights, Boolean useRights, FileShare share, Int32 bufferSize, FileOptions options, SECURITY_ATTRIBUTES secAttrs, String msgPath, Boolean bFromProxy, Boolean useLongPath, Boolean checkHost)
+   в System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize, FileOptions options, String msgPath, Boolean bFromProxy, Boolean useLongPath, Boolean checkHost)
+   в System.IO.StreamReader..ctor(String path, Encoding encoding, Boolean detectEncodingFromByteOrderMarks, Int32 bufferSize, Boolean checkHost)
+   в System.IO.File.InternalReadAllText(String path, Encoding encoding, Boolean checkHost)
+   в System.IO.File.ReadAllText(String path, Encoding encoding)
+   в WebMTHR.EmailSender.SenderUtils.GetTemplate(String nameTemplate) в c:\Users\Руслан\Desktop\MTAHR\WebMTHR\EmailSender\SenderUtils.cs:строка 19
+   в WebMTHR.EmailSender.SendMailFirst..ctor(ISenderParam param) в c:\Users\Руслан\Desktop\MTAHR\WebMTHR\EmailSender\SendMailFirst.cs:строка 44
+   в WebMTHR.EmailSender.EmailSenderMTHR.TimerCall(Object state) в c:\Users\Руслан\Desktop\MTAHR\WebMTHR\EmailSender\EmailSenderMTHR.cs:строка 35"

@@ -1,0 +1,91 @@
+﻿<controls:MetroWindow x:Name="SearchUserWindow1" x:Class="ManagementGui.View.SearchUserWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        xmlns:viewModel="clr-namespace:ManagementGui.ViewModel"
+        xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+        xmlns:utils="clr-namespace:BaseType.Utils;assembly=BaseType"
+                       xmlns:properties="clr-namespace:ManagementGui.Utils.AttachedProperty"  
+        properties:CloseDialog.DialogResult="{Binding IsDialogClose}"
+        Title="Окно поиска пользователей" MinHeight="400" MinWidth="500" ResizeMode="NoResize" SizeToContent="Height" 
+    Icon="/mainicon.ico">
+    <Window.DataContext>
+        <viewModel:SearchUserViewModel/>
+    </Window.DataContext>
+    <Window.Resources>
+
+        <ObjectDataProvider x:Key="AuthenticationUserData"
+                            MethodName="GetValues" 
+                            ObjectType="{x:Type sys:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="viewModel:AuthenticationUser" />
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+        <utils:EnumDescriptionConverter x:Key="EnumItemsConverter"/>
+    </Window.Resources>
+   <Grid>
+       <Grid.RowDefinitions>
+           <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition Height="50"></RowDefinition>
+        </Grid.RowDefinitions>
+       <Grid Grid.Row="0">
+           <Grid.RowDefinitions>
+               <RowDefinition Height="40"></RowDefinition>
+                <RowDefinition Height="40"></RowDefinition>
+
+            </Grid.RowDefinitions>
+           <Grid.ColumnDefinitions>
+               <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition Width="260" MinWidth="160"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+           <StackPanel Grid.ColumnSpan="2"  Margin="2" Grid.Row="0" Orientation="Horizontal">
+                <Label Margin="20,3,20,0" FontSize="16">ФИО</Label>
+               <TextBox Width="671" Text="{Binding FIOField}"></TextBox>
+           </StackPanel>
+            <StackPanel  Grid.Row="1" Grid.Column="0" Orientation="Horizontal">
+                <controls:ToggleSwitch Margin="16,0,6,0"  HorizontalAlignment="Left"  IsChecked="{Binding IsWork}" VerticalAlignment="Stretch" Content="{Binding IsWorkText}"/>
+                <controls:ToggleSwitch Margin="6,0,6,0"  HorizontalAlignment="Left" Visibility="{Binding IsVisibleProjectUser}" VerticalAlignment="Stretch" IsChecked="{Binding IsProject}" Content="{Binding IsProjectText}"/>
+            </StackPanel>
+            <Button Margin="4" Grid.Row="1" Grid.Column="1" Command="{Binding Search}">Искать</Button>
+        </Grid>
+        <DataGrid Grid.Row="1"
+                  Name="UserSearchGrid"     
+                  RenderOptions.ClearTypeHint="Enabled"
+                  TextOptions.TextFormattingMode="Display"
+                  Margin="5"
+                  IsReadOnly="True"
+                  SelectionUnit="FullRow"
+                  ItemsSource="{Binding Users}"
+                  AutoGenerateColumns="False"> 
+            <DataGrid.Columns>
+                <DataGridCheckBoxColumn ElementStyle="{DynamicResource MetroDataGridCheckBox}"
+                                        EditingElementStyle="{DynamicResource MetroDataGridCheckBox}"
+                                        Header="Выбрать"
+                                        Width="80"
+                                        Binding="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow}, Path=IsSelected, Mode=OneWay}" />
+                <DataGridTextColumn Header="Фамилия"
+                                    MinWidth="100"
+                                    Binding="{Binding Surname}" />
+                <DataGridTextColumn Header="Имя"
+                                     MinWidth="100"
+                                    Binding="{Binding Name}" />
+                <DataGridTextColumn Header="Отчество"
+                                     MinWidth="100"
+                                    Binding="{Binding MiddleName}" />
+                <DataGridTextColumn Header="Email"
+                                     MinWidth="150"
+                                    Binding="{Binding Email}" />
+                <DataGridTextColumn Header="Должность"
+                                    MinWidth="150"
+                                    Binding="{Binding Post}" />
+            </DataGrid.Columns>
+        </DataGrid>
+        <StackPanel Orientation="Horizontal" Margin="6" Grid.Row="2" HorizontalAlignment="Center">
+            <Button Width="60" Margin="0,0,15,0" Command="{Binding Select}">Выбрать</Button>
+            <Button Width="60" Command="{Binding Exit}">Выйти</Button>
+        </StackPanel>
+
+    </Grid>
+    </controls:MetroWindow>
+

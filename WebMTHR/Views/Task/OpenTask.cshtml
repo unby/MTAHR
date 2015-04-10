@@ -1,0 +1,89 @@
+﻿@using BaseType
+@using BaseType.Utils
+@using Microsoft.Ajax.Utilities
+@model WebMTHR.Models.TaskViewModels
+
+@{
+    ViewBag.Title = Model.Task.NameTask;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style type="text/css">
+    .commentMessage {
+        border: none;
+        height: 80px;
+        
+    }
+</style>
+
+<h1>@Model.Task.NameTask</h1>
+@Html.AntiForgeryToken()
+<table style="margin: 10px">
+    <tr>
+        <td>Автор: </td>
+        <td>@Model.AuthorName</td>
+        <td>Статус: </td>
+        <td>@Model.Task.Status.GetDescription()</td>
+    </tr>
+    <tr>
+        <td>Дата создания: </td>
+        <td>@Model.Task.DateCreate</td>
+        <td>Дата обновления: </td>
+        <td>@Model.Task.DateUpdate</td>
+    </tr>
+</table>
+<h3>Описание</h3>
+@Html.TextAreaFor(m => m.Task.Description, new { style = "width:800px;max-width:800px;border: none;" })
+<div class="form-horizontal">
+
+</div>
+<form action="~/Task/PublishComment?idTask=@Model.Task.IdTask" method="post">
+    <h3>Добавить комментарий</h3>
+    <div> @Html.TextAreaFor(m => m.NewComment, new { style = "width:400px;max-width:750px;" })</div>
+    <div class="col-md-offset-2 col-md-10">
+        @Html.ValidationMessageFor(m => m.NewComment)
+        @if (Model.Task.Status != StatusTask.Complete)
+        {
+            <input type="submit" name="PublishComment" value="Опубликовать" class="btn btn-default" />
+        }
+        @if (Model.EditOld)
+        {
+            <input type="button" onclick="updateComment();" name="EditOldComment" value="Изменить последнее" class="btn btn-default" />
+        }
+    </div>
+
+</form>
+@foreach (var item in Model.Comments.ToList())
+{
+    <div>
+        <p><strong>@item.AuthorApplicationUser.UserName</strong> @item.DateMessage.ToString("dd MMMM yyyy hh:mm")</p>
+        @Html.TextAreaFor(i => item.Message, new { Readonly = "readonly", style = "width:700px;max-width:750px; border: none;" })
+        @*<input type="text" readonly="readonly" class="commentMessage" value="@item.Message" />*@
+    </div>
+}
+<div>
+    @Html.ActionLink("Назад", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+<script type="text/javascript">
+    jQuery(function () {
+        jQuery('textarea').autoResize();
+    });
+</script>
+<script type="text/javascript">
+
+    function updateComment() {
+        $.ajax({
+            type: 'POST',
+            contentType: 'application/json; charset=utf-8',
+            url: 'UpdateComment?idTask=@Model.Task.IdTask',
+            data: '{"NewComment":"' + document.getElementById('NewComment').value + '"}',
+            dataType: 'json',
+            success: function (data) {
+                alert('Success');
+            }
+        });
+    }
+</script>

@@ -1,0 +1,87 @@
+﻿<Controls:MetroWindow x:Class="ManagementGui.Admin.ProjectsWindow"
+        xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:ignore="http://www.ignore.com"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" xmlns:xcdg="http://schemas.xceed.com/wpf/xaml/datagrid" 
+        xmlns:properties="clr-namespace:ManagementGui.Utils.AttachedProperty"  
+        properties:CloseDialog.DialogResult="{Binding IsDialogClose}"
+        mc:Ignorable="d ignore"
+        Height="auto"
+        Width="auto"
+        Title="Управление проетками"
+        Icon="/mainicon.ico" BorderThickness="1" AllowsTransparency="False" BorderBrush="{DynamicResource VS2012WindowBorderBrush}" >
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions >
+            <ColumnDefinition  Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <GridSplitter HorizontalAlignment="Right" VerticalAlignment="Stretch" Grid.Column="1" Grid.Row="1" ResizeBehavior="PreviousAndNext" Width="5" Background="#FFBCBCBC"/>
+        <ListBox Grid.Row="1" Grid.Column="0" ItemsSource="{Binding Projects}" SelectedItem="{Binding Path=Current, Mode=TwoWay}" x:Name="ProjectList">
+            <ListBox.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Создать подразделение" FontWeight="Bold" Command="{Binding CreateProject}">
+                    </MenuItem>
+                </ContextMenu>
+            </ListBox.ContextMenu>
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Grid Margin="0,2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="{Binding Name}" >
+                            <TextBlock.ContextMenu>
+                                <ContextMenu >
+                                    <MenuItem Header="Создать подразделение" FontWeight="Bold" Command="{Binding CreateProject}"></MenuItem>
+                                    <MenuItem Header="Удалить" Command="{Binding DeleteProject}"></MenuItem>
+                                    <MenuItem  Header="Назначить руководителя" Command="{Binding SetHead}"></MenuItem>
+                                </ContextMenu>
+                            </TextBlock.ContextMenu>
+                            <TextBlock Margin="3" Text="{Binding HeadMan}"></TextBlock>
+                        </TextBlock>
+                    </Grid>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <Grid Grid.Row="0" Grid.ColumnSpan="3" Grid.Column="0">
+            <StackPanel Orientation="Horizontal">
+                <Button Command="{Binding CreateProject}">Создать</Button>
+                <Button Command="{Binding SaveAll}">Сохранить</Button>
+                <Button Command="{Binding DeleteProject}">Удалить</Button>
+            </StackPanel>
+        </Grid>
+        <xctk:PropertyGrid x:Name="PGProject" SelectedObject="{Binding Current,Mode=TwoWay}" Grid.Column="2" Grid.Row="1" >
+            <xctk:PropertyGrid.EditorDefinitions>
+                <xctk:EditorTemplateDefinition TargetProperties="Idproject" >
+                    <xctk:EditorTemplateDefinition.EditingTemplate>
+                        <DataTemplate >
+                            <Border IsEnabled="False">
+                            </Border>
+                        </DataTemplate>
+                    </xctk:EditorTemplateDefinition.EditingTemplate>
+                </xctk:EditorTemplateDefinition>
+                <xctk:EditorTemplateDefinition TargetProperties="Author" >
+                    <xctk:EditorTemplateDefinition.EditingTemplate>
+                        <DataTemplate>
+                            <Button Name="btnAuthor" Content="{Binding Value,Mode=TwoWay}"  Click="BtnAuthor_OnClick"></Button>
+                        </DataTemplate>
+                    </xctk:EditorTemplateDefinition.EditingTemplate>
+                </xctk:EditorTemplateDefinition>
+            </xctk:PropertyGrid.EditorDefinitions>
+            <xctk:PropertyGrid.PropertyDefinitions>
+                <xctk:PropertyDefinition IsBrowsable="False">
+                    <xctk:PropertyDefinition.TargetProperties>HeadMan,DateCreate,DateUpdate,Tasks,WorkGroup,TypeProject</xctk:PropertyDefinition.TargetProperties>
+                </xctk:PropertyDefinition>
+            </xctk:PropertyGrid.PropertyDefinitions>
+        </xctk:PropertyGrid>
+    </Grid>
+</Controls:MetroWindow>

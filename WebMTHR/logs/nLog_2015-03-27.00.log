@@ -1,0 +1,19 @@
+time;message;logger;level
+2015-03-26 21:51:16.9846;EmailSenderMTHR иницализирован;WebMTHR.EmailSender.EmailSenderMTHR;Info
+2015-03-26 21:57:16.6812;EmailSenderMTHR иницализирован;WebMTHR.EmailSender.EmailSenderMTHR;Info
+2015-03-26 22:00:23.0200;EmailSenderMTHR иницализирован;WebMTHR.EmailSender.EmailSenderMTHR;Info
+2015-03-26 22:08:09.7495;EmailSenderMTHR иницализирован;WebMTHR.EmailSender.EmailSenderMTHR;Info
+2015-03-26 22:11:16.7129;EmailSenderMTHR запущен первый вызов таймера Task;WebMTHR.EmailSender.EmailSenderMTHR;Info
+2015-03-26 22:11:45.4436;Ошибка выполения операции;WebMTHR.EmailSender.EmailSenderMTHR;Error
+2015-03-26 22:14:44.1328;EmailSenderMTHR иницализирован;WebMTHR.EmailSender.EmailSenderMTHR;Info
+2015-03-26 22:18:56.6372;EmailSenderMTHR иницализирован;WebMTHR.EmailSender.EmailSenderMTHR;Info
+2015-03-26 22:24:00.4893;EmailSenderMTHR иницализирован;WebMTHR.EmailSender.EmailSenderMTHR;Info
+2015-03-26 22:24:58.0120;EmailSenderMTHR иницализирован;WebMTHR.EmailSender.EmailSenderMTHR;Info
+2015-03-26 22:28:16.4775;EmailSenderMTHR запущен первый вызов таймера Task;WebMTHR.EmailSender.EmailSenderMTHR;Info
+2015-03-26 22:28:16.5883;Ошибка выполения операции;WebMTHR.EmailSender.EmailSenderMTHR;Error
+2015-03-26 22:31:06.3215;EmailSenderMTHR запущен первый вызов таймера Task;WebMTHR.EmailSender.EmailSenderMTHR;Info
+2015-03-26 22:34:54.0415;EmailSenderMTHR иницализирован;WebMTHR.EmailSender.EmailSenderMTHR;Info
+2015-03-26 22:37:58.2368;EmailSenderMTHR запущен первый вызов таймера Task;WebMTHR.EmailSender.EmailSenderMTHR;Info
+2015-03-26 22:38:17.9479;Ошибка выполения операции;WebMTHR.EmailSender.EmailSenderMTHR;Error
+2015-03-26 22:40:59.0541;EmailSenderMTHR запущен первый вызов таймера Task;WebMTHR.EmailSender.EmailSenderMTHR;Info
+2015-03-26 22:41:04.2958;Ошибка выполения операции;WebMTHR.EmailSender.EmailSenderMTHR;Error

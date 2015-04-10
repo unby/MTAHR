@@ -53,18 +53,11 @@ namespace ManagementGui.Config
 			return copy;
 		}
 
-		///<summary>Save the current property values to the config file</summary>
-		public void Save()
+		///<summary>SaveConnectionString the current property values to the config file</summary>
+		public void SaveConnectionString()
 		{
-			// The Configuration has to be opened anew each time we want to update the file contents.
-			// Otherwise, the update of other custom configuration sections will cause an exception
-			// to occur when we try to save our modifications, stating that another app has modified
-			// the file since we opened it.
 			var config = ConfigurationManager.OpenExeConfiguration(_spath);
-			var section = (DesktopSettings)config.Sections["DesktopSettings"];
-			//
-			// TODO: Add code to copy all properties from "this" to "sect"
-			//
+			var section = (DesktopSettings)config.Sections["DesktopSettings"];           
 			section.ConnectionSettings = new ConnectionSettingsElement
 			{
 			    UserName = ConnectionSettings.UserName,
@@ -76,7 +69,19 @@ namespace ManagementGui.Config
 			config.Save(ConfigurationSaveMode.Full);
 		}
 
-		///<summary>Alternate means to Save the current property values to the config file</summary>
+        public void SaveSession(Guid id)
+        {
+            var config = ConfigurationManager.OpenExeConfiguration(_spath);
+            var section = (DesktopSettings)config.Sections["DesktopSettings"];
+            section.SessionSettings = new SessionSettingsElement()
+            {
+               LastProject=id.ToString()
+            };
+            //
+            config.Save(ConfigurationSaveMode.Full);
+        }
+
+		///<summary>Alternate means to SaveConnectionString the current property values to the config file</summary>
 		public void AltSave()
 		{
 			Configuration config = ConfigurationManager.OpenExeConfiguration(_spath);
@@ -111,6 +116,31 @@ namespace ManagementGui.Config
                     set { this["ConnectionSettings"] = value; }
                 }
 
+                [ConfigurationProperty("SessionSettings")]
+                public SessionSettingsElement SessionSettings
+                {
+                    get
+                    {
+                        return ((SessionSettingsElement)(this["SessionSettings"]));
+                    }
+                    set { this["SessionSettings"] = value; }
+                }
+                public sealed class SessionSettingsElement : System.Configuration.ConfigurationElement
+                {
+
+                    [System.Configuration.ConfigurationPropertyAttribute("LastProject", IsRequired = true)]
+                    public string LastProject
+                    {
+                        get
+                        {
+                            return ((string)(this["LastProject"]));
+                        }
+                        set
+                        {
+                            this["LastProject"] = value;
+                        }
+                    }
+                }
                 public sealed class ConnectionSettingsElement : ConfigurationElement
                 {
 

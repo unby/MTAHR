@@ -5,53 +5,186 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:ignore="http://www.ignore.com"
+        xmlns:static="clr-namespace:ManagementGui.Config"
+        xmlns:xcad="http://schemas.xceed.com/wpf/xaml/avalondock"
         mc:Ignorable="d ignore"
-        Height="938"
-        Width="762"
-        Title="Среда управления подразделением"
-        Icon="/mainicon.ico"
-
-        DataContext="{Binding Main, Source={StaticResource Locator}}" BorderThickness="2" BorderBrush="{DynamicResource VS2012WindowBorderBrush}">
+        xmlns:baseType="clr-namespace:BaseType;assembly=BaseType"
+        xmlns:report1="clr-namespace:BaseType.Report;assembly=BaseType"
+        xmlns:viewModel="clr-namespace:ManagementGui.ViewModel"
+        MinWidth="800" MinHeight="500"       
+        Title="Управление задачами и ресурсами"
+        Icon="/mainicon.ico"  
+        BorderThickness="2" BorderBrush="{DynamicResource VS2012WindowBorderBrush}" Background="White">
 
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Skins/MainSkin.xaml" />
+                <ResourceDictionary Source="Styles/OutlookStyle.xaml"></ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
-
     <Grid x:Name="LayoutRoot">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition MaxWidth="320" MinWidth="200"></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition Height="25"></RowDefinition>
             <RowDefinition></RowDefinition>
+            <RowDefinition Height="15"></RowDefinition>
         </Grid.RowDefinitions>
-        <Menu Grid.Row="0" Name="Menu">
-            <MenuItem Name="FileMI" Header="File">
-                <MenuItem Header="New"></MenuItem>
-                <MenuItem Header="Open"></MenuItem>
-                <MenuItem Header="Save"></MenuItem>
-                <MenuItem Header="SaveAs..."></MenuItem>
-                <Separator></Separator>
-                <MenuItem Header="Exit"></MenuItem>
+        <Menu Grid.Row="0" Name="Menu" Grid.ColumnSpan="2" Background="Transparent">
+            <MenuItem Name="Project" Header="Проекты">
+                <MenuItem Header="Мои проекты" Click="ShowMyProjects_OnClick"></MenuItem>
+                <MenuItem Name="ManageSystemMI" Visibility="{Binding Source={x:Static static:WorkEnviroment.ManageSystemMI}}" Header="Управление системой">
+                     <MenuItem Name="MISistemUserList" Click="MISistemUserList_OnClick" Header="Пользователи модуля 'Управление подразделением'"></MenuItem>
+                    <!--<MenuItem Name="ManageSystem" Click="ManageSystem_OnClick" Header="Управление системой"></MenuItem>-->
+                </MenuItem>
             </MenuItem>
-            <MenuItem Name="EditMI" Header="Edit">
-                <MenuItem Header="Undo"></MenuItem>
-                <MenuItem Header="Redo"></MenuItem>
+            <MenuItem Name="Edit" Header="Правка">
+                <MenuItem Header="Отмена" Command="ApplicationCommands.Undo" Icon="{StaticResource UndoImage}"></MenuItem>
+                <MenuItem Header="Повторить"  Command="ApplicationCommands.Redo" Icon="{StaticResource RedoImage}"></MenuItem>
                 <Separator></Separator>
-                <MenuItem Header="Cut"></MenuItem>
-                <MenuItem Header="Copy"></MenuItem>
-                <MenuItem Header="Paste"></MenuItem>
+                <MenuItem Header="Вырезать" Command="ApplicationCommands.Cut" Icon="{StaticResource CutImage}"></MenuItem>
+                <MenuItem Header="Скопировать" Command="ApplicationCommands.Copy" Icon="{StaticResource CopyImage}"></MenuItem>
+                <MenuItem Header="Вставить" Command="ApplicationCommands.Paste" Icon="{StaticResource PasteImage}"></MenuItem>
             </MenuItem>
-            <MenuItem Name="ManageSystemMI" Header="Управление системой">
-                <MenuItem Name="MISistemUserList" Click="MISistemUserList_OnClick" Header="Пользователи модуля 'Управление подразделением'"></MenuItem>
-                <MenuItem Header="Redo"></MenuItem>
-                <Separator></Separator>
-                <MenuItem Header="Cut"></MenuItem>
-                <MenuItem Header="Copy"></MenuItem>
-                <MenuItem Header="Paste"></MenuItem>
+            <MenuItem Name="Personal" Header="Персонал">
+                <MenuItem Header="Создать пользователя" Click="NewUserCreateOnClick"></MenuItem>
+                <MenuItem Header="Импорт сотрудников (*.xls)" Click="ImportPersonsOnXLS"></MenuItem>
             </MenuItem>
+            <MenuItem Name="Task" Header="Задачи">
+                <MenuItem Header="Новая задача" Click="NewTaskOnClick"></MenuItem>
+            </MenuItem>
+            
         </Menu>
-        <Label Content="Label" HorizontalAlignment="Left" Margin="309,71,0,0" Grid.Row="1" VerticalAlignment="Top"/>
+        <ToolBarTray Grid.Row="1" Grid.Column="0">
+            <ToolBar>
+                <Button Command="ApplicationCommands.Undo" Content="{StaticResource UndoImage}" ToolTip="Отмена"/>
+                <Button Command="ApplicationCommands.Redo" Content="{StaticResource RedoImage}" ToolTip="Повторить"/>
+                <Button Command="ApplicationCommands.Cut" Content="{StaticResource CutImage}" ToolTip="Вырезать"/>
+                <Button Command="ApplicationCommands.Copy" Content="{StaticResource CopyImage}" ToolTip="Скопировать"/>
+                <Button Command="ApplicationCommands.Paste" Content="{StaticResource PasteImage}" ToolTip="Вставить"/>
+            </ToolBar>
+        </ToolBarTray>
+        <!-- This is the tabcontrol itself. You can remove the template attribute to see what it looks like unstyled. -->
+        <TabControl SelectionChanged="Users_OnSelected" Grid.Column="0" Grid.Row="2" Name="TabMain" Template="{StaticResource OutlookTab}">
+            <TabItem  Header="Подразделение" IsSelected="True">
+                <ListBox Name="TreeUsers" ItemsSource="{Binding Users, Mode=TwoWay}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate DataType="{x:Type baseType:ApplicationUser}">
+                            <StackPanel>
+                                <TextBlock Text="{Binding Path=UserName}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                    <ListBox.Resources>
+                        <ContextMenu x:Key="UserContextMenu">
+                            <MenuItem Header="Просмотр" Click="OpenUser" FontWeight="Bold" />
+                            <MenuItem Header="Создать задачу" Click="CreateTask" FontWeight="Bold" />
+                        </ContextMenu>
+                    </ListBox.Resources>
+                    <ListBox.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="Добавить сотрудника" Click="NewUserCreateOnClick"/>
+                        </ContextMenu>
+                    </ListBox.ContextMenu>
+                    <ListBox.ItemContainerStyle>
+
+                        <Style TargetType="{x:Type ListBoxItem}">
+                            <Setter Property="ContextMenu" Value="{StaticResource UserContextMenu}"/>
+                            <Setter Property="FontWeight" Value="Normal" />
+                            <EventSetter Event="MouseDoubleClick" Handler="TreeViewDoubleClickOpenUser"></EventSetter>
+                            <!--   <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
+                            <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />                           
+                            <Style.Triggers>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="FontWeight" Value="Bold" />
+                                </Trigger>
+                            </Style.Triggers>-->                          
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                    
+                </ListBox>
+            </TabItem>
+            <TabItem Name="Currentes" Header="Текущие задачи">
+                <ScrollViewer>
+                <ListBox Name="CurrentList" ItemsSource="{Binding CurrentInfoList, Mode=TwoWay}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate DataType="{x:Type viewModel:CurrentInfo}">
+                                <Border BorderBrush="DarkRed" BorderThickness="0,0,0,2" >
+                                    <Grid Margin="2">
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition></RowDefinition>
+                                                <RowDefinition></RowDefinition>
+                                                <RowDefinition></RowDefinition>
+                                                <RowDefinition></RowDefinition>
+                                            </Grid.RowDefinitions>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition></ColumnDefinition>
+                                                <ColumnDefinition Width="35"></ColumnDefinition>
+                                                <ColumnDefinition  Width="35"></ColumnDefinition>
+                                            </Grid.ColumnDefinitions>
+                                            <Label Grid.ColumnSpan="3" Grid.Row="0"  Content="{Binding Name}" FontWeight="Bold"></Label>
+
+                                            <Label  Grid.Row="1" Grid.Column="0" Content="Все:"></Label>
+                                            <Label  Grid.Row="2" Grid.Column="0" Content="Открыто:"></Label>
+                                            <Label  Grid.Row="3" Grid.Column="0" Content="Завершено:"></Label>
+
+                                            <Label  Grid.Row="1" Grid.Column="1" Content="{Binding Common}"></Label>
+                                            <Label  Grid.Row="2" Grid.Column="1" Content="{Binding Opens}"></Label>
+                                            <Label  Grid.Row="3" Grid.Column="1" Content="{Binding Closed}"></Label>
+
+                                            <Label  Grid.Row="1" Grid.Column="2" Content="{Binding CommonPercent,StringFormat=0.0%}"></Label>
+                                            <Label  Grid.Row="2" Grid.Column="2" Content="{Binding OpensPercent,StringFormat=0.0%}"></Label>
+                                            <Label  Grid.Row="3" Grid.Column="2" Content="{Binding ClosedPercent,StringFormat=0.0%}"></Label>
+                                        </Grid>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem Header="Отчеты">
+                <ListBox Name="ReportList" ItemsSource="{Binding ListReport, Mode=TwoWay}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate DataType="{x:Type report1:ReportItem}">
+                            <StackPanel>
+                                <TextBlock Text="{Binding Path=Name}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>                                    
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="{x:Type ListBoxItem}">
+                            <Setter Property="FontWeight" Value="Normal" />
+                            <EventSetter Event="MouseDoubleClick" Handler="TreeViewDoubleClickOpenReport"></EventSetter>
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                </ListBox>
+            </TabItem>
+        </TabControl>
+        <xcad:DockingManager Grid.Row="1" Grid.Column="1"  Name="ADManager" Background="White"
+                            AllowMixedOrientation="True" 
+                            BorderThickness="1" Margin="0,0,0,0" Grid.RowSpan="2">
+            <xcad:DockingManager.DocumentHeaderTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="{Binding IconSource}" Margin="0,0,0,0"/>
+                        <TextBlock Text="{Binding Title}" />
+                    </StackPanel>
+                </DataTemplate>               
+            </xcad:DockingManager.DocumentHeaderTemplate>           
+            <xcad:LayoutRoot x:Name="_layoutRoot">
+                <xcad:LayoutPanel Orientation="Horizontal">
+                    <xcad:LayoutDocumentPane >
+                    </xcad:LayoutDocumentPane>
+                </xcad:LayoutPanel>
+            </xcad:LayoutRoot>            
+        </xcad:DockingManager>
+        <StatusBar Grid.Column="0" Name="MainStatusBar" Grid.Row="3" Grid.ColumnSpan="2"  />
     </Grid>
 </Controls:MetroWindow>

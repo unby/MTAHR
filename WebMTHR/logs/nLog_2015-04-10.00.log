@@ -1,0 +1,109 @@
+time;message;logger;level;description
+2015-03-31 21:59:12.3137;EmailSenderMTHR иницализирован;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-03-31 22:01:36.9686;EmailSenderMTHR иницализирован;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-03-31 22:02:11.4191;EmailSenderMTHR запущен первый вызов таймера Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-03-31 22:03:08.0256;EmailSenderMTHR запущен первый вызов таймера Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-03-31 22:03:12.3247;Ошибка отправки сообщений таймер остановлен, проверте доступ к файлу шаблона и перезапустите службу;WebMTHR.EmailSender.EmailSenderMTHR;Error;"System.IO.FileNotFoundException: Файл 'C:\Program Files (x86)\IIS Express\TaskNotificationTemplate.htm' не найден.
+Имя файла: 'C:\Program Files (x86)\IIS Express\TaskNotificationTemplate.htm'
+   в System.IO.__Error.WinIOError(Int32 errorCode, String maybeFullPath)
+   в System.IO.FileStream.Init(String path, FileMode mode, FileAccess access, Int32 rights, Boolean useRights, FileShare share, Int32 bufferSize, FileOptions options, SECURITY_ATTRIBUTES secAttrs, String msgPath, Boolean bFromProxy, Boolean useLongPath, Boolean checkHost)
+   в System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize, FileOptions options, String msgPath, Boolean bFromProxy, Boolean useLongPath, Boolean checkHost)
+   в System.IO.StreamReader..ctor(String path, Encoding encoding, Boolean detectEncodingFromByteOrderMarks, Int32 bufferSize, Boolean checkHost)
+   в System.IO.File.InternalReadAllText(String path, Encoding encoding, Boolean checkHost)
+   в System.IO.File.ReadAllText(String path, Encoding encoding)
+   в WebMTHR.EmailSender.SenderUtils.GetTemplate(String nameTemplate) в c:\Users\Руслан\Desktop\MTAHR\WebMTHR\EmailSender\SenderUtils.cs:строка 19
+   в WebMTHR.EmailSender.SendMailFirst..ctor(ISenderParam param) в c:\Users\Руслан\Desktop\MTAHR\WebMTHR\EmailSender\SendMailFirst.cs:строка 44
+   в WebMTHR.EmailSender.EmailSenderMTHR.TimerCall(Object state) в c:\Users\Руслан\Desktop\MTAHR\WebMTHR\EmailSender\EmailSenderMTHR.cs:строка 34"
+2015-03-31 22:15:41.0576;EmailSenderMTHR иницализирован;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-03-31 22:16:13.8235;EmailSenderMTHR запущен первый вызов таймера Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-03-31 22:18:00.5654;EmailSenderMTHR иницализирован;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-03-31 22:18:31.0669;EmailSenderMTHR запущен первый вызов таймера Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-03-31 22:19:08.4789;EmailSenderMTHR иницализирован;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-03-31 22:19:38.5295;EmailSenderMTHR запущен первый вызов таймера Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-03-31 22:20:43.0362;EmailSenderMTHR запущен первый вызов таймера Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-03-31 22:21:13.0758;EmailSenderMTHR иницализирован;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-03-31 22:21:43.1154;EmailSenderMTHR запущен первый вызов таймера Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-03-31 22:22:56.2456;EmailSenderMTHR иницализирован;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-03-31 22:23:26.2865;EmailSenderMTHR запущен первый вызов таймера Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-03-31 22:24:01.6321;EmailSenderMTHR вызов таймера Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-03-31 22:24:32.5174;EmailSenderMTHR вызов таймера Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-03-31 22:24:46.2864;"System.Net.Mail.SmtpException: Ошибка обработки. Отклик сервера: 5.3.4 Requested action aborted; Local processing error.
+   в System.Net.Mail.DataStopCommand.CheckResponse(SmtpStatusCode statusCode, String serverResponse)
+   в System.Net.Mail.DataStopCommand.Send(SmtpConnection conn)
+   в System.Net.Mail.SmtpConnection.OnClose(Object sender, EventArgs args)
+   в System.Net.ClosableStream.Close()
+   в System.Net.Mail.MailWriter.Close()
+   в System.Net.Mail.SmtpClient.Send(MailMessage message)
+   в WebMTHR.EmailSender.SendMailFirst.<SendEmail>d__3.MoveNext() в c:\Users\Руслан\Desktop\MTAHR\WebMTHR\EmailSender\SendMailFirst.cs:строка 72";WebMTHR.EmailSender.SendMailFirst;Error;
+2015-03-31 22:24:54.7395;"System.Net.Mail.SmtpException: Ошибка обработки. Отклик сервера: 5.3.4 Requested action aborted; Local processing error.
+   в System.Net.Mail.DataStopCommand.CheckResponse(SmtpStatusCode statusCode, String serverResponse)
+   в System.Net.Mail.DataStopCommand.Send(SmtpConnection conn)
+   в System.Net.Mail.SmtpConnection.OnClose(Object sender, EventArgs args)
+   в System.Net.ClosableStream.Close()
+   в System.Net.Mail.MailWriter.Close()
+   в System.Net.Mail.SmtpClient.Send(MailMessage message)
+   в WebMTHR.EmailSender.SendMailFirst.<SendEmail>d__3.MoveNext() в c:\Users\Руслан\Desktop\MTAHR\WebMTHR\EmailSender\SendMailFirst.cs:строка 72";WebMTHR.EmailSender.SendMailFirst;Error;
+2015-03-31 22:24:58.6643;"System.Net.Mail.SmtpException: Ошибка обработки. Отклик сервера: 5.3.4 Requested action aborted; Local processing error.
+   в System.Net.Mail.DataStopCommand.CheckResponse(SmtpStatusCode statusCode, String serverResponse)
+   в System.Net.Mail.DataStopCommand.Send(SmtpConnection conn)
+   в System.Net.Mail.SmtpConnection.OnClose(Object sender, EventArgs args)
+   в System.Net.ClosableStream.Close()
+   в System.Net.Mail.MailWriter.Close()
+   в System.Net.Mail.SmtpClient.Send(MailMessage message)
+   в WebMTHR.EmailSender.SendMailFirst.<SendEmail>d__3.MoveNext() в c:\Users\Руслан\Desktop\MTAHR\WebMTHR\EmailSender\SendMailFirst.cs:строка 72";WebMTHR.EmailSender.SendMailFirst;Error;
+2015-03-31 22:25:02.5311;EmailSenderMTHR вызов таймера Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-03-31 22:26:50.6426;EmailSenderMTHR вызов таймера Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-03-31 22:26:52.7531;"System.Net.Mail.SmtpException: Сбой при отправке сообщения электронной почты. ---> System.IO.IOException: Не удается прочитать данные из транспортного соединения: net_io_connectionclosed.
+   в System.Net.Mail.SmtpReplyReaderFactory.ProcessRead(Byte[] buffer, Int32 offset, Int32 read, Boolean readLine)
+   в System.Net.Mail.SmtpReplyReaderFactory.ReadLines(SmtpReplyReader caller, Boolean oneLine)
+   в System.Net.Mail.SmtpReplyReaderFactory.ReadLine(SmtpReplyReader caller)
+   в System.Net.Mail.CheckCommand.Send(SmtpConnection conn, String& response)
+   в System.Net.Mail.MailCommand.Send(SmtpConnection conn, Byte[] command, MailAddress from, Boolean allowUnicode)
+   в System.Net.Mail.SmtpTransport.SendMail(MailAddress sender, MailAddressCollection recipients, String deliveryNotify, Boolean allowUnicode, SmtpFailedRecipientException& exception)
+   в System.Net.Mail.SmtpClient.Send(MailMessage message)
+   --- Конец трассировки внутреннего стека исключений ---
+   в System.Net.Mail.SmtpClient.Send(MailMessage message)
+   в WebMTHR.EmailSender.SendMailFirst.<SendEmail>d__3.MoveNext() в c:\Users\Руслан\Desktop\MTAHR\WebMTHR\EmailSender\SendMailFirst.cs:строка 72";WebMTHR.EmailSender.SendMailFirst;Error;
+2015-03-31 22:26:57.3584;"System.Net.Mail.SmtpException: Ошибка обработки. Отклик сервера: 5.3.4 Requested action aborted; Local processing error.
+   в System.Net.Mail.DataStopCommand.CheckResponse(SmtpStatusCode statusCode, String serverResponse)
+   в System.Net.Mail.DataStopCommand.Send(SmtpConnection conn)
+   в System.Net.Mail.SmtpConnection.OnClose(Object sender, EventArgs args)
+   в System.Net.ClosableStream.Close()
+   в System.Net.Mail.MailWriter.Close()
+   в System.Net.Mail.SmtpClient.Send(MailMessage message)
+   в WebMTHR.EmailSender.SendMailFirst.<SendEmail>d__3.MoveNext() в c:\Users\Руслан\Desktop\MTAHR\WebMTHR\EmailSender\SendMailFirst.cs:строка 72";WebMTHR.EmailSender.SendMailFirst;Error;
+2015-03-31 22:27:01.2222;"System.Net.Mail.SmtpException: Ошибка обработки. Отклик сервера: 5.3.4 Requested action aborted; Local processing error.
+   в System.Net.Mail.DataStopCommand.CheckResponse(SmtpStatusCode statusCode, String serverResponse)
+   в System.Net.Mail.DataStopCommand.Send(SmtpConnection conn)
+   в System.Net.Mail.SmtpConnection.OnClose(Object sender, EventArgs args)
+   в System.Net.ClosableStream.Close()
+   в System.Net.Mail.MailWriter.Close()
+   в System.Net.Mail.SmtpClient.Send(MailMessage message)
+   в WebMTHR.EmailSender.SendMailFirst.<SendEmail>d__3.MoveNext() в c:\Users\Руслан\Desktop\MTAHR\WebMTHR\EmailSender\SendMailFirst.cs:строка 72";WebMTHR.EmailSender.SendMailFirst;Error;
+2015-03-31 22:27:20.6488;EmailSenderMTHR вызов таймера Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-03-31 22:55:22.5476;EmailSenderMTHR иницализирован;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-03-31 22:55:52.5989;EmailSenderMTHR запущен первый вызов таймера Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-03-31 22:56:22.6037;EmailSenderMTHR вызов таймера Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-03-31 22:56:52.6035;EmailSenderMTHR вызов таймера Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-03-31 22:57:22.6182;EmailSenderMTHR вызов таймера Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-03-31 22:57:52.6402;EmailSenderMTHR вызов таймера Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-03-31 22:59:13.5166;EmailSenderMTHR иницализирован;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-03-31 22:59:43.5652;EmailSenderMTHR запущен первый вызов таймера Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-03-31 23:03:14.7374;EmailSenderMTHR иницализирован;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-03-31 23:03:44.8079;EmailSenderMTHR запущен первый вызов таймера Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-03-31 23:04:16.7841;EmailSenderMTHR вызов таймера Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-03-31 23:05:33.9459;EmailSenderMTHR иницализирован;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-03-31 23:06:03.9898;EmailSenderMTHR запущен первый вызов таймера Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-03-31 23:06:47.1903;EmailSenderMTHR вызов таймера Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-03-31 23:08:36.5588;EmailSenderMTHR иницализирован;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-03-31 23:09:06.6063;EmailSenderMTHR запущен первый вызов таймера Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-03-31 23:09:36.6053;EmailSenderMTHR вызов таймера Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-03-31 23:10:12.3634;EmailSenderMTHR вызов таймера Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-03-31 23:10:42.3848;EmailSenderMTHR вызов таймера Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-03-31 23:11:12.3956;EmailSenderMTHR вызов таймера Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-03-31 23:11:42.4004;EmailSenderMTHR вызов таймера Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-03-31 23:12:12.4092;EmailSenderMTHR вызов таймера Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-03-31 23:12:42.7130;EmailSenderMTHR иницализирован;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-03-31 23:13:12.7616;EmailSenderMTHR запущен первый вызов таймера Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-03-31 23:13:42.7624;EmailSenderMTHR вызов таймера Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-03-31 23:14:12.7761;EmailSenderMTHR вызов таймера Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;

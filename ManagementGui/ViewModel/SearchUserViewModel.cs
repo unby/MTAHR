@@ -1,212 +1,237 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Documents;
 using System.Windows.Input;
 using BaseType;
-using BaseType.Utils;
+using BaseType.Common;
 using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Command;
+using ManagementGui.Config;
 using ManagementGui.Utils;
+using Xceed.Wpf.Data;
 
 namespace ManagementGui.ViewModel
 {
-    /// <summary>
-    /// This class contains properties that a View can data bind to.
-    /// <para>
-    /// See http://www.galasoft.ch/mvvm
-    /// </para>
-    /// </summary>
     public class SearchUserViewModel : ViewModelBase
     {
-        /// <summary>
-        /// Initializes a new instance of the SearchUserViewModel class.
-        /// </summary>
         public SearchUserViewModel()
         {
-            Users = new ObservableCollection<User>(DbHelper.Invoke.Users.Take(25));
+            Users = new List<ApplicationUser>((from user in DbHelper.GetDbProvider.Users.Where(w => w.IsWork)
+                join project in DbHelper.GetDbProvider.UserRoles on user.Id equals project.IdUser
+                where project.IdProject==WorkEnviroment.CurrentProject.IdProject
+                select user));
+            IsWork = true;
+            IsProject = true;
+            SelectedUsers=new List<ApplicationUser>();
+            IsVisibleProjectUser = Visibility.Visible;
         }
-
-        public SearchUserViewModel(User headUser)
+        public SearchUserViewModel(Visibility isVisibleProjectUser)
         {
-            List<User> list = null;
-            HeadUser = headUser;
-            if (IsWork)
-                list = DbHelper.Invoke.Projects.Where(x => x.Author.IdUser == HeadUser.IdUser).
-                    Select(y => new List<UserRole>(y.ProjectGroup.Users).Where(v => v.Role == Role.User)).
-                    SelectMany(enumirable => enumirable.Where(d => d.User.IsWork == IsWork).Select(b => b.User) ?? null)
-                    .ToList();
-            else
-                list = DbHelper.Invoke.Projects.Where(x => x.Author.IdUser == HeadUser.IdUser).
-                    Select(y => new List<UserRole>(y.ProjectGroup.Users).Where(v => v.Role == Role.User)).
-                    SelectMany(enumirable => enumirable.Select(b => b.User) ?? null).ToList();
-
-            Users = new ObservableCollection<User>(list);
+            Users = new List<ApplicationUser>((from user in DbHelper.GetDbProvider.Users.Where(w => w.IsWork)
+                join project in DbHelper.GetDbProvider.UserRoles on user.Id equals project.IdUser
+                where project.IdProject==WorkEnviroment.CurrentProject.IdProject
+                select user));
+            IsWork = true;
+            IsProject = false;
+            SelectedUsers=new List<ApplicationUser>();
+             IsVisibleProjectUser = isVisibleProjectUser;
         }
+        #region PropertyBinding
+        #region PropertyFiltrBinding
 
-        #region Search
+        public  Visibility IsVisibleProjectUser { get; private set; }
+        public string FIOField { get; set; }
+        private bool _isWork;
+        private string _isProjectText;
+        private string _isWorkText;
+        private bool _isProject;
 
-        private RelayCommand _searchUserCommand;
-
-        public ICommand ISearchUser
+        public bool IsWork
         {
-            get
-            {
-                if (_searchUserCommand == null)
-                {
-                    _searchUserCommand = new RelayCommand(SearchUser);
-                }
-                return _searchUserCommand;
-            }
-        }
-
-        public void SearchUser()
-        {
-            if (string.IsNullOrEmpty(SearchString))
-                return;
-            else
-            {
-                List<User> list = null;
-                if (HeadUser != null)
-                    if (IsWork)
-                        list = DbHelper.Invoke.Projects.Where(x => x.Author.IdUser == HeadUser.IdUser).
-                            Select(y => new List<UserRole>(y.ProjectGroup.Users).Where(v => v.Role == Role.User)).
-                            SelectMany(
-                                enumirable =>
-                                    enumirable.Where(
-                                        d =>
-                                            d.User.IsWork == IsWork &&
-                                            (Words.EqualsWord(d.User.Name) || Words.EqualsWord(d.User.Surname)))
-                                        .Select(b => b.User) ?? null).ToList();
-                    else
-                        list = DbHelper.Invoke.Projects.Where(x => x.Author.IdUser == HeadUser.IdUser).
-                            Select(y => new List<UserRole>(y.ProjectGroup.Users).Where(v => v.Role == Role.User)).
-                            SelectMany(
-                                enumirable =>
-                                    enumirable.Where(
-                                        d => (Words.EqualsWord(d.User.Name) || Words.EqualsWord(d.User.Surname)))
-                                        .Select(b => b.User) ?? null).ToList();
-                else
-                {
-                    if (IsWork)
-                        list =
-                            DbHelper.Invoke.Users.Where(
-                                x => x.IsWork == true && (Words.EqualsWord(x.Name) || Words.EqualsWord(x.Surname)))
-                                .ToList();
-                    else
-                        list =
-                            DbHelper.Invoke.Users.Where(x => (Words.EqualsWord(x.Name) || Words.EqualsWord(x.Surname)))
-                                .ToList();
-                }
-
-                Users = new ObservableCollection<User>(list);
-            }
-        }
-
-        #endregion
-
-        #region CreateUser 
-
-        private RelayCommand _createUserCommand;
-
-        public ICommand ICreateUser
-        {
-            get
-            {
-                if (_createUserCommand == null)
-                {
-                    _createUserCommand = new RelayCommand(CreateUser);
-                }
-                return _createUserCommand;
-            }
-        }
-
-        private void CreateUser()
-        {
-            Current = new User()
-            {
-                IsWork = true,
-                Name = "Имя",
-                Email = "test@t1twr.ru",
-                MiddleName = "Отчество",
-                Surname = "Фамилия",
-                IdUser = Guid.NewGuid(),
-                Comment = "Новый пользователь",
-                Operation = Operation.Create,
-                Password = "1234"
-            };
-           Current.ObjectHystory.ClearMemento();
-        }
-
-        #endregion
-
-        #region SaveUser
-
-        private RelayCommand _saveUserCommand;
-
-        public ICommand ISaveUser
-        {
-            get
-            {
-                if (_searchUserCommand == null)
-                {
-                    _searchUserCommand = new RelayCommand(SaveUser);
-                }
-                return _searchUserCommand;
-            }
-        }
-
-        private async void SaveUser()
-        {
-            try
-            {
-                if (EntityValidate.CostumValidator(Current))
-                {
-                    Users.Add(Current);
-                    DbHelper.Invoke.Users.Add(Current);
-                    await DbHelper.Invoke.SaveChangesAsync();
-                }
-                else
-                    MessageBox.Show("Корректно заполните инфорамцию о пользователе", "Информация о пользователе",
-                        MessageBoxButton.OK, MessageBoxImage.Stop);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(string.Format("Данные не сохранены:{1} {0}",ex.Message,Environment.NewLine), "Информация о пользователе, ошибка выполнения операции", MessageBoxButton.OK,
-                    MessageBoxImage.Error);
-            }
-        }
-
-        #endregion
-
-        #region template
-
-        #endregion
-
-
-        private string[] Words
-        {
-            get { return SearchString.Split(' '); }
-        }
-
-        private User HeadUser { get; set; }
-        public string SearchString { get; set; }
-        public bool IsWork = true;
-        public ObservableCollection<User> Users { get; set; }
-
-        private User _user;
-        public User Current
-        {
-            get { return _user; }
+            get { return _isWork; }
             set
             {
-                    _user = value;
-                    RaisePropertyChanged("Current");
+                _isWork = value;
+                if (_isWork)
+                {
+                    IsWorkText = "Работает";
+                }
+                else
+                {
+                    IsWorkText = "Не работает";
+                }
+                this.RaisePropertyChanged();
             }
         }
+
+        public bool IsProject
+        {
+            get { return _isProject; }
+            set
+            {
+                _isProject = value;
+                _isWork = value;
+                if (_isProject)
+                {
+                    IsProjectText = "В базе";
+                }
+                else
+                {
+                    IsProjectText = "В проекте";
+                }
+                this.RaisePropertyChanged();
+            }
+        }
+        public string IsWorkText
+        {
+            get { return _isWorkText; }
+            set
+            {
+                _isWorkText = value;
+                this.RaisePropertyChanged();
+            }
+        }
+        public string IsProjectText
+        {
+            get { return _isProjectText; }
+            set
+            {
+                _isProjectText = value;
+                this.RaisePropertyChanged();
+            }
+        }
+        private bool? _isDialogClose;
+        public bool? IsDialogClose
+        {
+            get { return _isDialogClose; }
+            set
+            {
+                _isDialogClose = value;
+                RaisePropertyChanged();
+            }
+        }
+        #endregion
+        #region ModelBinding
+        private List<ApplicationUser> _users;
+        private List<ApplicationUser> _selectedUsers;
+
+        public List<ApplicationUser> SelectedUsers
+        {
+            get { return _selectedUsers; }
+            set
+            {
+                _selectedUsers = value;
+                this.RaisePropertyChanged();
+            }
+        }
+
+        public List<ApplicationUser> Users
+        {
+            get { return _users; }
+            set
+            {
+                _users = value;
+                this.RaisePropertyChanged();
+            }
+        }
+        #endregion
+        #endregion
+
+        #region CommandBinding
+
+        private RelayCommand _seacrh;
+        private RelayCommand _select;
+        private RelayCommand _exit;
+        public ICommand Search {
+            get
+            {
+                if(_seacrh==null)
+                    _seacrh=new RelayCommand(SearchUserInBase);
+                return _seacrh;
+            }
+        }
+
+        private async void SearchUserInBase(object obj)
+        {
+            if (!string.IsNullOrEmpty(FIOField))
+            {
+                string query = string.Format(@"SELECT *  FROM [AspNetUsers] as userapp where {1} {0} {2}", GetBool(), GetFio(), GetProject());
+                Users =
+                    new List<ApplicationUser>(
+                        await
+                            DbHelper.GetDbProvider.Database.SqlQuery<ApplicationUser>(query
+                                )
+                                .ToListAsync());
+            }
+
+        }
+
+        private string GetProject()
+        {
+            string result = "";
+            if (IsProject)
+                result =
+                    string.Format(@"and userapp.id in (select id from (select IdProject from [Projects] where IdProject='{0}') as projectApp 
+join [members] as memberApp on memberApp.IdProject=projectApp.IdProject)", WorkEnviroment.CurrentProject.IdProject);
+            return result;
+        }
+
+        private string GetFio()
+        {
+            string result = "";
+            var names = FIOField.Split(new[] {'.',' ', ',', ';', '!', '@', '"', '\'', '+', '(', ')', '^', ':'}).Where(w=>w.Length>2);
+            result += "(";
+            var enumerable = names as string[] ?? names.ToArray();
+            result = enumerable.Aggregate(result, (current, name) => current + string.Format(" Name='{0}' or", name));
+            result = enumerable.Aggregate(result, (current, name) => current + string.Format(" MiddleName='{0}' or", name));
+            result = enumerable.Aggregate(result, (current, name) => current + string.Format(" SurName='{0}' or", name));
+           result= result.RemoveEndString("or");
+            result += ")";
+            return result;
+        }
+
+        private string GetBool()
+        {
+            string result = "";
+            if (IsWork)
+                result += "and iswork='true'";
+            else
+                result += "";
+            return result;
+        }
+
+        public ICommand Select
+        {
+            get
+            {
+                if (_select == null)
+                    _select = new RelayCommand(SelectUsers);
+                return _select;
+            }
+        }
+
+        private void SelectUsers(object obj)
+        {
+            IsDialogClose = true;
+        }
+
+        public ICommand Exit
+        {
+            get
+            {
+                if (_exit == null)
+                    _exit = new RelayCommand(ExitWindow);
+                return _exit;
+            }
+        }
+
+        private void ExitWindow(object obj)
+        {
+            IsDialogClose = false;
+        }
+
+        #endregion
     }
 }

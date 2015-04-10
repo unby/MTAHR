@@ -5,14 +5,14 @@ namespace BaseType.Migrations
     using System.Data.Entity.Migrations;
     using System.Linq;
 
-    internal sealed class Configuration : DbMigrationsConfiguration<BaseType.MthrData>
+    internal sealed class Configuration : DbMigrationsConfiguration<BaseType.ApplicationDbContext>
     {
         public Configuration()
         {
             AutomaticMigrationsEnabled = true;
         }
 
-        protected override void Seed(BaseType.MthrData context)
+        protected override void Seed(BaseType.ApplicationDbContext context)
         {
             //  This method will be called after migrating to the latest version.
 

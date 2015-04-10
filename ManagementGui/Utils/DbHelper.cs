@@ -9,15 +9,17 @@ namespace ManagementGui.Utils
 {
     internal static class DbHelper
     {
-        private static MthrData dataContext;
+        private static ApplicationDbContext dataContext;
 
-        public static MthrData Invoke {
+        public static ApplicationDbContext GetDbProvider {
             get { return dataContext; }
         }
 
+        private static string _connectionString;
         public static void Init(string connStr)
         {
-            dataContext = new MthrData(connStr);
+            _connectionString = connStr;
+            dataContext=new ApplicationDbContext(_connectionString);
         }
     }
 }

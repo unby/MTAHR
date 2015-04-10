@@ -1,0 +1,80 @@
+time;message;logger;level;description
+2015-04-10 14:57:04.8176;EmailSenderMTHR иницализирован;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-04-10 14:57:34.8801;EmailSenderMTHR запущен первый вызов таймера Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-04-10 14:58:07.6998;EmailSenderMTHR вызов таймера Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-04-10 14:58:12.1344;"System.Net.Mail.SmtpException: Сбой при отправке сообщения электронной почты. ---> System.Net.WebException: Невозможно разрешить удаленное имя: 'smtp.live.com'
+   в System.Net.ServicePoint.GetConnection(PooledStream PooledStream, Object owner, Boolean async, IPAddress& address, Socket& abortSocket, Socket& abortSocket6)
+   в System.Net.PooledStream.Activate(Object owningObject, Boolean async, GeneralAsyncDelegate asyncCallback)
+   в System.Net.PooledStream.Activate(Object owningObject, GeneralAsyncDelegate asyncCallback)
+   в System.Net.ConnectionPool.GetConnection(Object owningObject, GeneralAsyncDelegate asyncCallback, Int32 creationTimeout)
+   в System.Net.Mail.SmtpConnection.GetConnection(ServicePoint servicePoint)
+   в System.Net.Mail.SmtpTransport.GetConnection(ServicePoint servicePoint)
+   в System.Net.Mail.SmtpClient.GetConnection()
+   в System.Net.Mail.SmtpClient.Send(MailMessage message)
+   --- Конец трассировки внутреннего стека исключений ---
+   в System.Net.Mail.SmtpClient.Send(MailMessage message)
+   в WebMTHR.EmailSender.SendMailFirst.<SendEmail>d__3.MoveNext() в c:\Users\Руслан\Desktop\MTAHR\WebMTHR\EmailSender\SendMailFirst.cs:строка 71";WebMTHR.EmailSender.SendMailFirst;Error;
+2015-04-10 14:58:12.7907;"System.Net.Mail.SmtpException: Сбой при отправке сообщения электронной почты. ---> System.Net.WebException: Невозможно разрешить удаленное имя: 'smtp.live.com'
+   в System.Net.ServicePoint.GetConnection(PooledStream PooledStream, Object owner, Boolean async, IPAddress& address, Socket& abortSocket, Socket& abortSocket6)
+   в System.Net.PooledStream.Activate(Object owningObject, Boolean async, GeneralAsyncDelegate asyncCallback)
+   в System.Net.PooledStream.Activate(Object owningObject, GeneralAsyncDelegate asyncCallback)
+   в System.Net.ConnectionPool.GetConnection(Object owningObject, GeneralAsyncDelegate asyncCallback, Int32 creationTimeout)
+   в System.Net.Mail.SmtpConnection.GetConnection(ServicePoint servicePoint)
+   в System.Net.Mail.SmtpTransport.GetConnection(ServicePoint servicePoint)
+   в System.Net.Mail.SmtpClient.GetConnection()
+   в System.Net.Mail.SmtpClient.Send(MailMessage message)
+   --- Конец трассировки внутреннего стека исключений ---
+   в System.Net.Mail.SmtpClient.Send(MailMessage message)
+   в WebMTHR.EmailSender.SendMailFirst.<SendEmail>d__3.MoveNext() в c:\Users\Руслан\Desktop\MTAHR\WebMTHR\EmailSender\SendMailFirst.cs:строка 71";WebMTHR.EmailSender.SendMailFirst;Error;
+2015-04-10 14:58:13.2126;"System.Net.Mail.SmtpException: Сбой при отправке сообщения электронной почты. ---> System.Net.WebException: Невозможно разрешить удаленное имя: 'smtp.live.com'
+   в System.Net.ServicePoint.GetConnection(PooledStream PooledStream, Object owner, Boolean async, IPAddress& address, Socket& abortSocket, Socket& abortSocket6)
+   в System.Net.PooledStream.Activate(Object owningObject, Boolean async, GeneralAsyncDelegate asyncCallback)
+   в System.Net.PooledStream.Activate(Object owningObject, GeneralAsyncDelegate asyncCallback)
+   в System.Net.ConnectionPool.GetConnection(Object owningObject, GeneralAsyncDelegate asyncCallback, Int32 creationTimeout)
+   в System.Net.Mail.SmtpConnection.GetConnection(ServicePoint servicePoint)
+   в System.Net.Mail.SmtpTransport.GetConnection(ServicePoint servicePoint)
+   в System.Net.Mail.SmtpClient.GetConnection()
+   в System.Net.Mail.SmtpClient.Send(MailMessage message)
+   --- Конец трассировки внутреннего стека исключений ---
+   в System.Net.Mail.SmtpClient.Send(MailMessage message)
+   в WebMTHR.EmailSender.SendMailFirst.<SendEmail>d__3.MoveNext() в c:\Users\Руслан\Desktop\MTAHR\WebMTHR\EmailSender\SendMailFirst.cs:строка 71";WebMTHR.EmailSender.SendMailFirst;Error;
+2015-04-10 14:58:24.8860;Пользователь ekbsl@gmail.com не авторизован;WebMTHR.Controllers.AccountController;Warn;"System.IO.IOException: DNS transaction timeout, no response from DNS server.
+   в LumiSoft.Net.DNS.Client.Dns_Client.GetEmailHosts(String domain)
+   в WebMTHR.Controllers.AccountController.<>c__DisplayClass3.<MailAuth>b__2() в c:\Users\Руслан\Desktop\MTAHR\WebMTHR\Controllers\AccountController.cs:строка 87"
+2015-04-10 14:58:37.6701;EmailSenderMTHR вызов таймера Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-04-10 14:59:07.6783;EmailSenderMTHR вызов таймера Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-04-10 14:59:37.6848;EmailSenderMTHR вызов таймера Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-04-10 15:00:07.6940;EmailSenderMTHR вызов таймера Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-04-10 15:00:37.7047;EmailSenderMTHR вызов таймера Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-04-10 15:01:07.7170;EmailSenderMTHR вызов таймера Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-04-10 15:01:37.7249;EmailSenderMTHR вызов таймера Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-04-10 15:02:07.7365;EmailSenderMTHR вызов таймера Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-04-10 15:02:37.7410;EmailSenderMTHR вызов таймера Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-04-10 15:03:07.7526;EmailSenderMTHR вызов таймера Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-04-10 15:03:37.7614;EmailSenderMTHR вызов таймера Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-04-10 15:04:07.7636;EmailSenderMTHR вызов таймера Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-04-10 15:04:37.7720;EmailSenderMTHR вызов таймера Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-04-10 15:05:07.7798;EmailSenderMTHR вызов таймера Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-04-10 15:05:37.7930;EmailSenderMTHR вызов таймера Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-04-10 15:21:36.6919;EmailSenderMTHR иницализирован;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-04-10 15:22:06.7653;EmailSenderMTHR запущен первый вызов таймера Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-04-10 15:22:36.7628;EmailSenderMTHR вызов таймера Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-04-10 15:23:06.7724;EmailSenderMTHR вызов таймера Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-04-10 15:23:36.7724;EmailSenderMTHR вызов таймера Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-04-10 15:24:06.7724;EmailSenderMTHR вызов таймера Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-04-10 15:24:36.7729;EmailSenderMTHR вызов таймера Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-04-10 15:25:06.7749;EmailSenderMTHR вызов таймера Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-04-10 15:25:36.7884;EmailSenderMTHR вызов таймера Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-04-10 15:26:06.8034;EmailSenderMTHR вызов таймера Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-04-10 15:26:36.8044;EmailSenderMTHR вызов таймера Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-04-10 15:27:06.8052;EmailSenderMTHR вызов таймера Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-04-10 15:27:36.8059;EmailSenderMTHR вызов таймера Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-04-10 15:28:06.8184;EmailSenderMTHR вызов таймера Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-04-10 15:28:36.8184;EmailSenderMTHR вызов таймера Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-04-10 15:29:06.8185;EmailSenderMTHR вызов таймера Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-04-10 15:29:36.8193;EmailSenderMTHR вызов таймера Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-04-10 15:30:06.8194;EmailSenderMTHR вызов таймера Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-04-10 15:30:36.8321;EmailSenderMTHR вызов таймера Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-04-10 15:31:06.8434;EmailSenderMTHR вызов таймера Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-04-10 15:31:36.8436;EmailSenderMTHR вызов таймера Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-04-10 15:32:06.8557;EmailSenderMTHR вызов таймера Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;

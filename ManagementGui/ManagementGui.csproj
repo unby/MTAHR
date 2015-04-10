@@ -16,6 +16,7 @@
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -28,7 +29,6 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
@@ -57,22 +57,24 @@
   <PropertyGroup>
     <GenerateManifests>false</GenerateManifests>
   </PropertyGroup>
-  <PropertyGroup>
-    <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
-  </PropertyGroup>
+  <PropertyGroup />
   <PropertyGroup>
     <StartupObject>
     </StartupObject>
   </PropertyGroup>
+  <PropertyGroup>
+    <NoWin32Manifest>true</NoWin32Manifest>
+  </PropertyGroup>
   <ItemGroup>
-    <Reference Include="EntityFramework">
-      <HintPath>..\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.dll</HintPath>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.2\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework.Extended">
       <HintPath>..\packages\EntityFramework.Extended.6.1.0.121\lib\net45\EntityFramework.Extended.dll</HintPath>
     </Reference>
-    <Reference Include="EntityFramework.SqlServer">
-      <HintPath>..\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\EntityFramework.6.1.2\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="GalaSoft.MvvmLight">
       <HintPath>..\packages\MvvmLightLibs.5.0.2.0\lib\net45\GalaSoft.MvvmLight.dll</HintPath>
@@ -86,18 +88,33 @@
     <Reference Include="MahApps.Metro">
       <HintPath>..\packages\MahApps.Metro.1.0.0.0\lib\net45\MahApps.Metro.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Core">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.1.0\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.EntityFramework">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.EntityFramework.2.1.0\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.EntityFramework.resources">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.EntityFramework.ru.2.1.0\lib\net45\ru\Microsoft.AspNet.Identity.EntityFramework.resources.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Expression.Interactions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Windows.Interactivity.WPF.2.0.20525\lib\net40\Microsoft.Expression.Interactions.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Practices.ServiceLocation">
       <HintPath>..\packages\CommonServiceLocator.1.3\lib\portable-net4+sl5+netcore45+wpa81+wp8\Microsoft.Practices.ServiceLocation.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.ReportViewer.WinForms, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.TeamFoundation.Controls, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="NLog">
+      <HintPath>..\packages\NLog.3.2.0.0\lib\net45\NLog.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationFramework.Aero" />
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\MahApps.Metro.1.0.0.0\lib\net45\System.Windows.Interactivity.dll</HintPath>
-    </Reference>
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -109,35 +126,15 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="WindowsFormsIntegration" />
     <Reference Include="Xceed.Wpf.AvalonDock">
       <HintPath>..\packages\Extended.Wpf.Toolkit.2.3\lib\net40\Xceed.Wpf.AvalonDock.dll</HintPath>
-    </Reference>
-    <Reference Include="Xceed.Wpf.AvalonDock.Themes.Aero">
-      <HintPath>..\packages\Extended.Wpf.Toolkit.2.3\lib\net40\Xceed.Wpf.AvalonDock.Themes.Aero.dll</HintPath>
-    </Reference>
-    <Reference Include="Xceed.Wpf.AvalonDock.Themes.Metro">
-      <HintPath>..\packages\Extended.Wpf.Toolkit.2.3\lib\net40\Xceed.Wpf.AvalonDock.Themes.Metro.dll</HintPath>
-    </Reference>
-    <Reference Include="Xceed.Wpf.AvalonDock.Themes.VS2010">
-      <HintPath>..\packages\Extended.Wpf.Toolkit.2.3\lib\net40\Xceed.Wpf.AvalonDock.Themes.VS2010.dll</HintPath>
     </Reference>
     <Reference Include="Xceed.Wpf.DataGrid">
       <HintPath>..\packages\Extended.Wpf.Toolkit.2.3\lib\net40\Xceed.Wpf.DataGrid.dll</HintPath>
     </Reference>
     <Reference Include="Xceed.Wpf.ListBox">
       <HintPath>..\packages\Extended.Wpf.Toolkit.2.3\lib\net40\Xceed.Wpf.ListBox.dll</HintPath>
-    </Reference>
-    <Reference Include="Xceed.Wpf.ListBox.Themes.LiveExplorer">
-      <HintPath>..\packages\Extended.Wpf.Toolkit.2.3\lib\net40\Xceed.Wpf.ListBox.Themes.LiveExplorer.dll</HintPath>
-    </Reference>
-    <Reference Include="Xceed.Wpf.ListBox.Themes.Metro">
-      <HintPath>..\packages\Extended.Wpf.Toolkit.2.3\lib\net40\Xceed.Wpf.ListBox.Themes.Metro.dll</HintPath>
-    </Reference>
-    <Reference Include="Xceed.Wpf.ListBox.Themes.Office2007">
-      <HintPath>..\packages\Extended.Wpf.Toolkit.2.3\lib\net40\Xceed.Wpf.ListBox.Themes.Office2007.dll</HintPath>
-    </Reference>
-    <Reference Include="Xceed.Wpf.ListBox.Themes.WMP11">
-      <HintPath>..\packages\Extended.Wpf.Toolkit.2.3\lib\net40\Xceed.Wpf.ListBox.Themes.WMP11.dll</HintPath>
     </Reference>
     <Reference Include="Xceed.Wpf.Toolkit">
       <HintPath>..\packages\Extended.Wpf.Toolkit.2.3\lib\net40\Xceed.Wpf.Toolkit.dll</HintPath>
@@ -148,42 +145,153 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Admin\Projects.xaml.cs">
-      <DependentUpon>Projects.xaml</DependentUpon>
+    <Compile Include="Admin\PointEnterWindow.xaml.cs">
+      <DependentUpon>PointEnterWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="AuthenticationWindows.xaml.cs">
-      <DependentUpon>AuthenticationWindows.xaml</DependentUpon>
+    <Compile Include="Admin\ProjectsWindow.xaml.cs">
+      <DependentUpon>ProjectsWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Config\DesktopConfigHelper.cs" />
+    <Compile Include="Admin\SystemAdminWindow.xaml.cs">
+      <DependentUpon>SystemAdminWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Config\DesktopSettings.cs" />
     <Compile Include="Config\WorkEnviroment.cs" />
     <Compile Include="Design\DesignDataService.cs" />
     <Compile Include="E.cs" />
+    <Compile Include="MainWindowView\Model\TVUser.cs" />
+    <Compile Include="MainWindowView\ViewModel\TreeViewItemViewModel.cs" />
+    <Compile Include="MainWindowView\ViewModel\UsersViewModel.cs" />
     <Compile Include="Model\DataItem.cs" />
     <Compile Include="Model\DataService.cs" />
     <Compile Include="Model\IDataService.cs" />
-    <Compile Include="SearchUserWindow.xaml.cs">
-      <DependentUpon>SearchUserWindow.xaml</DependentUpon>
-    </Compile>
+    <Compile Include="Model\ModalMessage.cs" />
     <Compile Include="Styles\CustomizedWindow\VS2012WindowStyle.cs" />
+    <Compile Include="Utils\AttachedProperties%28DialogResult%29.cs" />
+    <Compile Include="Utils\AttachedProperty\CloseDialog.cs" />
     <Compile Include="Utils\DbHelper.cs" />
-    <Compile Include="ViewModel\AdminProjectsWindow.cs" />
+    <Compile Include="Utils\DialogResultEvent.cs" />
+    <Compile Include="Utils\Extention.cs" />
+    <Compile Include="Utils\ICrud.cs" />
+    <Compile Include="Utils\IDialogResult.cs" />
+    <Compile Include="Admin\AdminProjectsWindow.cs" />
+    <Compile Include="ViewModel\CurrentInfo.cs" />
+    <Compile Include="ViewModel\CurrentTasksViewModel.cs" />
+    <Compile Include="ViewModel\IModelAction.cs" />
+    <Compile Include="ViewModel\NotivicationViewModel.cs" />
+    <Compile Include="ViewModel\ProjectManageViewModel.cs" />
+    <Compile Include="ViewModel\Report\ObjectivesReportViewModel.cs" />
+    <Compile Include="ViewModel\Report\UserTaskReportModelTemplate.cs" />
+    <Compile Include="ViewModel\Report\UserTaskReportViewModel.cs" />
+    <Compile Include="ViewModel\Report\WeightOfTasksReportModelTemplate.cs" />
+    <Compile Include="ViewModel\Report\WeightOfTasksReportViewModel.cs" />
+    <Compile Include="ViewModel\Report\ObjectivesReportModelTemplate.cs" />
+    <Compile Include="ViewModel\Report\ConsolidateReportModelTemplate.cs" />
+    <Compile Include="ViewModel\Report\ConsolidateReportViewModel.cs" />
+    <Compile Include="ViewModel\Report\ReportTaskModelTemplate.cs" />
+    <Compile Include="ViewModel\Report\ReportTaskViewModel.cs" />
     <Compile Include="ViewModel\SearchUserViewModel.cs" />
-    <Compile Include="ViewModel\SystemUsersViewModel.cs" />
-    <Compile Include="WindowSystemListUsers.xaml.cs">
-      <DependentUpon>WindowSystemListUsers.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="ViewModel\AuthenticationWindowsViewModel.cs" />
+    <Compile Include="ViewModel\TaskDocumentViewModel.cs" />
+    <Compile Include="ViewModel\Validation\IValidationExceptionHandler.cs" />
+    <Compile Include="ViewModel\Validation\ValidationExceptionBehavior.cs" />
+    <Compile Include="ViewModel\Validation\ValidationViewModelBase.cs" />
+    <Compile Include="Admin\PointEnterViewModel.cs" />
+    <Compile Include="Admin\SearchUserViewModel.cs" />
+    <Compile Include="ViewModel\AuthenticationWindowViewModel.cs" />
+    <Compile Include="ViewModel\UserDocumentViewModel.cs" />
     <Compile Include="ViewModel\Utils.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
-    <Page Include="Admin\Projects.xaml">
-      <SubType>Designer</SubType>
+    <Compile Include="View\AuthenticationWindows.xaml.cs">
+      <DependentUpon>AuthenticationWindows.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Control\RichTextEditor\RichTextboxAssistant.cs" />
+    <Compile Include="View\Control\RichTextEditor\RichTextEditor.xaml.cs">
+      <DependentUpon>RichTextEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Control\RatingControl.xaml.cs">
+      <DependentUpon>RatingControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Control\XamlToHtmlParser\HtmlCssParser.cs" />
+    <Compile Include="View\Control\XamlToHtmlParser\HtmlFromXamlConverter.cs" />
+    <Compile Include="View\Control\XamlToHtmlParser\HtmlLexicalAnalyzer.cs" />
+    <Compile Include="View\Control\XamlToHtmlParser\HtmlParser.cs" />
+    <Compile Include="View\Control\XamlToHtmlParser\HtmlSchema.cs" />
+    <Compile Include="View\Control\XamlToHtmlParser\HtmlTokenType.cs" />
+    <Compile Include="View\Control\XamlToHtmlParser\HtmlToXamlConverter.cs" />
+    <Compile Include="View\Current\CurrentTasks.xaml.cs">
+      <DependentUpon>CurrentTasks.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Document\NotivicationTreeViewModel.cs" />
+    <Compile Include="View\Document\ProjectManage.xaml.cs">
+      <DependentUpon>ProjectManage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Document\TaskDocument.xaml.cs">
+      <DependentUpon>TaskDocument.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Document\UserDocument.xaml.cs">
+      <DependentUpon>UserDocument.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Document\UsersTask.cs" />
+    <Compile Include="View\Document\UserTreeViewModel.cs" />
+    <Compile Include="View\ItemKeyValue.cs" />
+    <Compile Include="View\NotivicationWindow.xaml.cs">
+      <DependentUpon>NotivicationWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\SearchUserWindow.xaml.cs">
+      <DependentUpon>SearchUserWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Report\ConsolidateReport.xaml.cs">
+      <DependentUpon>ConsolidateReport.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Report\ObjectivesReport.xaml.cs">
+      <DependentUpon>ObjectivesReport.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Report\RussianReportViewerMessages.cs" />
+    <Compile Include="View\Report\ReportTasks.xaml.cs">
+      <DependentUpon>ReportTasks.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Report\UserTaskReport.xaml.cs">
+      <DependentUpon>UserTaskReport.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Report\WeightOfTasksReport.xaml.cs">
+      <DependentUpon>WeightOfTasksReport.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\SearchUserWindow.xaml.cs">
+      <DependentUpon>SearchUserWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\TreeViewUserAndTasks\Common\Extensions.cs" />
+    <Compile Include="View\TreeViewUserAndTasks\Common\Helper\HierarchyDataTemplateSelector.cs" />
+    <Compile Include="View\TreeViewUserAndTasks\Common\HierachyItemViewModel.cs" />
+    <Compile Include="View\TreeViewUserAndTasks\Common\HierarchyViewModel.cs" />
+    <Compile Include="View\TreeViewUserAndTasks\Common\Mediator.cs" />
+    <Compile Include="View\TreeViewUserAndTasks\Common\MediatorMessages.cs" />
+    <Compile Include="View\TreeViewUserAndTasks\Common\MediatorMessageSinkAttribute.cs" />
+    <Compile Include="View\TreeViewUserAndTasks\Common\Messenger.cs" />
+    <Compile Include="View\TreeViewUserAndTasks\Common\ObservableObject.cs" />
+    <Compile Include="View\TreeViewUserAndTasks\Common\PropertyObserver.cs" />
+    <Compile Include="View\TreeViewUserAndTasks\Common\RelayCommand.cs" />
+    <Compile Include="View\TreeViewUserAndTasks\Common\ViewModelBase.cs" />
+    <Compile Include="View\TreeViewUserAndTasks\Model\TaskTrV.cs" />
+    <Compile Include="View\TreeViewUserAndTasks\Model\TreeEntity.cs" />
+    <Compile Include="View\TreeViewUserAndTasks\Model\UserTrV.cs" />
+    <Compile Include="View\TreeViewUserAndTasks\TreeViewUserAndTasks.xaml.cs">
+      <DependentUpon>TreeViewUserAndTasks.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ViewConverter\HtmlToFlowDocumentConverter.cs" />
+    <Compile Include="View\ViewConverter\EnumDescriptionConverter.cs" />
+    <Compile Include="View\ViewConverter\TypePropertyView.cs" />
+    <Compile Include="View\ViewConverter\UserToTextConverter.cs" />
+    <Page Include="Admin\PointEnterWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
-    <Page Include="AuthenticationWindows.xaml">
+    <Page Include="Admin\ProjectsWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Admin\SystemAdminWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -201,11 +309,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Resources\Styles.xaml">
-      <SubType>Designer</SubType>
+    <Page Include="Resources\ImageResources.xaml">
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
-    <Page Include="SearchUserWindow.xaml">
+    <Page Include="Resources\Styles.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -217,13 +325,105 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="WindowSystemListUsers.xaml">
-      <SubType>Designer</SubType>
+    <Page Include="Styles\OutlookStyle.xaml">
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="themes\generic.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Styles\CustomizedWindow\BureauBlack.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Styles\CustomizedWindow\BureauBlue.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Styles\CustomizedWindow\ExpressionDark.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Styles\CustomizedWindow\ExpressionLight.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Styles\CustomizedWindow\ShinyBlue.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Styles\CustomizedWindow\ShinyRed.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Styles\CustomizedWindow\WhistlerBlue.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\AuthenticationWindows.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\Control\RichTextEditor\RichTextEditor.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\Control\RatingControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\Current\CurrentTasks.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Document\ProjectManage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\Document\TaskDocument.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Document\UserDocument.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\NotivicationWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Admin\SearchUserWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\Report\ConsolidateReport.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Report\ObjectivesReport.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Report\ReportTasks.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Report\UserTaskReport.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Report\WeightOfTasksReport.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\SearchUserWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\TreeViewUserAndTasks\TreeViewUserAndTasks.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
@@ -244,11 +444,25 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="View\Document\UserDocument.resx" />
+    <EmbeddedResource Include="View\Report\ConsolidateReportTemplate.rdlc" />
+    <EmbeddedResource Include="View\Report\ObjectivesReportTemplate.rdlc" />
+    <EmbeddedResource Include="View\Report\ReportTasksTemplate.rdlc" />
+    <EmbeddedResource Include="View\Report\UserTaskReport.rdlc" />
+    <EmbeddedResource Include="View\Report\WeightOfTasksReportTemplate.rdlc" />
     <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="NLog.xsd">
       <SubType>Designer</SubType>
     </None>
     <None Include="packages.config" />
     <None Include="Properties\app.manifest" />
+    <None Include="Properties\DataSources\ManagementGui.ViewModel.Report.ConsolidateReportModelTemplate.datasource" />
+    <None Include="Properties\DataSources\ManagementGui.ViewModel.Report.ObjectivesReportModelTemplate.datasource" />
+    <None Include="Properties\DataSources\ManagementGui.ViewModel.Report.ReportTask.datasource" />
+    <None Include="Properties\DataSources\ManagementGui.ViewModel.Report.UserTaskReportModelTemplate.datasource" />
+    <None Include="Properties\DataSources\ManagementGui.ViewModel.Report.WeightOfTasksReportModelTemplate.datasource" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -263,28 +477,6 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="mainicon.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <NativeReference Include="Xceed.Wpf.ListBox, Version=2.5.14562.0, PublicKeyToken=BA83FF368B7563C6, ProcessorArchitecture=msil">
-      <Name>Xceed.Wpf.ListBox.manifest</Name>
-      <HintPath>..\packages\Extended.Wpf.Toolkit.2.3\lib\net40\Xceed.Wpf.ListBox.manifest</HintPath>
-    </NativeReference>
-    <NativeReference Include="Xceed.Wpf.ListBox.Themes.LiveExplorer, Version=2.5.14562.0, PublicKeyToken=BA83FF368B7563C6, ProcessorArchitecture=msil">
-      <Name>Xceed.Wpf.ListBox.Themes.LiveExplorer.manifest</Name>
-      <HintPath>..\packages\Extended.Wpf.Toolkit.2.3\lib\net40\Xceed.Wpf.ListBox.Themes.LiveExplorer.manifest</HintPath>
-    </NativeReference>
-    <NativeReference Include="Xceed.Wpf.ListBox.Themes.Metro, Version=2.5.14562.0, PublicKeyToken=BA83FF368B7563C6, ProcessorArchitecture=msil">
-      <Name>Xceed.Wpf.ListBox.Themes.Metro.manifest</Name>
-      <HintPath>..\packages\Extended.Wpf.Toolkit.2.3\lib\net40\Xceed.Wpf.ListBox.Themes.Metro.manifest</HintPath>
-    </NativeReference>
-    <NativeReference Include="Xceed.Wpf.ListBox.Themes.Office2007, Version=2.5.14562.0, PublicKeyToken=BA83FF368B7563C6, ProcessorArchitecture=msil">
-      <Name>Xceed.Wpf.ListBox.Themes.Office2007.manifest</Name>
-      <HintPath>..\packages\Extended.Wpf.Toolkit.2.3\lib\net40\Xceed.Wpf.ListBox.Themes.Office2007.manifest</HintPath>
-    </NativeReference>
-    <NativeReference Include="Xceed.Wpf.ListBox.Themes.WMP11, Version=2.5.14562.0, PublicKeyToken=BA83FF368B7563C6, ProcessorArchitecture=msil">
-      <Name>Xceed.Wpf.ListBox.Themes.WMP11.manifest</Name>
-      <HintPath>..\packages\Extended.Wpf.Toolkit.2.3\lib\net40\Xceed.Wpf.ListBox.Themes.WMP11.manifest</HintPath>
-    </NativeReference>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5">
@@ -303,7 +495,57 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\BookLibrary.ico" />
+    <Resource Include="Resources\Images\Copy.png" />
+    <Resource Include="Resources\Images\Cut.png" />
+    <Resource Include="Resources\Images\Delete.png" />
+    <Resource Include="Resources\Images\Email.png" />
+    <Resource Include="Resources\Images\Paste.png" />
+    <Resource Include="Resources\Images\Redo.png" />
+    <Resource Include="Resources\Images\Save.png" />
+    <Resource Include="Resources\Images\Undo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="themes\WPF Themes\" />
+    <Folder Include="ViewModel\Extendet\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="MainWindowView\Images\City.png" />
+    <Resource Include="MainWindowView\Images\Region.png" />
+    <Resource Include="MainWindowView\Images\State.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="View\Control\RichTextEditor\Images\charactergrowfont.png" />
+    <Resource Include="View\Control\RichTextEditor\Images\charactershrinkfont.png" />
+    <Resource Include="View\Control\RichTextEditor\Images\editcopy.png" />
+    <Resource Include="View\Control\RichTextEditor\Images\editcut.png" />
+    <Resource Include="View\Control\RichTextEditor\Images\editpaste.png" />
+    <Resource Include="View\Control\RichTextEditor\Images\editredo.png" />
+    <Resource Include="View\Control\RichTextEditor\Images\editundo.png" />
+    <Resource Include="View\Control\RichTextEditor\Images\fileopen.png" />
+    <Resource Include="View\Control\RichTextEditor\Images\filesave.png" />
+    <Resource Include="View\Control\RichTextEditor\Images\listbullets.png" />
+    <Resource Include="View\Control\RichTextEditor\Images\listnumbering.png" />
+    <Resource Include="View\Control\RichTextEditor\Images\paragraphcenterjustify.png" />
+    <Resource Include="View\Control\RichTextEditor\Images\paragraphdecreaseindentation.png" />
+    <Resource Include="View\Control\RichTextEditor\Images\paragraphfulljustify.png" />
+    <Resource Include="View\Control\RichTextEditor\Images\paragraphincreaseindentation.png" />
+    <Resource Include="View\Control\RichTextEditor\Images\paragraphleftjustify.png" />
+    <Resource Include="View\Control\RichTextEditor\Images\paragraphrightjustify.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="themes\background.jpg" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

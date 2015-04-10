@@ -1,0 +1,20 @@
+﻿@using BaseType.Utils
+@model WebMTHR.Models.ListTask
+@{
+    ViewBag.Title = "Задачи";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<table class="table">
+    <tr>
+        <th style="max-width: 100px">Последнее изменение</th><th>Задача</th><th style="max-width: 150px">Статус</th>
+    </tr>
+
+@foreach (var item in Model.ShortTasks) {
+    <tr>
+        <td>@item.LastUpdate.ToString("dd.MM.yy hh:mm")</td>
+        <td>@Html.ActionLink(item.Name, "OpenTask", new { idTask =item.IdTask})</td>
+        <td>@item.Status.GetDescription()</td>
+    </tr>
+}
+
+</table>

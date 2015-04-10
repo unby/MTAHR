@@ -1,0 +1,2 @@
+time;message;logger;level;description
+2015-03-29 19:45:03.2566;EmailSenderMTHR иницализирован;WebMTHR.EmailSender.EmailSenderMTHR;Info;
