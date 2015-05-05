@@ -36,7 +36,7 @@ namespace ManagementGui.ViewModel
 
     public class UserDocumentViewModel : ValidationViewModelBase
     {
-        private ApplicationDbContext context = DbHelper.GetDbProvider;
+        private readonly ApplicationDbContext _context = DbHelper.GetDbProvider;
         private ApplicationUser _user;
         private List<UserViewTasks> _userTask;
         public List<UserViewTasks> UserTasks {
@@ -111,13 +111,9 @@ namespace ManagementGui.ViewModel
 
         public ICommand MouseDoubleClickTasksGridCommand
         {
-            get
-            {
-                if (_mouseDoubleClickCommand == null)
-                {
-                    _mouseDoubleClickCommand = new RelayCommand<UserViewTasks>(OpenTask);
-                }
-                return _mouseDoubleClickCommand;
+            get {
+                return _mouseDoubleClickCommand ??
+                       (_mouseDoubleClickCommand = new RelayCommand<UserViewTasks>(OpenTask));
             }
         }
 
@@ -129,12 +125,7 @@ namespace ManagementGui.ViewModel
 
         public ICommand CreateTask
         {
-            get
-            {
-                if (_createTask == null)
-                    _createTask = new RelayCommand(NewTask);
-                return _createTask;
-            }
+            get { return _createTask ?? (_createTask = new RelayCommand(NewTask)); }
         }
 
         private void NewTask(object obj)
@@ -146,66 +137,51 @@ namespace ManagementGui.ViewModel
         private RelayCommand _createTask;
 
         public ICommand Save {
-            get
-            {
-                if (_save == null)
-                {
-                    _save=new RelayCommand(SaveUser);
-                }
-                return _save;
-            }
+            get { return _save ?? (_save = new RelayCommand(SaveUser)); }
         }
 
         private void SaveUser(object obj)
         {
             try
-            {        
-                context.Users.AddOrUpdate(User);
-                context.SaveChanges();
+            {
+                if (string.IsNullOrEmpty(User.PasswordHash))
+                    User.PasswordHash = Guid.NewGuid().ToString();
+                _context.Users.AddOrUpdate(User);
+                _context.SaveChanges();
                 MainWindow.View.Users.Add(User);
             }
             catch (Exception ex)
             {
                 Logger.MessageBoxException(ex);
             }
-            if (User.Members == null)
+            if (User.Members != null) return;
+            try
             {
-                try
+                var member = new Member {Role = Role.User, User = User};
+                // member.IdUser = User.Id;
+                if (WorkEnviroment.CurrentProject != null)
+                    member.Project = WorkEnviroment.CurrentProject;
+                else
                 {
-                    var member = new Member();
-                    member.Role = Role.User;
-                    member.User = User;
-                   // member.IdUser = User.Id;
                     if (WorkEnviroment.CurrentProject != null)
-                        member.Project = WorkEnviroment.CurrentProject;
-                    else
                     {
-                        WorkEnviroment.CurrentProject.Members = new ObservableCollection<Member>();
-                        WorkEnviroment.CurrentProject.Members.Add(member);
-                        context.SaveChanges();
+                        WorkEnviroment.CurrentProject.Members = new ObservableCollection<Member> {member};
                     }
-                    context.UserRoles.AddOrUpdate(member);
-                    context.SaveChanges();
+                    _context.SaveChanges();
                 }
-                catch (Exception ex)
-                {
-                    Logger.MessageBoxException(ex);
-                }
+                _context.UserRoles.AddOrUpdate(member);
+                _context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                Logger.MessageBoxException(ex);
             }
         }
 
     
         #region Accesors
         
-        public string Name {
-            get { return User.Name; }
-            set
-            {
-                User.Name = value;
-                this.RaisePropertyChanged("Name");
-            }
-        }
-        [Required(ErrorMessage = "Field 'Name' is required.")]
+        [Required(ErrorMessage = @"Обязательно заполните фамилию сотрудника.")]
         public string Surname
         {
             get { return User.Surname; }
@@ -215,7 +191,7 @@ namespace ManagementGui.ViewModel
                 this.RaisePropertyChanged("Surname");
             }
         }
-        [Required(ErrorMessage = "Field 'Name' is required.")]
+        [Required(ErrorMessage = @"Обязательно заполните отчество сотрудника.")]
         public string MiddleName
         {
             get { return User.MiddleName; }
@@ -225,6 +201,28 @@ namespace ManagementGui.ViewModel
                 RaisePropertyChanged("MiddleName");
             }
 
+        }
+        [Required(ErrorMessage = @"Обязательно заполните имя сотрудника.")]
+        public string Name
+        {
+            get { return User.Name; }
+            set
+            {
+                User.Name = value;
+                RaisePropertyChanged("Name");
+            }
+
+        }
+
+        [Required(ErrorMessage = @"Обязательно заполните почтовый адрес.")]
+        public string Email
+        {
+            get { return User.Email; }
+            set
+            {
+                User.Email = value;
+                RaisePropertyChanged("Email");
+            }
         }
 
         private DateTime _birthDate;
@@ -239,7 +237,6 @@ namespace ManagementGui.ViewModel
                 User.BirthDate = _birthDate;
                 RaisePropertyChanged("BirthDate");
             }
-
         }
 
         #endregion

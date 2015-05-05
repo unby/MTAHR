@@ -102,38 +102,32 @@ namespace ManagementGui.View.Document
             var userViewModel = UsersAndNotifications.SelectedItem as UserTreeViewModel;
             try
             {
-                if (userViewModel != null)
+                if (userViewModel == null) return;
+                var notivication=new Notivication()
                 {
-                    var notivication=new Notivication()
-                    {
-                        From = WorkEnviroment.ApplicationUserSession,
-                        IdNotivication = Guid.NewGuid(),
-                        To = userViewModel.applicationUser,
-                        IdUserTo = userViewModel.applicationUser.Id,
-                        IdUserFrom =  WorkEnviroment.ApplicationUserSession.Id,
-                        Task = View.Task,
-                        IdTask = View.Task.IdTask,
-                        DateCreate = DateTime.Now.AddDays(2),
-                        TimeSend = WorkEnviroment.GetSendDefaultTime
-                    };
-                    var window=new NotivicationWindow(notivication);
-                    if (window.ShowDialog() == true)
-                    {   
-                        if(View.Task.Notivications!=null)
-                            View.Task.Notivications.Add(window.ViewModel.Notivication);
-                        else
-                        {
-                            View.Task.Notivications=new List<Notivication> {window.ViewModel.Notivication};
-                        }
-                        userViewModel.AddUser(window.ViewModel.Notivication);
-                        View.SaveModel();
-                        View.Task.Author = WorkEnviroment.ApplicationUserSession.Id;
+                    From = WorkEnviroment.ApplicationUserSession,
+                    IdNotivication = Guid.NewGuid(),
+                    To = userViewModel.MemberUser.User,
+                    IdUserTo = userViewModel.MemberUser.IdUser,
+                    IdUserFrom =  WorkEnviroment.ApplicationUserSession.Id,
+                    Task = View.Task,
+                    IdTask = View.Task.IdTask,
+                    DateCreate = DateTime.Now.AddDays(2),
+                    TimeSend = WorkEnviroment.GetSendDefaultTime
+                };
+                var window=new NotivicationWindow(notivication);
+                if (window.ShowDialog() != true) return;
+                if(View.Task.Notivications!=null)
+                    View.Task.Notivications.Add(window.ViewModel.Notivication);
+                else
+                {
+                    View.Task.Notivications=new List<Notivication> {window.ViewModel.Notivication};
+                }
+                userViewModel.AddUser(window.ViewModel.Notivication);
+                View.SaveModel();
+                View.Task.Author = WorkEnviroment.ApplicationUserSession.Id;
                        
-                        DbHelper.GetDbProvider.SaveChanges();
-                        //DbHelper.GetDbProvider.Notivications.Add(notivication);
-                        //DbHelper.GetDbProvider.SaveChanges();
-                    }
-                }   
+                DbHelper.GetDbProvider.SaveChanges();
             }
             catch (Exception ex)
             {
@@ -146,17 +140,11 @@ namespace ManagementGui.View.Document
             var notivicationViewModel = UsersAndNotifications.SelectedItem as NotivicationTreeViewModel;
             try
             {
-                if (notivicationViewModel != null)
-                {
-                    notivicationViewModel.DeleteElementInParent(notivicationViewModel);
-                        if (View.Task.Notivications != null)
-                        {
-                            
-                            DbHelper.GetDbProvider.Notivications.Remove(notivicationViewModel.Notivication);
-                            await DbHelper.GetDbProvider.SaveChangesAsync();
-                        }      
-                    
-                }  
+                if (notivicationViewModel == null) return;
+                notivicationViewModel.DeleteElementInParent(notivicationViewModel);
+                if (View.Task.Notivications == null) return;
+                DbHelper.GetDbProvider.Notivications.Remove(notivicationViewModel.Notivication);
+                await DbHelper.GetDbProvider.SaveChangesAsync();
             }
             catch (Exception ex)
             {
@@ -169,50 +157,47 @@ namespace ManagementGui.View.Document
             try
             {
                 var userWindow = new SearchUserWindow();
-                if (userWindow.ShowDialog() == true)
+                if (userWindow.ShowDialog() != true) return;
+                var newList = new List<ApplicationUser>();
+                foreach (var user in userWindow.UserSearchGrid.SelectedItems)
                 {
-                    var newList = new List<ApplicationUser>();
-                    foreach (var user in userWindow.UserSearchGrid.SelectedItems)
+                    var temp = user as ApplicationUser;
+                    if (temp == null) continue;
+                    if (View.Users.Any(viewUser => temp.Id.Equals(viewUser.MemberUser.IdUser)))
                     {
-                        var temp = user as ApplicationUser;
-                        if (temp != null)
-                        {
-                            if (View.Users.Any(viewUser => temp.Id.Equals(viewUser.applicationUser.Id)))
-                            {
-                                temp = null;
-                            }
-                            if (temp != null)
-                                newList.Add(temp);
-                        }
+                        temp = null;
                     }
-                    if (newList.Count > 0)
-                        foreach (var user in newList)
-                        {
-                            View.Users.Add(new UserTreeViewModel(user, View.Task.IdTask));
-                            View.Task.WorkGroup.Add(new TaskMembers()
-                            {
-                                Task = View.Task,
-                                IdTask = View.Task.IdTask,
-                                IdUser = user.Id,
-                                LevelNotivication = LevelNotivication.Normal,
-                                TaskRole = TaskRoles.Participant,
-                                User = user
-                            });
-                            View.Task.Notivications.Add(new Notivication
-                            {
-                                NotivicationStatus = NotivicationStatus.Declared,
-                                DateCreate = DateTime.Now,
-                                Description = "На вас назначена новая задача",
-                                Task = View.Task,
-                                From = WorkEnviroment.ApplicationUserSession,
-                                To = user,
-                                IdNotivication = Guid.NewGuid(),
-                                IdTask = View.Task.IdTask,
-                                IdUserFrom = WorkEnviroment.ApplicationUserSession.Id,
-                                IdUserTo = user.Id,
-                                TimeSend = DateTime.Now
-                            });
-                        }
+                    if (temp != null)
+                        newList.Add(temp);
+                }
+                if (newList.Count <= 0) return;
+                foreach (var user in newList)
+                {
+                    var member = new TaskMembers()
+                    {
+                        Task = View.Task,
+                        IdTask = View.Task.IdTask,
+                        IdUser = user.Id,
+                        LevelNotivication = LevelNotivication.Normal,
+                        TaskRole = TaskRoles.Participant,
+                        User = user
+                    };
+                    View.Users.Add(new UserTreeViewModel(member, View.Task.IdTask));
+                    View.Task.WorkGroup.Add(member);
+                    View.Task.Notivications.Add(new Notivication
+                    {
+                        NotivicationStatus = NotivicationStatus.Declared,
+                        DateCreate = DateTime.Now,
+                        Description = "На вас назначена новая задача",
+                        Task = View.Task,
+                        From = WorkEnviroment.ApplicationUserSession,
+                        To = user,
+                        IdNotivication = Guid.NewGuid(),
+                        IdTask = View.Task.IdTask,
+                        IdUserFrom = WorkEnviroment.ApplicationUserSession.Id,
+                        IdUserTo = user.Id,
+                        TimeSend = DateTime.Now
+                    });
                 }
             }
             catch (Exception ex)
@@ -226,23 +211,19 @@ namespace ManagementGui.View.Document
             var notivicationTreeViewModel = UsersAndNotifications.SelectedItem as NotivicationTreeViewModel;
             try
             {
-                if (notivicationTreeViewModel != null)
+                if (notivicationTreeViewModel == null) return;
+                var window = new NotivicationWindow(notivicationTreeViewModel.Notivication);
+                if (window.ShowDialog() != true) return;
+                if (View.Task.Notivications != null)
+                    View.Task.Notivications.Add(window.ViewModel.Notivication);
+                else
                 {
-                    var window = new NotivicationWindow(notivicationTreeViewModel.Notivication);
-                    if (window.ShowDialog() == true)
-                    {
-                        if (View.Task.Notivications != null)
-                            View.Task.Notivications.Add(window.ViewModel.Notivication);
-                        else
-                        {
-                            View.Task.Notivications = new List<Notivication> {window.ViewModel.Notivication};
-                        }
-                        View.SaveModel();
-                        DbHelper.GetDbProvider.Notivications.AddOrUpdate(notivicationTreeViewModel.Notivication);
-                        View.SaveModel();
-                        DbHelper.GetDbProvider.SaveChanges();
-                    }
+                    View.Task.Notivications = new List<Notivication> {window.ViewModel.Notivication};
                 }
+                View.SaveModel();
+                DbHelper.GetDbProvider.Notivications.AddOrUpdate(notivicationTreeViewModel.Notivication);
+                View.SaveModel();
+                DbHelper.GetDbProvider.SaveChanges();
             }
             catch (Exception ex)
             {
@@ -256,17 +237,15 @@ namespace ManagementGui.View.Document
             {
 
             var userViewModel = UsersAndNotifications.SelectedItem as UserTreeViewModel;
-                if (userViewModel != null)
+                if (userViewModel == null) return;
+                foreach (NotivicationTreeViewModel item in userViewModel.Children)
                 {
-                    foreach (NotivicationTreeViewModel item in userViewModel.Children)
-                    {
-                        DbHelper.GetDbProvider.Notivications.Remove(item.Notivication);
-                    }
-                    View.Task.WorkGroup.Remove(
-                        View.Task.WorkGroup.FirstOrDefault(f => f.IdUser == userViewModel.applicationUser.Id));
-                    await DbHelper.GetDbProvider.SaveChangesAsync();
-                    View.Users.Remove(userViewModel);
+                    DbHelper.GetDbProvider.Notivications.Remove(item.Notivication);
                 }
+                View.Task.WorkGroup.Remove(
+                    View.Task.WorkGroup.FirstOrDefault(f => f.IdUser == userViewModel.MemberUser.IdUser));
+                await DbHelper.GetDbProvider.SaveChangesAsync();
+                View.Users.Remove(userViewModel);
             }
             catch (Exception ex)
             {
@@ -280,7 +259,7 @@ namespace ManagementGui.View.Document
             var comment=new TaskComment()
             {
                 TaskCommentId = Guid.NewGuid(),
-                AuthorApplicationUser = WorkEnviroment.ApplicationUserSession,
+                Author = WorkEnviroment.ApplicationUserSession,
                 Task = View.Task,
                 DateMessage = DateTime.Now,
                 Message = View.MessageSend
@@ -293,18 +272,16 @@ namespace ManagementGui.View.Document
         private bool _isMessageExpandetOpens;
         private void MessageExpandetOpen(object sender, RoutedEventArgs e)
         {
-            if (!_isMessageExpandetOpens)
+            if (_isMessageExpandetOpens) return;
+            //View.Comments=new ObservableCollection<TaskComment>(View.Task.TaskComments.OrderBy(ob=>ob.DateMessage));
+            if(View.Task.TaskComments==null)
+                View.Task.TaskComments=new ObservableCollection<TaskComment>();
+            foreach (var item in View.Task.TaskComments.OrderByDescending(ob => ob.DateMessage))
             {
-                //View.Comments=new ObservableCollection<TaskComment>(View.Task.TaskComments.OrderBy(ob=>ob.DateMessage));
-                if(View.Task.TaskComments==null)
-                    View.Task.TaskComments=new ObservableCollection<TaskComment>();
-                foreach (var item in View.Task.TaskComments.OrderByDescending(ob => ob.DateMessage))
-                {
-                    View.Comments.Add(item);
-                }
+                View.Comments.Add(item);
+            }
 
-                _isMessageExpandetOpens = true;
-            }   
+            _isMessageExpandetOpens = true;
         }
     }
 }

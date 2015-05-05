@@ -5,6 +5,7 @@ using System.Data.Entity;
 using System.Data.Entity.Migrations;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -62,12 +63,16 @@ namespace WebMTHR.Controllers
                 var view = new TaskViewModels();
                 var idTask = Guid.Parse(Request.QueryString["idTask"]);
                 var currentUserId = Guid.Parse(User.Identity.GetUserId());
-                Task task =await ExtendetMethods.GetTaskEntityAsync(_dbContext, idTask, currentUserId);
-                if (task == null)
-                    throw new NullReferenceException(string.Format("Задача {0} не найдена", idTask));
-                view.AuthorName = _dbContext.Users.First(f => f.Id == task.Author).UserName;
-                view.Task = task;
-                view.Comments = task.TaskComments.OrderByDescending(o => o.DateMessage).ToList();
+                TaskMembers member = await ExtendetMethods.GetTaskMemberkEntityAsync(_dbContext, idTask, currentUserId);
+                if (member == null)
+                    return await Index();
+
+                if (member.Participation != StatusParticipation.ToAccept ||
+                    member.Participation != StatusParticipation.ItIsAppointed)
+                    return  InitTask(member);
+                view.AuthorName = member.User.LoginName;
+                view.Task = member.Task;
+                view.Comments = member.Task.TaskComments.OrderByDescending(o => o.DateMessage).ToList();
                
                 return View(view);
             }
@@ -76,10 +81,48 @@ namespace WebMTHR.Controllers
                 log.ErrorException("Ошибка открытия задачи",ex);
                 return new HttpStatusCodeResult(500);
             }
+        }
+        [Authorize]
+        private ActionResult InitTask(TaskMembers memberModel)
+        {
+            return View(memberModel);
 
         }
-         
-         [Authorize]
+
+        [Authorize]
+        [HttpPost]
+        private async Task<ActionResult> AcceptTask(TaskMembers memberModel)
+        {
+            try
+            {
+                var view = new TaskViewModels();
+                var idTask = Guid.Parse(Request.QueryString["idTask"]);
+                var currentUserId = Guid.Parse(User.Identity.GetUserId());
+                TaskMembers member = await ExtendetMethods.GetTaskMemberkEntityAsync(_dbContext, idTask, currentUserId);
+                if (member == null)
+                    return await Index();
+                member.Participation = memberModel.Participation;
+                member.Comment = memberModel.Comment;
+                _dbContext.TaskMembers.AddOrUpdate(member);
+                await _dbContext.SaveChangesAsync();
+                if (member.Participation != StatusParticipation.ToAccept ||
+                    member.Participation != StatusParticipation.ItIsAppointed)
+                    return InitTask(member);               
+                view.AuthorName = member.User.LoginName;
+                view.Task = member.Task;
+                view.Comments = member.Task.TaskComments.OrderByDescending(o => o.DateMessage).ToList();
+
+                return View(view);
+            }
+            catch (Exception ex)
+            {
+                log.ErrorException("Ошибка открытия задачи", ex);
+                return new HttpStatusCodeResult(500);
+            }
+        }
+
+
+        [Authorize]
          [HttpPost]
          public async Task<ActionResult> UpdateComment(TaskViewModels view)
          {
@@ -101,7 +144,7 @@ namespace WebMTHR.Controllers
                  view.Task = task;
                  view.NewComment = string.Empty;
                  view.Comments = task.TaskComments.OrderByDescending(de => de.DateMessage).ToList();
-                 if (view.Comments[0].AuthorApplicationUser.Id == currentUserId)
+                 if (view.Comments[0].Author.Id == currentUserId)
                  {
                      var id = view.Comments[0].TaskCommentId;
                      view.Comments[0].Message = updComment;
@@ -118,7 +161,7 @@ namespace WebMTHR.Controllers
              }
              catch (Exception ex)
              {
-                 log.ErrorException("Ошибка добавления комментрия", ex);
+                 log.ErrorException("Ошибка добавления комментария", ex);
                  return new HttpStatusCodeResult(500);
              }
          }
@@ -136,7 +179,7 @@ namespace WebMTHR.Controllers
                 var userid = this.GetUserId();
                 var comment = new TaskComment()
                 {
-                    AuthorApplicationUser =
+                    Author =
                         _dbContext.Users.First(f => f.Id == userid),
                     DateMessage = DateTime.Now,
                     Task = task,
@@ -152,7 +195,7 @@ namespace WebMTHR.Controllers
                 view.Task = task;
                 view.NewComment = string.Empty;
                 view.Comments = task.TaskComments.OrderByDescending(o=>o.DateMessage).ToList();
-                if (view.Comments[0].AuthorApplicationUser.Id == userid)
+                if (view.Comments[0].Author.Id == userid)
                     view.EditOld = true;
                 return View("OpenTask",view);
             }

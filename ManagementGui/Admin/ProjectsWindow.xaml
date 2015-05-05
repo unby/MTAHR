@@ -43,7 +43,7 @@
                                 <ContextMenu >
                                     <MenuItem Header="Создать подразделение" FontWeight="Bold" Command="{Binding CreateProject}"></MenuItem>
                                     <MenuItem Header="Удалить" Command="{Binding DeleteProject}"></MenuItem>
-                                    <MenuItem  Header="Назначить руководителя" Command="{Binding SetHead}"></MenuItem>
+                                    <MenuItem Header="Назначить руководителя" Command="{Binding SetHead}"></MenuItem>
                                 </ContextMenu>
                             </TextBlock.ContextMenu>
                             <TextBlock Margin="3" Text="{Binding HeadMan}"></TextBlock>
@@ -56,9 +56,10 @@
             <StackPanel Orientation="Horizontal">
                 <Button Command="{Binding CreateProject}">Создать</Button>
                 <Button Command="{Binding SaveAll}">Сохранить</Button>
-                <Button Command="{Binding DeleteProject}">Удалить</Button>
+              
             </StackPanel>
         </Grid>
+        
         <xctk:PropertyGrid x:Name="PGProject" SelectedObject="{Binding Current,Mode=TwoWay}" Grid.Column="2" Grid.Row="1" >
             <xctk:PropertyGrid.EditorDefinitions>
                 <xctk:EditorTemplateDefinition TargetProperties="Idproject" >

@@ -32,7 +32,12 @@ namespace WebMTHR.Utils
             var userId = Guid.Parse(id);
             return await context.Users.FirstOrDefaultAsync(f => f.Id == userId);
         }
-
+        public static async Task<BaseType.TaskMembers> GetTaskMemberkEntityAsync(ApplicationDbContext context, Guid idTask, Guid idUser)
+        {
+            var query = from userMembers in context.TaskMembers.Where(w => w.IdUser == idUser && w.IdTask == idTask)
+                        select userMembers;
+            return await query.FirstOrDefaultAsync();
+        }
         public static async Task<BaseType.Task> GetTaskEntityAsync(ApplicationDbContext context,Guid idTask,Guid idUser)
         {
             var query = from tasks in context.Tasks.Where(f => f.IdTask == idTask)

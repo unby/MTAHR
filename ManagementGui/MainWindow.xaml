@@ -12,14 +12,15 @@
         xmlns:report1="clr-namespace:BaseType.Report;assembly=BaseType"
         xmlns:viewModel="clr-namespace:ManagementGui.ViewModel"
         MinWidth="800" MinHeight="500"       
-        Title="Управление задачами и ресурсами"
-        Icon="/mainicon.ico"  
-        BorderThickness="2" BorderBrush="{DynamicResource VS2012WindowBorderBrush}" Background="White">
+        Title="{Binding Title}"
+        Icon="/mainicon.ico" 
+         WindowStartupLocation="CenterScreen" 
+        BorderThickness="2" BorderBrush="{DynamicResource VS2012WindowBorderBrush}">
 
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Skins/MainSkin.xaml" />
+                <!--<ResourceDictionary Source="Skins/MainSkin.xaml" />-->
                 <ResourceDictionary Source="Styles/OutlookStyle.xaml"></ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
@@ -37,6 +38,7 @@
         </Grid.RowDefinitions>
         <Menu Grid.Row="0" Name="Menu" Grid.ColumnSpan="2" Background="Transparent">
             <MenuItem Name="Project" Header="Проекты">
+                <MenuItem Header="Новые файлы" Click="ShowNewFilesMenu_OnClick"></MenuItem>
                 <MenuItem Header="Мои проекты" Click="ShowMyProjects_OnClick"></MenuItem>
                 <MenuItem Name="ManageSystemMI" Visibility="{Binding Source={x:Static static:WorkEnviroment.ManageSystemMI}}" Header="Управление системой">
                      <MenuItem Name="MISistemUserList" Click="MISistemUserList_OnClick" Header="Пользователи модуля 'Управление подразделением'"></MenuItem>
@@ -72,15 +74,17 @@
         <!-- This is the tabcontrol itself. You can remove the template attribute to see what it looks like unstyled. -->
         <TabControl SelectionChanged="Users_OnSelected" Grid.Column="0" Grid.Row="2" Name="TabMain" Template="{StaticResource OutlookTab}">
             <TabItem  Header="Подразделение" IsSelected="True">
-                <ListBox Name="TreeUsers" ItemsSource="{Binding Users, Mode=TwoWay}">
-                    <ListBox.ItemTemplate>
+                <ListBox Name="TreeUsers" ItemsSource="{Binding Users, Mode=TwoWay}"
+                         Background="{x:Null}" BorderBrush="{x:Null}" >
+                    <ListBox.ItemTemplate >
                         <DataTemplate DataType="{x:Type baseType:ApplicationUser}">
                             <StackPanel>
-                                <TextBlock Text="{Binding Path=UserName}" />
+                                <TextBlock Text="{Binding Path=UserName,FallbackValue=UserName}"  FontFamily="Segoe UI Light" FontSize="20" 
+                            Foreground="{Binding RelativeSource={RelativeSource AncestorType=ListBoxItem, Mode=FindAncestor}, Path=Foreground}" />
                             </StackPanel>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
-                    <ListBox.Resources>
+                    <ListBox.Resources >                   
                         <ContextMenu x:Key="UserContextMenu">
                             <MenuItem Header="Просмотр" Click="OpenUser" FontWeight="Bold" />
                             <MenuItem Header="Создать задачу" Click="CreateTask" FontWeight="Bold" />
@@ -92,21 +96,72 @@
                         </ContextMenu>
                     </ListBox.ContextMenu>
                     <ListBox.ItemContainerStyle>
-
                         <Style TargetType="{x:Type ListBoxItem}">
                             <Setter Property="ContextMenu" Value="{StaticResource UserContextMenu}"/>
                             <Setter Property="FontWeight" Value="Normal" />
                             <EventSetter Event="MouseDoubleClick" Handler="TreeViewDoubleClickOpenUser"></EventSetter>
-                            <!--   <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
-                            <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />                           
-                            <Style.Triggers>
-                                <Trigger Property="IsSelected" Value="True">
-                                    <Setter Property="FontWeight" Value="Bold" />
-                                </Trigger>
-                            </Style.Triggers>-->                          
+                            <Setter Property="SnapsToDevicePixels" Value="True"/>
+                            <Setter Property="Padding" Value="4,1"/>
+                            <Setter Property="HorizontalContentAlignment" Value="{Binding HorizontalContentAlignment, RelativeSource={RelativeSource FindAncestor, AncestorLevel=1, AncestorType={x:Type ItemsControl}}}"/>
+                            <Setter Property="VerticalContentAlignment" Value="{Binding VerticalContentAlignment, RelativeSource={RelativeSource FindAncestor, AncestorLevel=1, AncestorType={x:Type ItemsControl}}}"/>
+                            <Setter Property="Background" Value="Transparent"/>
+                            <Setter Property="BorderBrush" Value="Transparent"/>
+                            <Setter Property="BorderThickness" Value="1"/>
+                            <Setter Property="FocusVisualStyle">
+                                <Setter.Value>
+                                    <Style>
+                                        <Setter Property="Control.Template">
+                                            <Setter.Value>
+                                                <ControlTemplate>
+                                                    <Rectangle Margin="2" SnapsToDevicePixels="True" Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" StrokeThickness="1" StrokeDashArray="1 2"/>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
+                                </Setter.Value>
+                            </Setter>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                                        <Border x:Name="Bd" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}" SnapsToDevicePixels="True">
+                                            <ContentPresenter ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" ContentStringFormat="{TemplateBinding ContentStringFormat}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <MultiTrigger>
+                                                <MultiTrigger.Conditions>
+                                                    <Condition Property="IsMouseOver" Value="True"/>
+                                                    <Condition Property="IsSelected" Value="False"/>
+                                                </MultiTrigger.Conditions>
+                                                <Setter Property="Background" TargetName="Bd" Value="#FFB9B9B9"/>
+                                                <Setter Property="BorderBrush" TargetName="Bd" Value="{x:Null}"/>
+                                                <Setter Property="Foreground" Value="Black" />
+                                            </MultiTrigger>
+                                            <MultiTrigger>
+                                                <MultiTrigger.Conditions>
+                                                    <Condition Property="IsMouseOver" Value="False"/>
+                                                    <Condition Property="IsSelected" Value="False"/>
+                                                </MultiTrigger.Conditions>
+                                                <Setter Property="Background" TargetName="Bd" Value="{x:Null}"/>
+                                                <Setter Property="BorderBrush" TargetName="Bd" Value="{x:Null}"/>
+                                                <Setter Property="Foreground" Value="Black" />
+                                            </MultiTrigger>
+                                            <MultiTrigger>
+                                                <MultiTrigger.Conditions>
+                                                    <Condition Property="IsSelected" Value="True"/>
+                                                </MultiTrigger.Conditions>
+                                                <Setter Property="Background" TargetName="Bd" Value="#FF0072C6"/>
+                                                <Setter Property="BorderBrush" TargetName="Bd" Value="{x:Null}"/>
+                                                <Setter Property="Foreground" Value="White"/>
+                                            </MultiTrigger>
+                                            <Trigger Property="IsEnabled" Value="False">
+                                                <Setter Property="TextElement.Foreground" TargetName="Bd" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
                         </Style>
-                    </ListBox.ItemContainerStyle>
-                    
+                    </ListBox.ItemContainerStyle>                  
                 </ListBox>
             </TabItem>
             <TabItem Name="Currentes" Header="Текущие задачи">
@@ -153,14 +208,82 @@
                 <ListBox Name="ReportList" ItemsSource="{Binding ListReport, Mode=TwoWay}">
                     <ListBox.ItemTemplate>
                         <DataTemplate DataType="{x:Type report1:ReportItem}">
-                            <StackPanel>
-                                <TextBlock Text="{Binding Path=Name}" />
-                            </StackPanel>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="40"/>
+                                    <ColumnDefinition Width="200"/>
+                                </Grid.ColumnDefinitions>
+                                <Path Data="{Binding Path=Image}" Stretch="Uniform" Width="28" Height="28" 
+                    Fill="{Binding RelativeSource={RelativeSource AncestorType=ListBoxItem, Mode=FindAncestor}, Path=Foreground}" />
+                                <StackPanel Grid.Column="1" Margin="5">
+                                    <TextBlock Text="{Binding Path=Name, FallbackValue=Name}" FontFamily="Segoe UI Light" FontSize="20" 
+                            Foreground="{Binding RelativeSource={RelativeSource AncestorType=ListBoxItem, Mode=FindAncestor}, Path=Foreground}" />
+                                </StackPanel>
+                            </Grid>
                         </DataTemplate>
                     </ListBox.ItemTemplate>                                    
                     <ListBox.ItemContainerStyle>
                         <Style TargetType="{x:Type ListBoxItem}">
-                            <Setter Property="FontWeight" Value="Normal" />
+                            <Setter Property="SnapsToDevicePixels" Value="True"/>
+                            <Setter Property="Padding" Value="4,1"/>
+                            <Setter Property="HorizontalContentAlignment" Value="{Binding HorizontalContentAlignment, RelativeSource={RelativeSource FindAncestor, AncestorLevel=1, AncestorType={x:Type ItemsControl}}}"/>
+                            <Setter Property="VerticalContentAlignment" Value="{Binding VerticalContentAlignment, RelativeSource={RelativeSource FindAncestor, AncestorLevel=1, AncestorType={x:Type ItemsControl}}}"/>
+                            <Setter Property="Background" Value="Transparent"/>
+                            <Setter Property="BorderBrush" Value="Transparent"/>
+                            <Setter Property="BorderThickness" Value="1"/>
+                            <Setter Property="FocusVisualStyle">
+                                <Setter.Value>
+                                    <Style>
+                                        <Setter Property="Control.Template">
+                                            <Setter.Value>
+                                                <ControlTemplate>
+                                                    <Rectangle Margin="2" SnapsToDevicePixels="True" Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" StrokeThickness="1" StrokeDashArray="1 2"/>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
+                                </Setter.Value>
+                            </Setter>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                                        <Border x:Name="Bd" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}" SnapsToDevicePixels="True">
+                                            <ContentPresenter ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" ContentStringFormat="{TemplateBinding ContentStringFormat}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <MultiTrigger>
+                                                <MultiTrigger.Conditions>
+                                                    <Condition Property="IsMouseOver" Value="True"/>
+                                                    <Condition Property="IsSelected" Value="False"/>
+                                                </MultiTrigger.Conditions>
+                                                <Setter Property="Background" TargetName="Bd" Value="#FFB9B9B9"/>
+                                                <Setter Property="BorderBrush" TargetName="Bd" Value="{x:Null}"/>
+                                                <Setter Property="Foreground" Value="Black" />
+                                            </MultiTrigger>
+                                            <MultiTrigger>
+                                                <MultiTrigger.Conditions>
+                                                    <Condition Property="IsMouseOver" Value="False"/>
+                                                    <Condition Property="IsSelected" Value="False"/>
+                                                </MultiTrigger.Conditions>
+                                                <Setter Property="Background" TargetName="Bd" Value="{x:Null}"/>
+                                                <Setter Property="BorderBrush" TargetName="Bd" Value="{x:Null}"/>
+                                                <Setter Property="Foreground" Value="Black" />
+                                            </MultiTrigger>
+                                            <MultiTrigger>
+                                                <MultiTrigger.Conditions>
+                                                    <Condition Property="IsSelected" Value="True"/>
+                                                </MultiTrigger.Conditions>
+                                                <Setter Property="Background" TargetName="Bd" Value="#FF0072C6"/>
+                                                <Setter Property="BorderBrush" TargetName="Bd" Value="{x:Null}"/>
+                                                <Setter Property="Foreground" Value="White"/>
+                                            </MultiTrigger>
+                                            <Trigger Property="IsEnabled" Value="False">
+                                                <Setter Property="TextElement.Foreground" TargetName="Bd" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
                             <EventSetter Event="MouseDoubleClick" Handler="TreeViewDoubleClickOpenReport"></EventSetter>
                         </Style>
                     </ListBox.ItemContainerStyle>
@@ -170,6 +293,9 @@
         <xcad:DockingManager Grid.Row="1" Grid.Column="1"  Name="ADManager" Background="White"
                             AllowMixedOrientation="True" 
                             BorderThickness="1" Margin="0,0,0,0" Grid.RowSpan="2">
+            <xcad:DockingManager.Theme>
+                <xcad:MetroTheme/>
+            </xcad:DockingManager.Theme>
             <xcad:DockingManager.DocumentHeaderTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal">
@@ -183,7 +309,17 @@
                     <xcad:LayoutDocumentPane >
                     </xcad:LayoutDocumentPane>
                 </xcad:LayoutPanel>
-            </xcad:LayoutRoot>            
+                <xcad:LayoutRoot.RightSide>
+                    <xcad:LayoutAnchorSide>
+                        <!--<xcad:LayoutAnchorGroup>
+                            <xcad:LayoutAnchorable Title="Новые файлы" ContentId="NewFiles">
+                               
+                            </xcad:LayoutAnchorable>
+                        </xcad:LayoutAnchorGroup>-->
+                    </xcad:LayoutAnchorSide>
+                </xcad:LayoutRoot.RightSide>
+            </xcad:LayoutRoot>   
+            
         </xcad:DockingManager>
         <StatusBar Grid.Column="0" Name="MainStatusBar" Grid.Row="3" Grid.ColumnSpan="2"  />
     </Grid>

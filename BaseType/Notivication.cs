@@ -24,7 +24,7 @@ namespace BaseType
         public Guid IdTask { get; set; }
         public virtual Task Task { get; set; }
 
-        [ ForeignKey("From")]
+        [ForeignKey("From")]
         public Guid? IdUserFrom { get; set; }
       
         public virtual ApplicationUser From { get; set; }

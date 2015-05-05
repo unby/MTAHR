@@ -10,8 +10,7 @@
 <style type="text/css">
     .commentMessage {
         border: none;
-        height: 80px;
-        
+        height: 80px;       
     }
 </style>
 
@@ -34,7 +33,27 @@
 <h3>Описание</h3>
 @Html.TextAreaFor(m => m.Task.Description, new { style = "width:800px;max-width:800px;border: none;" })
 <div class="form-horizontal">
-
+    <a href="#" data-toggle="collapse" data-target="#files" class="btn btn-default">Файлы</a>
+    <div id="files" class="collapse">
+        <table class="table">
+           @foreach (var item in Model.Task.Files)
+           {
+               <tr>
+                   <td>@Html.ActionLink(item.FileName, "OpenTask", new { idTask = Model.Task.IdTask,ifFile=item.FileId })</td>
+                   <td>@item.Size</td>
+                   <td>@item.DateCreate.ToShortDateString()</td>
+                   <td>
+                       @item.Author.LoginName
+                       @if (string.IsNullOrEmpty(item.Comment))
+                       {
+                           <br />
+                           @item.Comment
+                       }
+                   </td>                  
+               </tr>
+           }
+        </table>
+    </div>
 </div>
 <form action="~/Task/PublishComment?idTask=@Model.Task.IdTask" method="post">
     <h3>Добавить комментарий</h3>
@@ -52,38 +71,41 @@
     </div>
 
 </form>
-@foreach (var item in Model.Comments.ToList())
-{
-    <div>
-        <p><strong>@item.AuthorApplicationUser.UserName</strong> @item.DateMessage.ToString("dd MMMM yyyy hh:mm")</p>
-        @Html.TextAreaFor(i => item.Message, new { Readonly = "readonly", style = "width:700px;max-width:750px; border: none;" })
-        @*<input type="text" readonly="readonly" class="commentMessage" value="@item.Message" />*@
-    </div>
-}
-<div>
-    @Html.ActionLink("Назад", "Index")
-</div>
-
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-}
-<script type="text/javascript">
-    jQuery(function () {
-        jQuery('textarea').autoResize();
-    });
-</script>
-<script type="text/javascript">
-
-    function updateComment() {
-        $.ajax({
-            type: 'POST',
-            contentType: 'application/json; charset=utf-8',
-            url: 'UpdateComment?idTask=@Model.Task.IdTask',
-            data: '{"NewComment":"' + document.getElementById('NewComment').value + '"}',
-            dataType: 'json',
-            success: function (data) {
-                alert('Success');
-            }
-        });
+<table class="table">
+    @foreach (var item in Model.Comments.ToList())
+    {
+        <tr>
+            <td>
+                <p><strong>@item.Author.UserName</strong> @item.DateMessage.ToString("dd MMMM yyyy hh:mm")</p>
+                @Html.TextAreaFor(i => item.Message, new { Readonly = "readonly", style = "width:700px;max-width:750px; border: none;" })
+            </td>
+        </tr>
     }
-</script>
+    </table>
+    <div>
+        @Html.ActionLink("Назад", "Index")
+    </div>
+
+    @section Scripts {
+        @Scripts.Render("~/bundles/jqueryval")
+    }
+    <script type="text/javascript">
+        jQuery(function () {
+            jQuery('textarea').autoResize();
+        });
+    </script>
+    <script type="text/javascript">
+
+        function updateComment() {
+            $.ajax({
+                type: 'POST',
+                contentType: 'application/json; charset=utf-8',
+                url: 'UpdateComment?idTask=@Model.Task.IdTask',
+                data: '{"NewComment":"' + document.getElementById('NewComment').value + '"}',
+                dataType: 'json',
+                success: function (data) {
+                    alert('Success');
+                }
+            });
+        }
+    </script>

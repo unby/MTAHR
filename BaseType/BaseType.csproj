@@ -31,13 +31,13 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EntityFramework">
-      <HintPath>..\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.dll</HintPath>
+      <HintPath>..\packages\EntityFramework.6.1.2\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework.Extended">
       <HintPath>..\packages\EntityFramework.Extended.6.1.0.121\lib\net45\EntityFramework.Extended.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework.SqlServer">
-      <HintPath>..\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <HintPath>..\packages\EntityFramework.6.1.2\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.AspNet.Identity.Core">
       <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.1.0\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
@@ -54,13 +54,13 @@
     <Reference Include="Microsoft.Owin.Security">
       <HintPath>..\packages\Microsoft.Owin.Security.3.0.0\lib\net45\Microsoft.Owin.Security.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Windows.Design.Extensibility, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=x86" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Transactions" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -75,7 +75,6 @@
     <Compile Include="AspNetImpliment.cs" />
     <Compile Include="Common\EnumItem.cs" />
     <Compile Include="Common\NotifyObservableCollection.cs" />
-    <Compile Include="Common\IEntityState.cs" />
     <Compile Include="Common\LenghtMessage.cs" />
     <Compile Include="Common\RelayCommand.cs" />
     <Compile Include="Common\RoundStack.cs" />
@@ -91,9 +90,9 @@
     <Compile Include="Migrations\201504041202281_ss7.Designer.cs">
       <DependentUpon>201504041202281_ss7.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201504041204503_ss8.cs" />
-    <Compile Include="Migrations\201504041204503_ss8.Designer.cs">
-      <DependentUpon>201504041204503_ss8.cs</DependentUpon>
+    <Compile Include="Migrations\201505020642343_workFile.cs" />
+    <Compile Include="Migrations\201505020642343_workFile.Designer.cs">
+      <DependentUpon>201505020642343_workFile.cs</DependentUpon>
     </Compile>
     <Compile Include="ProjectEntity.cs" />
     <Compile Include="MessageType.cs" />
@@ -112,6 +111,8 @@
     <Compile Include="Utils\EntityValidate.cs" />
     <Compile Include="Utils\EnumConverter.cs" />
     <Compile Include="Utils\ExternalMethod.cs" />
+    <Compile Include="Utils\NotifyPropertyChangedInvocator.cs" />
+    <Compile Include="WorkFile.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
@@ -140,8 +141,8 @@
     <EmbeddedResource Include="Migrations\201504041202281_ss7.resx">
       <DependentUpon>201504041202281_ss7.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201504041204503_ss8.resx">
-      <DependentUpon>201504041204503_ss8.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201505020642343_workFile.resx">
+      <DependentUpon>201505020642343_workFile.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

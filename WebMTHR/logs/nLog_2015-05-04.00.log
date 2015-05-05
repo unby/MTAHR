@@ -1,0 +1,55 @@
+time;message;logger;level;description
+2015-05-03 15:34:52.2525;EmailSenderMTHR טםטצאכטחטנמגאם;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-05-03 15:35:22.5225;EmailSenderMTHR חאןףשום ןונגûי גûחמג עאילונא Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-05-03 15:37:01.8005;EmailSenderMTHR גûחמג עאילונא Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-05-03 15:37:13.8322;Îרטבךא מעךנûעטÿ חאהאקט;WebMTHR.Controllers.TaskController;Error;"System.ArgumentNullException: Çםאקוםטו םו למזוע בûעü םומןנוהוכוםםûל.
+Èלÿ ןאנאלוענא: input
+   ג System.Guid.Parse(String input)
+   ג WebMTHR.Controllers.TaskController.<OpenTask>d__b.MoveNext() ג c:\Users\Ðףסכאם\Desktop\MTAHR\WebMTHR\Controllers\TaskController.cs:סענמךא 63"
+2015-05-03 15:37:24.6461;EmailSenderMTHR גûחמג עאילונא Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-05-03 15:37:54.6576;EmailSenderMTHR גûחמג עאילונא Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-05-03 15:38:24.6664;EmailSenderMTHR גûחמג עאילונא Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-05-03 15:38:54.6683;EmailSenderMTHR גûחמג עאילונא Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-05-03 15:39:24.6732;EmailSenderMTHR גûחמג עאילונא Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-05-03 15:39:54.6799;EmailSenderMTHR גûחמג עאילונא Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-05-03 15:40:24.7757;EmailSenderMTHR גûחמג עאילונא Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-05-03 15:40:54.7896;EmailSenderMTHR גûחמג עאילונא Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-05-03 15:41:24.8034;EmailSenderMTHR גûחמג עאילונא Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-05-03 15:41:54.8071;EmailSenderMTHR גûחמג עאילונא Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-05-03 15:42:24.8149;EmailSenderMTHR גûחמג עאילונא Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-05-03 15:42:54.8197;EmailSenderMTHR גûחמג עאילונא Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-05-03 15:43:24.8214;EmailSenderMTHR גûחמג עאילונא Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-05-03 15:43:54.8352;EmailSenderMTHR גûחמג עאילונא Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-05-03 15:44:24.8370;EmailSenderMTHR גûחמג עאילונא Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-05-03 15:44:54.8408;EmailSenderMTHR גûחמג עאילונא Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-05-03 15:45:24.8536;EmailSenderMTHR גûחמג עאילונא Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-05-03 15:45:54.8713;EmailSenderMTHR גûחמג עאילונא Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-05-03 15:46:24.8811;EmailSenderMTHR גûחמג עאילונא Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-05-03 15:46:54.8839;EmailSenderMTHR גûחמג עאילונא Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-05-03 15:47:24.8885;EmailSenderMTHR גûחמג עאילונא Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-05-03 15:47:54.8993;EmailSenderMTHR גûחמג עאילונא Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-05-03 15:48:24.9050;EmailSenderMTHR גûחמג עאילונא Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-05-03 15:48:54.9298;EmailSenderMTHR גûחמג עאילונא Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-05-03 15:49:24.9496;EmailSenderMTHR גûחמג עאילונא Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-05-03 15:49:54.9614;EmailSenderMTHR גûחמג עאילונא Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-05-03 15:50:24.9744;EmailSenderMTHR גûחמג עאילונא Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-05-03 15:50:54.9752;EmailSenderMTHR גûחמג עאילונא Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-05-03 15:51:24.9780;EmailSenderMTHR גûחמג עאילונא Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-05-03 15:51:54.9877;EmailSenderMTHR גûחמג עאילונא Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-05-03 15:52:24.9925;EmailSenderMTHR גûחמג עאילונא Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-05-03 15:52:55.0063;EmailSenderMTHR גûחמג עאילונא Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-05-03 15:53:25.0225;EmailSenderMTHR גûחמג עאילונא Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-05-03 15:53:55.0223;EmailSenderMTHR גûחמג עאילונא Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-05-03 15:54:25.0241;EmailSenderMTHR גûחמג עאילונא Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-05-03 15:54:55.0368;EmailSenderMTHR גûחמג עאילונא Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-05-03 15:55:25.0376;EmailSenderMTHR גûחמג עאילונא Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-05-03 15:55:55.0493;EmailSenderMTHR גûחמג עאילונא Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-05-03 15:56:25.0599;EmailSenderMTHR גûחמג עאילונא Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-05-03 15:56:55.0687;EmailSenderMTHR גûחמג עאילונא Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-05-03 15:57:25.0715;EmailSenderMTHR גûחמג עאילונא Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-05-03 15:57:55.0712;EmailSenderMTHR גûחמג עאילונא Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-05-03 15:58:25.0840;EmailSenderMTHR גûחמג עאילונא Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-05-03 15:58:55.0877;EmailSenderMTHR גûחמג עאילונא Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-05-03 15:59:25.0996;EmailSenderMTHR גûחמג עאילונא Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-05-03 15:59:55.0992;EmailSenderMTHR גûחמג עאילונא Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;
+2015-05-03 16:00:25.1029;EmailSenderMTHR גûחמג עאילונא Task;WebMTHR.EmailSender.EmailSenderMTHR;Info;

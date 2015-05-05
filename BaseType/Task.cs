@@ -33,6 +33,7 @@ namespace BaseType
         public Guid ParentTask { get; set; }
 
         public StatusTask Status { get; set; }
+        public virtual ICollection<WorkFile> Files { get; set; } 
         public virtual ICollection<TaskMembers> WorkGroup { get; set; }
         public virtual ICollection<Notivication> Notivications { get; set; }
         public virtual ICollection<TaskComment> TaskComments { get; set; }
@@ -50,13 +51,7 @@ namespace BaseType
         [Description("В работе")]
         Open =1,
         [Description("Приостановлена")]
-        Suspended=-1,
-        [Description("Отменена")]
-        Cancelled=-2,
-        [Description("Получен ответ")]
-        Response=2,
-        [Description("Запрошен ответ")]
-        Request=3
+        Suspended=2
     }
 
     [Serializable]
@@ -88,7 +83,7 @@ namespace BaseType
         [Required]
         public string Message { get; set; }
         [Required]
-        public virtual ApplicationUser AuthorApplicationUser { get; set; }
+        public virtual ApplicationUser Author { get; set; }
         [Required]
         public DateTime DateMessage { get; set; }
 }

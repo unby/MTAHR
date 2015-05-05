@@ -120,4 +120,7 @@
   <data name="TaskDocumentViewModel_DayNotivication_Error_Message" xml:space="preserve">
     <value>Доступная дата должна входить в диапозон между 1 и 100</value>
   </data>
+  <data name="UserDocumentViewModel_Surname_Обязательно_заполните_фамилию_сотрудника_" xml:space="preserve">
+    <value>Обязательно заполните фамилию сотрудника.</value>
+  </data>
 </root>

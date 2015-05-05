@@ -19,20 +19,19 @@ namespace ChronicleMTHR
         public static  Task NewComment(BaseType.Task task, TaskComment comment, ApplicationDbContext dbContext)
         {
             task.DateUpdate = DateTime.Now;
-            task.Status = StatusTask.Response;
             task.TaskComments.Add(comment);
             dbContext.Tasks.AddOrUpdate(task);
             var autNotivication = new Notivication()
             {
                 DateCreate = comment.DateMessage,
                 Description =
-                    string.Format("Пользователь {0} опубликовал сообщение в вашей задаче", comment.AuthorApplicationUser.UserName),
+                    string.Format("Пользователь {0} опубликовал сообщение в вашей задаче", comment.Author.UserName),
                 IdNotivication = Guid.NewGuid(),
-                From = comment.AuthorApplicationUser,
+                From = comment.Author,
                 IdTask = task.IdTask,
                 NotivicationStatus = NotivicationStatus.Declared,
                 Task = task,
-                IdUserFrom = comment.AuthorApplicationUser.Id,
+                IdUserFrom = comment.Author.Id,
                 IdUserTo = task.Author,
                 TimeSend = DateTime.Now.AddMinutes(10),
                 To = dbContext.Users.First(f=>f.Id==task.Author)
@@ -46,9 +45,9 @@ namespace ChronicleMTHR
 
         private static  IEnumerable<Notivication> CreateNotificationForNewComment(TaskComment comment, BaseType.Task task)
         {
-            return task.WorkGroup.Where(w=>w.User!=comment.AuthorApplicationUser).Select(userTo => new Notivication()
+            return task.WorkGroup.Where(w=>w.User!=comment.Author).Select(userTo => new Notivication()
             {
-                DateCreate = comment.DateMessage, Description = string.Format("Пользователь {0} опубликовал сообщение", comment.AuthorApplicationUser.UserName), IdNotivication = Guid.NewGuid(), From = comment.AuthorApplicationUser, IdTask = task.IdTask, NotivicationStatus = NotivicationStatus.Declared, Task = task, IdUserFrom = comment.AuthorApplicationUser.Id, IdUserTo = userTo.IdUser, TimeSend = DateTime.Now.AddMinutes(10), To = userTo.User
+                DateCreate = comment.DateMessage, Description = string.Format("Пользователь {0} опубликовал сообщение", comment.Author.UserName), IdNotivication = Guid.NewGuid(), From = comment.Author, IdTask = task.IdTask, NotivicationStatus = NotivicationStatus.Declared, Task = task, IdUserFrom = comment.Author.Id, IdUserTo = userTo.IdUser, TimeSend = DateTime.Now.AddMinutes(10), To = userTo.User
             }).ToList();
         }
     }

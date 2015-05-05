@@ -205,7 +205,7 @@ namespace ManagementGui.Config
                         UserName = username;
                     }
 
-                    private string _password;
+                    private static string  _password;
 
                     public override string ToString()
                     {

@@ -78,9 +78,9 @@
                     <ColumnDefinition Width="205*"/>
                 </Grid.ColumnDefinitions>
                 <Label Content="Почтовый адрес"  Grid.Column="0" />
-                    <TextBox x:Name="TBEmail" Grid.Column="1" Text="{Binding User.Email, ValidatesOnExceptions=True, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Width="173" />
+                    <TextBox x:Name="TBEmail" Grid.Column="1" Text="{Binding Email, ValidatesOnDataErrors=True , UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Width="173" />
                 <Label Content="Телефон" Grid.Column="2"  />
-                    <TextBox x:Name="TBPhone" Grid.Column="3" Text="{Binding User.PhoneNumber, ValidatesOnExceptions=True,NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBox x:Name="TBPhone" Grid.Column="3" Text="{Binding User.PhoneNumber, ValidatesOnExceptions=True, UpdateSourceTrigger=PropertyChanged}"/>
             </Grid>
         </Expander>
         <Expander IsExpanded="True" Name="ServiceExpander" Header="Служебное" Grid.Row="3" Margin="5,0,5,5">
@@ -94,7 +94,7 @@
                 </Grid.ColumnDefinitions>
                     <CheckBox Margin="3,6,5,5" Grid.Column="0" x:Name="ChBIsWork" Content="Работает" IsChecked="{Binding User.IsWork}" FlowDirection="RightToLeft"/>
                 <Label Content="Должность" Grid.Column="1" Margin="0,0,0,0"  />
-                <TextBox x:Name="TBPost" Grid.Column="2" Text="{Binding User.Post}"></TextBox>
+                <TextBox x:Name="TBPost" Grid.Column="2" Text="{Binding User.Post,Mode=TwoWay}"></TextBox>
                 <!--<Label Content="Роль" Grid.Column="3" Margin="0,0,0,0"  />
                 <ComboBox Grid.Column="4" SelectedItem="{Binding User.Role,Converter={StaticResource EnumItemsConverter}}" ItemsSource="{Binding RoleList,Converter={StaticResource EnumItemsConverter}}" />-->
             </Grid>

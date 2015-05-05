@@ -24,6 +24,14 @@ namespace ManagementGui.View.Document
             }
         }
 
+        public NotivicationStatus Status
+        {
+            get { return Notivication.NotivicationStatus; }
+            set
+            {
+                Notivication.NotivicationStatus = value;
+            }
+        }
         public string Description
         {
             get { return Notivication.Description; }

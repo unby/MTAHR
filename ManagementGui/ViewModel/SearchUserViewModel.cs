@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using BaseType;
@@ -10,7 +7,6 @@ using BaseType.Common;
 using GalaSoft.MvvmLight;
 using ManagementGui.Config;
 using ManagementGui.Utils;
-using Xceed.Wpf.Data;
 
 namespace ManagementGui.ViewModel
 {
@@ -42,7 +38,7 @@ namespace ManagementGui.ViewModel
         #region PropertyFiltrBinding
 
         public  Visibility IsVisibleProjectUser { get; private set; }
-        public string FIOField { get; set; }
+        public string FioField { get; set; }
         private bool _isWork;
         private string _isProjectText;
         private string _isWorkText;
@@ -54,15 +50,7 @@ namespace ManagementGui.ViewModel
             set
             {
                 _isWork = value;
-                if (_isWork)
-                {
-                    IsWorkText = "Работает";
-                }
-                else
-                {
-                    IsWorkText = "Не работает";
-                }
-                this.RaisePropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -71,17 +59,8 @@ namespace ManagementGui.ViewModel
             get { return _isProject; }
             set
             {
-                _isProject = value;
-                _isWork = value;
-                if (_isProject)
-                {
-                    IsProjectText = "В базе";
-                }
-                else
-                {
-                    IsProjectText = "В проекте";
-                }
-                this.RaisePropertyChanged();
+                _isProject = value;               
+                RaisePropertyChanged();
             }
         }
         public string IsWorkText
@@ -90,7 +69,7 @@ namespace ManagementGui.ViewModel
             set
             {
                 _isWorkText = value;
-                this.RaisePropertyChanged();
+                RaisePropertyChanged();
             }
         }
         public string IsProjectText
@@ -99,7 +78,7 @@ namespace ManagementGui.ViewModel
             set
             {
                 _isProjectText = value;
-                this.RaisePropertyChanged();
+                RaisePropertyChanged();
             }
         }
         private bool? _isDialogClose;
@@ -123,7 +102,7 @@ namespace ManagementGui.ViewModel
             set
             {
                 _selectedUsers = value;
-                this.RaisePropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -133,7 +112,7 @@ namespace ManagementGui.ViewModel
             set
             {
                 _users = value;
-                this.RaisePropertyChanged();
+                RaisePropertyChanged();
             }
         }
         #endregion
@@ -145,32 +124,24 @@ namespace ManagementGui.ViewModel
         private RelayCommand _select;
         private RelayCommand _exit;
         public ICommand Search {
-            get
-            {
-                if(_seacrh==null)
-                    _seacrh=new RelayCommand(SearchUserInBase);
-                return _seacrh;
-            }
+            get { return _seacrh ?? (_seacrh = new RelayCommand(SearchUserInBase)); }
         }
 
         private async void SearchUserInBase(object obj)
         {
-            if (!string.IsNullOrEmpty(FIOField))
-            {
-                string query = string.Format(@"SELECT *  FROM [AspNetUsers] as userapp where {1} {0} {2}", GetBool(), GetFio(), GetProject());
-                Users =
-                    new List<ApplicationUser>(
-                        await
-                            DbHelper.GetDbProvider.Database.SqlQuery<ApplicationUser>(query
-                                )
-                                .ToListAsync());
-            }
-
+            if (string.IsNullOrEmpty(FioField)) return;
+            var query = string.Format(@"SELECT *  FROM [AspNetUsers] as userapp where {1} {0} {2}", GetBool(), GetFio(), GetProject());
+            Users =
+                new List<ApplicationUser>(
+                    await
+                        DbHelper.GetDbProvider.Database.SqlQuery<ApplicationUser>(query
+                            )
+                            .ToListAsync());
         }
 
         private string GetProject()
         {
-            string result = "";
+            var result = "";
             if (IsProject)
                 result =
                     string.Format(@"and userapp.id in (select id from (select IdProject from [Projects] where IdProject='{0}') as projectApp 
@@ -180,21 +151,21 @@ join [members] as memberApp on memberApp.IdProject=projectApp.IdProject)", WorkE
 
         private string GetFio()
         {
-            string result = "";
-            var names = FIOField.Split(new[] {'.',' ', ',', ';', '!', '@', '"', '\'', '+', '(', ')', '^', ':'}).Where(w=>w.Length>2);
+            var result = "";
+            var names = FioField.Split(new[] {'.',' ', ',', ';', '!', '@', '"', '\'', '+', '(', ')', '^', ':'}).Where(w=>w.Length>2);
             result += "(";
             var enumerable = names as string[] ?? names.ToArray();
             result = enumerable.Aggregate(result, (current, name) => current + string.Format(" Name='{0}' or", name));
             result = enumerable.Aggregate(result, (current, name) => current + string.Format(" MiddleName='{0}' or", name));
             result = enumerable.Aggregate(result, (current, name) => current + string.Format(" SurName='{0}' or", name));
-           result= result.RemoveEndString("or");
+            result= result.RemoveEndString("or");
             result += ")";
             return result;
         }
 
         private string GetBool()
         {
-            string result = "";
+            var result = "";
             if (IsWork)
                 result += "and iswork='true'";
             else
@@ -204,12 +175,7 @@ join [members] as memberApp on memberApp.IdProject=projectApp.IdProject)", WorkE
 
         public ICommand Select
         {
-            get
-            {
-                if (_select == null)
-                    _select = new RelayCommand(SelectUsers);
-                return _select;
-            }
+            get { return _select ?? (_select = new RelayCommand(SelectUsers)); }
         }
 
         private void SelectUsers(object obj)
@@ -219,12 +185,7 @@ join [members] as memberApp on memberApp.IdProject=projectApp.IdProject)", WorkE
 
         public ICommand Exit
         {
-            get
-            {
-                if (_exit == null)
-                    _exit = new RelayCommand(ExitWindow);
-                return _exit;
-            }
+            get { return _exit ?? (_exit = new RelayCommand(ExitWindow)); }
         }
 
         private void ExitWindow(object obj)

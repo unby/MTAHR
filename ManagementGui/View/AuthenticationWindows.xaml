@@ -6,6 +6,7 @@
         xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
         xmlns:utils="clr-namespace:BaseType.Utils;assembly=BaseType"
         Title="Окно авторизации" Height="236" Width="370" ResizeMode="NoResize" SizeToContent="Height" 
+        WindowStartupLocation="CenterScreen" 
     Icon="/mainicon.ico">
 
     <Window.Resources>

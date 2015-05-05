@@ -1,17 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using System.Web;
 using BaseType;
 using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
-using WebMTHR.Models;
 using Task = System.Threading.Tasks.Task;
 
 namespace WebMTHR
@@ -35,14 +29,9 @@ namespace WebMTHR
     }
 
     // Настройка диспетчера пользователей приложения. UserManager определяется в ASP.NET Identity и используется приложением.
-    public class ApplicationUserManager : UserManager<ApplicationUser,Guid>
+    public static class AspNetExtention  
     {
-        public ApplicationUserManager(IUserStore<ApplicationUser,Guid> store)
-            : base(store)
-        {
-        }
-
-        public static ApplicationUserManager Create(IdentityFactoryOptions<ApplicationUserManager> options, IOwinContext context) 
+        public static ApplicationUserManager CreateApplicationUserManager(IdentityFactoryOptions<ApplicationUserManager> options, IOwinContext context) 
         {
             var manager = new ApplicationUserManager(new ApplicationUserStore(context.Get<ApplicationDbContext>()));
             // Настройка логики проверки имен пользователей
@@ -93,14 +82,14 @@ namespace WebMTHR
     // Настройка диспетчера входа для приложения.
     public class ApplicationSignInManager : SignInManager<ApplicationUser, Guid>
     {
-        public ApplicationSignInManager(ApplicationUserManager userManager, IAuthenticationManager authenticationManager)
+        public ApplicationSignInManager(UserManager<ApplicationUser, Guid> userManager, IAuthenticationManager authenticationManager)
             : base(userManager, authenticationManager)
         {
         }
 
         public override Task<ClaimsIdentity> CreateUserIdentityAsync(ApplicationUser user)
         {
-            return user.GenerateUserIdentityAsync((ApplicationUserManager)UserManager);
+            return user.GenerateUserIdentityAsync(UserManager);
         }
 
         public static ApplicationSignInManager Create(IdentityFactoryOptions<ApplicationSignInManager> options, IOwinContext context)

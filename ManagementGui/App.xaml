@@ -19,8 +19,8 @@ mc:Ignorable="d">
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Blue.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />
                 <ResourceDictionary Source="Resources\Icons.xaml"/>
-                <ResourceDictionary Source="Styles/CustomizedWindow/VS2012WindowStyle.xaml" />
                 <ResourceDictionary Source="Resources/ImageResources.xaml"></ResourceDictionary>
+                <ResourceDictionary Source="Styles/MetroListBoxStyle.xaml"></ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
             <!--<vm:ViewModelLocator xmlns:vm="clr-namespace:ManagementGui.ViewModel"
             x:Key="Locator" d:IsDataSource="True" />-->

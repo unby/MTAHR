@@ -26,18 +26,16 @@ namespace ManagementGui.ViewModel
             set
             {
                 _users = value;
-                this.RaisePropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
         public MainViewModel()
         {
-            if (WorkEnviroment.UserProjects != null&&WorkEnviroment.UserProjects.Count>0)
-            {
-                Update(null);
-                SetListReport();
-                SetInfo();
-            }
+            if (WorkEnviroment.UserProjects == null || WorkEnviroment.UserProjects.Count <= 0) return;
+            Update(null);
+            SetListReport();
+            SetInfo();
         }
 
         private RelayCommand _update;
@@ -53,7 +51,7 @@ namespace ManagementGui.ViewModel
             private set
             {
                 _listReport = value;
-                this.RaisePropertyChanged();
+                RaisePropertyChanged();
             }
 
         }
@@ -69,7 +67,7 @@ namespace ManagementGui.ViewModel
             set
             {
                 _currentInfoList = value;
-                this.RaisePropertyChanged();
+                RaisePropertyChanged();
             }
         }
 
@@ -145,27 +143,31 @@ namespace ManagementGui.ViewModel
             {
                 new ReportItem {Description = "", Name = "Общий отчет по задачам", Type = typeof (ReportTasks)},
                 new ReportItem {Description = "", Name = "Консолидированный отчет о поставленных задачах", Type = typeof (ObjectivesReport)},
-                new ReportItem {Description = "", Name = "Отчет по задач", Type = typeof (WeightOfTasksReport)},
+                new ReportItem {Description = "", Name = "Отчет по задачам", Type = typeof (WeightOfTasksReport)},
                 new ReportItem {Description = "", Name = "Отчет по задачам пользователей", Type = typeof (UserTaskReport)},
                 new ReportItem {Description = "", Name = "Консолидированный отчет по исполнителям", Type = typeof (ConsolidateReport)}
             };
         }
 
+        public string Title { get
+        {
+            return string.Format("Управление подразделением. {0}",
+                WorkEnviroment.CurrentProject != null ? WorkEnviroment.CurrentProject.Name : "");
+        } }
         public void Update(object obj)
         {
             try
             {
-                if (WorkEnviroment.IsSetSetSession)
-                {
-                    if(WorkEnviroment.CurrentProject!=null)
-                    Users =
-                        new NotifyObservableCollection<ApplicationUser>(
-                            (   from user in DbHelper.GetDbProvider.Users
-                                join member in DbHelper.GetDbProvider.UserRoles on user.Id equals member.IdUser
-                                where member.IdProject == WorkEnviroment.CurrentProject.IdProject
-                                select user).ToList()
-                            );
-                }
+                if (!WorkEnviroment.IsSetSetSession) return;
+                if (WorkEnviroment.CurrentProject == null) return;
+                Users =
+                    new NotifyObservableCollection<ApplicationUser>(
+                        (   from user in DbHelper.GetDbProvider.Users
+                            join member in DbHelper.GetDbProvider.UserRoles on user.Id equals member.IdUser
+                            where member.IdProject == WorkEnviroment.CurrentProject.IdProject
+                            select user).ToList()
+                        );
+                this.RaisePropertyChanged("Title");
             }
             catch (Exception ex)
             {       

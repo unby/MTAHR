@@ -130,6 +130,9 @@
     <Reference Include="Xceed.Wpf.AvalonDock">
       <HintPath>..\packages\Extended.Wpf.Toolkit.2.3\lib\net40\Xceed.Wpf.AvalonDock.dll</HintPath>
     </Reference>
+    <Reference Include="Xceed.Wpf.AvalonDock.Themes.Metro">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.2.3\lib\net40\Xceed.Wpf.AvalonDock.Themes.Metro.dll</HintPath>
+    </Reference>
     <Reference Include="Xceed.Wpf.DataGrid">
       <HintPath>..\packages\Extended.Wpf.Toolkit.2.3\lib\net40\Xceed.Wpf.DataGrid.dll</HintPath>
     </Reference>
@@ -155,6 +158,8 @@
       <DependentUpon>SystemAdminWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Config\DesktopSettings.cs" />
+    <Compile Include="Config\FileLoadService.cs" />
+    <Compile Include="Config\IService.cs" />
     <Compile Include="Config\WorkEnviroment.cs" />
     <Compile Include="Design\DesignDataService.cs" />
     <Compile Include="E.cs" />
@@ -165,18 +170,16 @@
     <Compile Include="Model\DataService.cs" />
     <Compile Include="Model\IDataService.cs" />
     <Compile Include="Model\ModalMessage.cs" />
-    <Compile Include="Styles\CustomizedWindow\VS2012WindowStyle.cs" />
     <Compile Include="Utils\AttachedProperties%28DialogResult%29.cs" />
     <Compile Include="Utils\AttachedProperty\CloseDialog.cs" />
     <Compile Include="Utils\DbHelper.cs" />
-    <Compile Include="Utils\DialogResultEvent.cs" />
     <Compile Include="Utils\Extention.cs" />
-    <Compile Include="Utils\ICrud.cs" />
-    <Compile Include="Utils\IDialogResult.cs" />
     <Compile Include="Admin\AdminProjectsWindow.cs" />
     <Compile Include="ViewModel\CurrentInfo.cs" />
     <Compile Include="ViewModel\CurrentTasksViewModel.cs" />
     <Compile Include="ViewModel\IModelAction.cs" />
+    <Compile Include="ViewModel\Menu\NewFile.cs" />
+    <Compile Include="ViewModel\Menu\NewFilesViewModel.cs" />
     <Compile Include="ViewModel\NotivicationViewModel.cs" />
     <Compile Include="ViewModel\ProjectManageViewModel.cs" />
     <Compile Include="ViewModel\Report\ObjectivesReportViewModel.cs" />
@@ -203,6 +206,9 @@
     <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Compile Include="View\AuthenticationWindows.xaml.cs">
       <DependentUpon>AuthenticationWindows.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Control\ProgressButton.xaml.cs">
+      <DependentUpon>ProgressButton.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\Control\RichTextEditor\RichTextboxAssistant.cs" />
     <Compile Include="View\Control\RichTextEditor\RichTextEditor.xaml.cs">
@@ -234,6 +240,9 @@
     <Compile Include="View\Document\UsersTask.cs" />
     <Compile Include="View\Document\UserTreeViewModel.cs" />
     <Compile Include="View\ItemKeyValue.cs" />
+    <Compile Include="View\Menu\NewFilesMenu.xaml.cs">
+      <DependentUpon>NewFilesMenu.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\NotivicationWindow.xaml.cs">
       <DependentUpon>NotivicationWindow.xaml</DependentUpon>
     </Compile>
@@ -277,8 +286,11 @@
     <Compile Include="View\TreeViewUserAndTasks\TreeViewUserAndTasks.xaml.cs">
       <DependentUpon>TreeViewUserAndTasks.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\ViewConverter\TwoListSynchronizer.cs" />
     <Compile Include="View\ViewConverter\HtmlToFlowDocumentConverter.cs" />
     <Compile Include="View\ViewConverter\EnumDescriptionConverter.cs" />
+    <Compile Include="View\ViewConverter\IListItemConverter.cs" />
+    <Compile Include="View\ViewConverter\MultiSelectorBehaviours.cs" />
     <Compile Include="View\ViewConverter\TypePropertyView.cs" />
     <Compile Include="View\ViewConverter\UserToTextConverter.cs" />
     <Page Include="Admin\PointEnterWindow.xaml">
@@ -317,13 +329,9 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Skins\MainSkin.xaml">
-      <Generator>MSBuild:Compile</Generator>
+    <Page Include="Styles\MetroListBoxStyle.xaml">
       <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Styles\CustomizedWindow\VS2012WindowStyle.xaml">
       <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
     </Page>
     <Page Include="Styles\OutlookStyle.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -365,6 +373,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="View\Control\ProgressButton.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\Control\RichTextEditor\RichTextEditor.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -388,6 +400,10 @@
     <Page Include="View\Document\UserDocument.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\Menu\NewFilesMenu.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\NotivicationWindow.xaml">
       <SubType>Designer</SubType>
@@ -509,11 +525,6 @@
   <ItemGroup>
     <Folder Include="themes\WPF Themes\" />
     <Folder Include="ViewModel\Extendet\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="MainWindowView\Images\City.png" />
-    <Resource Include="MainWindowView\Images\Region.png" />
-    <Resource Include="MainWindowView\Images\State.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="View\Control\RichTextEditor\Images\charactergrowfont.png" />

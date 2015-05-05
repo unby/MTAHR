@@ -41,11 +41,11 @@
             </Grid.ColumnDefinitions>
            <StackPanel Grid.ColumnSpan="2"  Margin="2" Grid.Row="0" Orientation="Horizontal">
                 <Label Margin="20,3,20,0" FontSize="16">ФИО</Label>
-               <TextBox Width="671" Text="{Binding FIOField}"></TextBox>
+               <TextBox Width="671" Text="{Binding FioField}"></TextBox>
            </StackPanel>
             <StackPanel  Grid.Row="1" Grid.Column="0" Orientation="Horizontal">
-                <controls:ToggleSwitch Margin="16,0,6,0"  HorizontalAlignment="Left"  IsChecked="{Binding IsWork}" VerticalAlignment="Stretch" Content="{Binding IsWorkText}"/>
-                <controls:ToggleSwitch Margin="6,0,6,0"  HorizontalAlignment="Left" Visibility="{Binding IsVisibleProjectUser}" VerticalAlignment="Stretch" IsChecked="{Binding IsProject}" Content="{Binding IsProjectText}"/>
+                <controls:ToggleSwitch Margin="16,0,6,0"  HorizontalAlignment="Left" OffLabel="Не работает" OnLabel="Работает" IsChecked="{Binding IsWork}" VerticalAlignment="Stretch" />
+                <controls:ToggleSwitch Margin="6,0,6,0"  HorizontalAlignment="Left" OffLabel="В проекте" OnLabel="В базе" Visibility="{Binding IsVisibleProjectUser}" VerticalAlignment="Stretch" IsChecked="{Binding IsProject}" />
             </StackPanel>
             <Button Margin="4" Grid.Row="1" Grid.Column="1" Command="{Binding Search}">Искать</Button>
         </Grid>
@@ -55,7 +55,7 @@
                   TextOptions.TextFormattingMode="Display"
                   Margin="5"
                   IsReadOnly="True"
-                  SelectionUnit="FullRow"
+                  SelectionUnit="Cell"
                   ItemsSource="{Binding Users}"
                   AutoGenerateColumns="False"> 
             <DataGrid.Columns>

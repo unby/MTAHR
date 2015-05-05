@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BaseType.Common
 {
@@ -36,7 +33,10 @@ namespace BaseType.Common
         #endregion
 
         #region Constructor
-
+        public NotifyObservableCollection()
+            : base()
+        {
+        }
         public NotifyObservableCollection(IEnumerable<TItem> collection)
             : base(collection)
         {
@@ -48,27 +48,20 @@ namespace BaseType.Common
 
         protected override void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
         {
-            if (e.Action == NotifyCollectionChangedAction.Add)
+            switch (e.Action)
             {
-                foreach (var item in e.NewItems)
-                {
-                    var notifyItem = item as INotifyPropertyChanged;
-                    if (notifyItem != null)
+                case NotifyCollectionChangedAction.Add:
+                    foreach (var notifyItem in e.NewItems.OfType<INotifyPropertyChanged>())
                     {
                         notifyItem.PropertyChanged += ItemPropertyChanged;
                     }
-                }
-            }
-            else if (e.Action == NotifyCollectionChangedAction.Remove)
-            {
-                foreach (var item in e.OldItems)
-                {
-                    var notifyItem = item as INotifyPropertyChanged;
-                    if (notifyItem != null)
+                    break;
+                case NotifyCollectionChangedAction.Remove:
+                    foreach (var notifyItem in e.OldItems.OfType<INotifyPropertyChanged>())
                     {
                         notifyItem.PropertyChanged -= ItemPropertyChanged;
                     }
-                }
+                    break;
             }
             base.OnCollectionChanged(e);
         }

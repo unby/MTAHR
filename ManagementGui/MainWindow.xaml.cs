@@ -3,20 +3,20 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 using BaseType;
 using BaseType.Report;
 using BaseType.Utils;
 using MahApps.Metro.Controls;
-using ManagementGui.Admin;
 using ManagementGui.Config;
 using ManagementGui.Utils;
 using ManagementGui.View;
 using ManagementGui.View.Current;
 using ManagementGui.View.Document;
+using ManagementGui.View.Menu;
 using ManagementGui.ViewModel;
 using Xceed.Wpf.AvalonDock.Layout;
+using ThicknessConverter = Xceed.Wpf.DataGrid.Converters.ThicknessConverter;
 
 namespace ManagementGui
 {
@@ -25,12 +25,14 @@ namespace ManagementGui
     public delegate void DelegateTaskOpen(Guid idTask);
 
     public delegate void DelegateCloseDocument(List<Guid> godList);
+
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : MetroWindow
     {
-        public Dictionary<Guid,LayoutDocument> OpenDocuments=new Dictionary<Guid, LayoutDocument>();
+      
+        #region StaticObject
         private static DelegateCloseDocument RemoteCloseDocument { get; set; }
         private static DelegateUserCreateTask RemoteCreateTaskTask { get; set; }
         private static DelegateOpenUser RemoteOpenUser { get; set; }
@@ -56,81 +58,77 @@ namespace ManagementGui
         {
             RemoteCloseDocument(save);
         }
+        #endregion
 
         /// <summary>
         /// Initializes a new instance of the MainWindow class.
         /// </summary>
         public MainWindow()
         {
-            RemoteCloseDocument = CloseDocument;
-            RemoteOpenTask = OpenTask;
-            RemoteCreateTaskTask = CreateTask;
-            RemoteOpenUser = RemoteOpenUserCall;
-            var model = new AuthenticationWindowViewModel();
-            var authenticationWindows = new AuthenticationWindows { DataContext = model };
-            if (authenticationWindows.ShowDialog() == true)
+
+            try
             {
-                InitializeComponent();
-                View = new MainViewModel();
-                DataContext = View;
+                RemoteCloseDocument = CloseDocument;
+                RemoteOpenTask = OpenTask;
+                RemoteCreateTaskTask = CreateTask;
+                RemoteOpenUser = RemoteOpenUserCall;
+                var model = new AuthenticationWindowViewModel();
+                var authenticationWindows = new AuthenticationWindows {DataContext = model};
+
+                if (authenticationWindows.ShowDialog() == true)
+                {
+                    InitializeComponent();
+                    View = new MainViewModel();
+                    DataContext = View;
+                    Guid id;
+                    if (!Guid.TryParse(DesktopSettings.Default.SessionSettings.LastProject, out id))
+                        ShowMyProjects_OnClick(null, null);
+                    ADManager.DocumentClosed += ADManager_DocumentClosed;
+                }
+                else { Application.Current.Shutdown(); }
             }
-            else
+            catch (Exception ex)
             {
-                try
-                {
-                    Application.Current.Shutdown();
-                }
-                catch(Exception ex)
-                {
-                    Logger.WriteException("MainWindow Constructor", ex);
-                }
+                Application.Current.Shutdown();
             }
-            Guid id;
-            if(!Guid.TryParse(DesktopSettings.Default.SessionSettings.LastProject,out id))
-                ShowMyProjects_OnClick(null, null);
-            ADManager.DocumentClosed+=ADManager_DocumentClosed;
         }
 
+        public static Guid NewFilesId=Guid.NewGuid();
+        public Dictionary<Guid, LayoutAnchorable> OpenAnchorables = new Dictionary<Guid, LayoutAnchorable>();
+
+        public void AddLayoutAnchorable(Guid id,LayoutAnchorable layout)
+        {
+            var obj = ADManager.Layout.Descendents().OfType<LayoutAnchorablePane>().FirstOrDefault();
+            if (obj != null) obj.Children.Add(layout);
+        }
+
+        public Dictionary<Guid, LayoutDocument> OpenDocuments = new Dictionary<Guid, LayoutDocument>();
         private void CloseDocument(List<Guid> godlist)
         {
-            if(godlist==null)
-                godlist=new List<Guid>(){_myProjGuid};
+            if (godlist == null)
+                godlist = new List<Guid> {_myProjGuid};
             else
                 godlist.Add(_myProjGuid);
-            foreach (var doc in OpenDocuments.Where(doc => !godlist.Contains(doc.Key)))
-            {               
-                doc.Value.Close();
+            var x = OpenDocuments.Where(doc => !godlist.Contains(doc.Key)).Select(doc => doc.Value).ToList();
+            foreach (var item in x)
+            {
+                item.Close();
             }
+            OpenDocuments=new Dictionary<Guid, LayoutDocument>();
         }
 
         private void RemoteOpenUserCall(ApplicationUser item)
         {
             try
             {
-                var obj = ADManager.Layout.Descendents().OfType<LayoutDocumentPane>().FirstOrDefault();
-                if (obj != null)
+                if (item == null) return;
+                var doc = new LayoutDocument
                 {
-                    if (item != null)
-                    {
-                        if (!OpenDocuments.ContainsKey(item.Id))
-                        {
-                            var doc = new LayoutDocument()
-                            {
-                                Title = item.UserShortName(),
-                                Description = item.UserShortNameAndPost()
-                            };
-                            doc.Content = new UserDocument(item);
-                            obj.Children.Add(doc);
-                            OpenDocuments.Add(item.Id, doc);
-                            doc.IsActive = true;
-                        }
-                        else
-                        {
-                            LayoutDocument panel = OpenDocuments[item.Id];
-                            panel.IsActive = true;
-                        }
-                    }
-                }
+                    Title = item.UserShortName(),
+                    Description = item.UserShortNameAndPost(),
+                    Content = new UserDocument(item)
+                };
+                OpenOrActiveLayoutDocument(item.Id, doc);
             }
             catch (Exception ex)
             {
@@ -142,63 +140,42 @@ namespace ManagementGui
         {
             lock (OpenDocuments)
             {
-                OpenDocuments.Remove(OpenDocuments.FirstOrDefault(f => f.Value == e.Document).Key);
+                OpenDocuments.Remove(OpenDocuments.FirstOrDefault(f => f.Value.Equals(e.Document)).Key);
             }
         }
 
         private void OpenTask(Guid idtask)
         {
-            if (OpenDocuments.ContainsKey(idtask))
+            Task task = DbHelper.GetDbProvider.Tasks.FirstOrDefault(f => f.IdTask == idtask);
+            if (task == null) return;
+            var doc = new LayoutDocument
             {
-                LayoutDocument panel = OpenDocuments[idtask];
-                panel.IsActive = true;
-            }
-            else
-            {
-                var obj = ADManager.Layout.Descendents().OfType<LayoutDocumentPane>().FirstOrDefault();
-                if (obj != null)
-                {
-                    Task task = DbHelper.GetDbProvider.Tasks.FirstOrDefault(f => f.IdTask == idtask);
-                    if (task != null)
-                    {
-                        var doc = new LayoutDocument()
-                        {
-                            Title = "Новый пользователь",
-                            Description = "Новый пользователь"
-                        };
-                        doc.Content = new TaskDocument(task);
-                        obj.Children.Add(doc);
-                        doc.IsActive = true;
-                    }
-                }
-            }
-        }
-
-        private void MISistemUserList_OnClick(object sender, RoutedEventArgs e)
-        {
-            var projectWindow=new ProjectsWindow();
-            projectWindow.ShowDialog();
+                Title = "Новый пользователь",
+                Description = "Новый пользователь",
+                Content = new TaskDocument(task)
+            };
+            OpenOrActiveLayoutDocument(idtask,doc);
         }
 
         private void NewUserCreateOnClick(object sender, RoutedEventArgs e)
         {
             try
             {
-                var obj = ADManager.Layout.Descendents().OfType<LayoutDocumentPane>().FirstOrDefault();
-                if (obj != null)
+                var user = new ApplicationUser
                 {
-                    var userRole = new ApplicationUser()
-                    {
-                        IsWork = true,
-                        Id = Guid.NewGuid(),
-                        Comment = "Новый пользователь"
-                    };
-                    var doc = new LayoutDocument() {Title = "Новый пользователь", Description = "Новый пользователь"};
-                    doc.Content = new UserDocument(userRole);
-                    View.Users.Add(userRole);
-                    obj.Children.Add(doc);
-                    doc.IsActive = true;
-                }
+                    IsWork = true,
+                    Id = Guid.NewGuid(),
+                    Comment = "Новый пользователь",
+                    PasswordHash = Guid.NewGuid().ToString()
+                };
+                var doc = new LayoutDocument
+                {
+                    Title = "Новый пользователь",
+                    Description = "Новый пользователь",
+                    Content = new UserDocument(user)
+                };
+                View.Users.Add(user);
+                OpenOrActiveLayoutDocument(user.Id, doc);
             }
             catch (Exception ex)
             {
@@ -210,32 +187,15 @@ namespace ManagementGui
         {
             try
             {
-                var obj = ADManager.Layout.Descendents().OfType<LayoutDocumentPane>().FirstOrDefault();
-                if (obj != null)
+                var item = TreeUsers.SelectedItem as ApplicationUser;
+                if (item == null) return;
+                var doc = new LayoutDocument
                 {
-                    var item = TreeUsers.SelectedItem as ApplicationUser;
-                    if (item != null)
-                    {
-                        if (!OpenDocuments.ContainsKey(item.Id))
-                        {
-                            var doc = new LayoutDocument
-                            {
-                                Title = item.UserShortName(),
-                                Description = item.UserShortNameAndPost(),
-                                Content = new UserDocument(item)
-                            };
-                            obj.Children.Add(doc);
-                            OpenDocuments.Add(item.Id, doc);
-                            doc.IsActive = true;
-                        }
-                        else
-                        {
-                            LayoutDocument panel = OpenDocuments[item.Id];
-                            panel.IsActive = true;
-                        }
-                    }
-                }
-
+                    Title = item.UserShortName(),
+                    Description = item.UserShortNameAndPost(),
+                    Content = new UserDocument(item)
+                };
+                OpenOrActiveLayoutDocument(item.Id, doc);
             }
             catch (Exception ex)
             {
@@ -247,31 +207,15 @@ namespace ManagementGui
         {
             try
             {
-                var obj = ADManager.Layout.Descendents().OfType<LayoutDocumentPane>().FirstOrDefault();
-                if (obj != null)
+                var item = TreeUsers.SelectedItem as ApplicationUser;
+                if (item == null) return;
+                var doc = new LayoutDocument
                 {
-                    var item = TreeUsers.SelectedItem as ApplicationUser;
-                    if (item != null)
-                    {
-                        if (!OpenDocuments.ContainsKey(item.Id))
-                        {
-                           var doc = new LayoutDocument()
-                            {
-                                Title = item.UserShortName(),
-                                Description = item.UserShortNameAndPost()
-                            };
-                           doc.Content = new UserDocument(item);
-                            obj.Children.Add(doc);
-                            OpenDocuments.Add(item.Id, doc);
-                            doc.IsActive = true;
-                        }
-                        else
-                        {
-                            LayoutDocument panel = OpenDocuments[item.Id];
-                            panel.IsActive = true;
-                        }
-                    }
-                }
+                    Title = item.UserShortName(),
+                    Description = item.UserShortNameAndPost(),
+                    Content = new UserDocument(item)
+                };
+                OpenOrActiveLayoutDocument(item.Id, doc);
             }
             catch (Exception ex)
             {
@@ -283,48 +227,41 @@ namespace ManagementGui
         {
             try
             {
-                var obj = ADManager.Layout.Descendents().OfType<LayoutDocumentPane>().FirstOrDefault();
-                if (obj != null)
+                var task = new Task
                 {
-
-                        var task = new Task()
-                        {
-                            IdTask = Guid.NewGuid(),
-                            DateCreate = DateTime.Now,
-                            DateFinish = DateTime.Now.AddDays(3),
-                            Project = WorkEnviroment.CurrentProject.IdProject,
-                            Author = WorkEnviroment.ApplicationUserSession.Id,
-                            Status = StatusTask.Open
-                        };
-                    if (applicationUser != null)
+                    IdTask = Guid.NewGuid(),
+                    DateCreate = DateTime.Now,
+                    DateFinish = DateTime.Now.AddDays(3),
+                    Project = WorkEnviroment.CurrentProject.IdProject,
+                    Author = WorkEnviroment.ApplicationUserSession.Id,
+                    Status = StatusTask.Open
+                };
+                if (applicationUser != null)
+                {
+                    task.WorkGroup = new ObservableCollection<TaskMembers>
                     {
-                        task.WorkGroup = new ObservableCollection<TaskMembers>
+                        new TaskMembers
                         {
-                            new TaskMembers()
-                            {
-                                Task = task,
-                                User = applicationUser,
-                                LevelNotivication = LevelNotivication.Normal,
-                                TaskRole = TaskRoles.Participant,
-
-                                IdUser = applicationUser.Id,
-                                IdTask = task.IdTask
-                            }
-                        };
-                    }
-                    else
-                    {
-                        task.WorkGroup = new ObservableCollection<TaskMembers>();
-                    }
-                    var doc = new LayoutDocument()
-                        {
-                            Title = "Новая задача",
-                            Description = "Новая задача"
-                        };
-                        doc.Content = new TaskDocument(task);
-                        obj.Children.Add(doc);
-                        doc.IsActive = true;
-                    }               
+                            Task = task,
+                            User = applicationUser,
+                            LevelNotivication = LevelNotivication.Normal,
+                            TaskRole = TaskRoles.Participant,
+                            IdUser = applicationUser.Id,
+                            IdTask = task.IdTask
+                        }
+                    };
+                }
+                else
+                {
+                    task.WorkGroup = new ObservableCollection<TaskMembers>();
+                }
+                var doc = new LayoutDocument
+                {
+                    Title = "Новая задача",
+                    Description = "Новая задача",
+                    Content = new TaskDocument(task)
+                };
+                OpenOrActiveLayoutDocument(task.IdTask,doc);
             }
             catch (Exception ex)
             {
@@ -336,46 +273,37 @@ namespace ManagementGui
         {
             try
             {
-                var obj = ADManager.Layout.Descendents().OfType<LayoutDocumentPane>().FirstOrDefault();
-                if (obj != null)
+                var item = TreeUsers.SelectedItem as ApplicationUser;
+                if (item == null) return;
+                var task = new Task
                 {
-                    var item = TreeUsers.SelectedItem as ApplicationUser;
-                    if (item != null)
+                    IdTask = Guid.NewGuid(),
+                    DateFinish = DateTime.Now.AddDays(3),
+                    Project = WorkEnviroment.CurrentProject.IdProject
+                };
+                task.WorkGroup = new ObservableCollection<TaskMembers>
+                {
+                    new TaskMembers
                     {
-                            var task = new Task()
-                            {
-                                IdTask = Guid.NewGuid(),
-                                DateFinish = DateTime.Now.AddDays(3),
-                                Project = WorkEnviroment.CurrentProject.IdProject
-                            };
-                            task.WorkGroup = new ObservableCollection<TaskMembers>
-                            {
-                                new TaskMembers()
-                                {
-                                    Task = task,
-                                    User = item,
-                                    LevelNotivication = LevelNotivication.Normal,
-                                    TaskRole = TaskRoles.Participant,
-                                    IdUser = item.Id,
-                                    IdTask = task.IdTask
-                                }
-                            };
-                        var doc = new LayoutDocument
-                            {
-                                Title = task.NameTask.CutString(0, 16),
-                                Description = task.NameTask,
-                                Content = new TaskDocument(task)
-                            };
-                        obj.Children.Add(doc);
-                            OpenDocuments.Add(item.Id, doc);
-                            doc.IsActive = true;
-                        
+                        Task = task,
+                        User = item,
+                        LevelNotivication = LevelNotivication.Normal,
+                        TaskRole = TaskRoles.Participant,
+                        IdUser = item.Id,
+                        IdTask = task.IdTask
                     }
-                }
+                };
+                var doc = new LayoutDocument
+                {
+                    Title = "Новая задача",
+                    Description = "Новая задача",
+                    Content = new TaskDocument(task)
+                };
+                OpenOrActiveLayoutDocument(task.IdTask, doc);
             }
             catch (Exception ex)
             {
-              Logger.MessageBoxException(ex);
+                Logger.MessageBoxException(ex);
             }
         }
 
@@ -384,28 +312,47 @@ namespace ManagementGui
             throw new NotImplementedException();
         }
 
-        private void NewTaskOnClick(object sender, RoutedEventArgs e)
+        private void OpenOrActiveLayoutDocument(Guid id, LayoutDocument doc)
         {
             try
             {
                 var obj = ADManager.Layout.Descendents().OfType<LayoutDocumentPane>().FirstOrDefault();
-                if (obj != null)
+                if (obj == null) return;
+                if (OpenDocuments.ContainsKey(id))
                 {
-                        var task = new Task
-                        {
-                            IdTask = Guid.NewGuid(),
-                            WorkGroup = new ObservableCollection<TaskMembers>()
-                        };
-                        var doc = new LayoutDocument
-                        {
-                            Title = task.NameTask.CutString(0, 16),
-                            Description = task.NameTask,
-                            Content = new TaskDocument(task)
-                        };
-                        obj.Children.Add(doc);
-                        OpenDocuments.Add(task.IdTask, doc);
-                        doc.IsActive = true;                   
+                    var panel = OpenDocuments[id];
+                    panel.IsActive = true;
                 }
+                else
+                {
+                    obj.Children.Add(doc);
+                    OpenDocuments.Add(id, doc);
+                    doc.IsActive = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Ошибка открытия документа!", MessageBoxButton.OK,
+                    MessageBoxImage.Information);
+            }
+        }
+
+        private void NewTaskOnClick(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var task = new Task
+                {
+                    IdTask = Guid.NewGuid(),
+                    WorkGroup = new ObservableCollection<TaskMembers>()
+                };
+                var doc = new LayoutDocument
+                {
+                    Title = task.NameTask.CutString(0, 16),
+                    Description = task.NameTask,
+                    Content = new TaskDocument(task)
+                };
+                OpenOrActiveLayoutDocument(task.IdTask, doc);
             }
             catch (Exception ex)
             {
@@ -413,103 +360,32 @@ namespace ManagementGui
             }
         }
 
-        private void ManageSystem_OnClick(object sender, RoutedEventArgs e)
-        {
-            var adminWindow = new SystemAdminWindow();
-            adminWindow.ShowDialog();
-        }
+        private readonly Guid _myProjGuid = Guid.NewGuid();
 
-        readonly Guid _myProjGuid = Guid.NewGuid();
         private void ShowMyProjects_OnClick(object sender, RoutedEventArgs e)
         {
-            
-            var obj = ADManager.Layout.Descendents().OfType<LayoutDocumentPane>().FirstOrDefault();
-            if (obj != null)
+            var doc = new LayoutDocument
             {
-                if (!OpenDocuments.ContainsKey(_myProjGuid))
-                {
-                    var doc = new LayoutDocument()
-                    {
-                        Title = "Мои проекты",
-                        Description = "Управление проектами"
-                    };
-                    doc.Content = new ProjectManage();
-                    obj.Children.Add(doc);
-                    OpenDocuments.Add(_myProjGuid, doc);
-                    doc.IsActive = true;
-                }
-                else
-                {
-                    LayoutDocument panel = OpenDocuments[_myProjGuid];
-                    panel.IsActive = true;
-                }
-            }
+                Title = "Мои проекты",
+                Description = "Управление проектами",
+                Content = new ProjectManage()
+            };
+            OpenOrActiveLayoutDocument(_myProjGuid, doc);
         }
 
         private void TreeViewDoubleClickOpenReport(object sender, MouseButtonEventArgs e)
         {
             try
             {
-                var obj = ADManager.Layout.Descendents().OfType<LayoutDocumentPane>().FirstOrDefault();
-                if (obj != null)
+                var item = ReportList.SelectedItem as ReportItem;
+                if (item == null) return;
+                var doc = new LayoutDocument
                 {
-                    var item = ReportList.SelectedItem as ReportItem;
-                    if (item != null)
-                    {
-                        if (!OpenDocuments.ContainsKey(item.Id))
-                        {
-                            var doc = new LayoutDocument()
-                            {
-                                Title = item.Name,
-                                Description = item.Description
-                            };
-                            doc.Content = Activator.CreateInstance(item.Type);
-                            obj.Children.Add(doc);
-                            OpenDocuments.Add(item.Id, doc);
-                            doc.IsActive = true;
-                        }
-                        else
-                        {
-                            LayoutDocument panel = OpenDocuments[item.Id];
-                            panel.IsActive = true;
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Logger.MessageBoxException(ex);
-            }
-        }
-        readonly Guid CurrentesTaskId = Guid.NewGuid();
-        private void Users_OnSelected(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                if (Currentes != null && Currentes.IsSelected)
-                {
-                    var obj = ADManager.Layout.Descendents().OfType<LayoutDocumentPane>().FirstOrDefault();
-                    if (obj != null)
-                    {
-                        if (!OpenDocuments.ContainsKey(CurrentesTaskId))
-                        {
-                            var doc = new LayoutDocument
-                            {
-                                Title = "Задачи",
-                                Description = string.Format("Задачи ({0})", WorkEnviroment.CurrentProject.Name),
-                                Content = new CurrentTasks()
-                            };
-                            obj.Children.Add(doc);
-                            OpenDocuments.Add(CurrentesTaskId, doc);
-                            doc.IsActive = true;
-                        }
-                        else
-                        {
-                            LayoutDocument panel = OpenDocuments[CurrentesTaskId];
-                            panel.IsActive = true;
-                        }
-                    }
-                }
+                    Title = item.Name,
+                    Description = item.Description,
+                    Content = Activator.CreateInstance(item.Type)
+                };
+                OpenOrActiveLayoutDocument(item.Id, doc);
             }
             catch (Exception ex)
             {
@@ -517,39 +393,37 @@ namespace ManagementGui
             }
         }
 
-        private void Users_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        private readonly Guid _currentesTaskId = Guid.NewGuid();
+
+        private void Users_OnSelected(object sender, RoutedEventArgs e)
         {
             try
             {
-                if (Currentes!=null&&Currentes.IsSelected)
+                if (Currentes == null || !Currentes.IsSelected) return;
+                var doc = new LayoutDocument
                 {
-                    var obj = ADManager.Layout.Descendents().OfType<LayoutDocumentPane>().FirstOrDefault();
-                    if (obj != null)
-                    {
-                        if (!OpenDocuments.ContainsKey(CurrentesTaskId))
-                        {
-                            var doc = new LayoutDocument
-                            {
-                                Title = "Задачи",
-                                Description = string.Format("Задачи ({0})", WorkEnviroment.CurrentProject.Name),
-                                Content = new CurrentTasks()
-                            };
-                            obj.Children.Add(doc);
-                            OpenDocuments.Add(CurrentesTaskId, doc);
-                            doc.IsActive = true;
-                        }
-                        else
-                        {
-                            LayoutDocument panel = OpenDocuments[CurrentesTaskId];
-                            panel.IsActive = true;
-                        }
-                    }
-                }
+                    Title = "Задачи",
+                    Description = string.Format("Задачи ({0})", WorkEnviroment.CurrentProject.Name),
+                    Content = new CurrentTasks()
+                };
+                OpenOrActiveLayoutDocument(_currentesTaskId, doc);
             }
             catch (Exception ex)
             {
                 Logger.MessageBoxException(ex);
             }
-        }     
+        }
+
+        private void MISistemUserList_OnClick(object sender, RoutedEventArgs e)
+        {
+            
+        }
+
+        private void ShowNewFilesMenu_OnClick(object sender, RoutedEventArgs e)
+        {
+            var layoutAnchorable = new LayoutAnchorable { Title = "Новые файлы", Content = new NewFilesMenu() };
+
+            AddLayoutAnchorable(NewFilesId, layoutAnchorable);
+        }
     }
 }

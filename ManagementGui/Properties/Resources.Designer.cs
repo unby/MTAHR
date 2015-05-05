@@ -68,5 +68,14 @@ namespace ManagementGui.Properties {
                 return ResourceManager.GetString("TaskDocumentViewModel_DayNotivication_Error_Message", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Обязательно заполните фамилию сотрудника..
+        /// </summary>
+        internal static string UserDocumentViewModel_Surname_Обязательно_заполните_фамилию_сотрудника_ {
+            get {
+                return ResourceManager.GetString("UserDocumentViewModel_Surname_Обязательно_заполните_фамилию_сотрудника_", resourceCulture);
+            }
+        }
     }
 }

@@ -1,10 +1,19 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+
 
 namespace BaseType
 {
- 
+
+    public class ApplicationUserManager : UserManager<ApplicationUser, Guid>
+    {
+        public ApplicationUserManager(IUserStore<ApplicationUser, Guid> store)
+            : base(store)
+        {
+        }    
+    }
 
 
     public class ApplicationUserRole : IdentityUserRole<Guid>

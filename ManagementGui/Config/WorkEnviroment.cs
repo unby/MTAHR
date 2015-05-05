@@ -1,35 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using BaseType;
-using BaseType.Utils;
+using BaseType.Common;
 using ManagementGui.Utils;
+using ManagementGui.ViewModel.Menu;
 
 namespace ManagementGui.Config
 {
-    public class WorkEnviroment
+    public static class WorkEnviroment
     {
         public static Visibility ManageSystemMI
         {
-            get
-            {
-                if (IsModerator)
-                    return Visibility.Visible;
-                else
-                    return Visibility.Collapsed;
-            }
+            get {return IsModerator ? Visibility.Visible : Visibility.Collapsed;}
         }
-
+     //   public static FileLoadService FileLoadService { get; set; } 
         public static ApplicationUser ApplicationUserSession { get; set; }
         public static Project CurrentProject { get; set; }
         public static List<Project> UserProjects { get; set; }
         public static bool IsModerator { get; set; }
         public static List<SQLServerRoleUser> SqlServerRoles { get; set; }
-        public static DateTime StartDateTime {
+        public static DateTime StartDateTime
+        {
             get { return DateTime.Now.AddYears(-60); }
         }
         public static DateTime NowDateTime
@@ -48,7 +41,8 @@ namespace ManagementGui.Config
             ApplicationUserSession = new ApplicationUser();
             SqlServerRoles = new List<SQLServerRoleUser>();
             UserProjects = new List<Project>();
-
+            NewFiles=new NotifyObservableCollection<NewFile>();
+          //  FileLoadService = new FileLoadService(NewFiles);
         }
 
         private  static bool _isSetSession;
@@ -58,7 +52,7 @@ namespace ManagementGui.Config
         {
             try
             {
-                byte[] sid = SqlServerRoles[0].SID;               
+                var sid = SqlServerRoles[0].SID;               
                 ApplicationUserSession = DbHelper.GetDbProvider.Users.Single(w => w.SID == sid);
                 UserProjects = DbHelper.GetDbProvider.Projects.Where(w=>w.Author.Id==ApplicationUserSession.Id).ToList();
                 if (UserProjects != null && UserProjects.Count > 0)
@@ -79,8 +73,11 @@ namespace ManagementGui.Config
             }
         }
 
-        public static DateTime GetSendDefaultTime {
+        public static DateTime GetSendDefaultTime 
+        {
             get { return DateTime.Now.AddDays(1); }
         }
+
+        public static NotifyObservableCollection<NewFile> NewFiles { get; set; }
     }
 }

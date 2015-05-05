@@ -5,8 +5,6 @@ VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BaseType", "BaseType\BaseType.csproj", "{55E85DFB-2292-42C7-BE1A-F62E8DEEC828}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "test", "test\test.csproj", "{47E995A8-10CC-44DE-B2C2-D8ADBB0276DC}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ManagementGui", "ManagementGui\ManagementGui.csproj", "{95857FB2-B218-4006-B058-426206D273ED}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebMTHR", "WebMTHR\WebMTHR.csproj", "{F8EA8B00-BD16-4D9E-A13D-8917A4188EE8}"
@@ -14,6 +12,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OAuthClientExt", "OAuthClientExt\OAuthClientExt.csproj", "{1A0B4570-6689-46B7-8D00-B5F7742DBA55}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChronicleMTHR", "ChronicleMTHR\ChronicleMTHR.csproj", "{39438CE4-8445-44CB-9C35-0124226A4FC5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MTHRUtility", "MTHRUtility\MTHRUtility.csproj", "{3F3FCE8D-74D4-48B5-B908-08B2BA4AE5E6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,10 +25,6 @@ Global
 		{55E85DFB-2292-42C7-BE1A-F62E8DEEC828}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{55E85DFB-2292-42C7-BE1A-F62E8DEEC828}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{55E85DFB-2292-42C7-BE1A-F62E8DEEC828}.Release|Any CPU.Build.0 = Release|Any CPU
-		{47E995A8-10CC-44DE-B2C2-D8ADBB0276DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{47E995A8-10CC-44DE-B2C2-D8ADBB0276DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{47E995A8-10CC-44DE-B2C2-D8ADBB0276DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{47E995A8-10CC-44DE-B2C2-D8ADBB0276DC}.Release|Any CPU.Build.0 = Release|Any CPU
 		{95857FB2-B218-4006-B058-426206D273ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{95857FB2-B218-4006-B058-426206D273ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{95857FB2-B218-4006-B058-426206D273ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -45,6 +41,10 @@ Global
 		{39438CE4-8445-44CB-9C35-0124226A4FC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{39438CE4-8445-44CB-9C35-0124226A4FC5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{39438CE4-8445-44CB-9C35-0124226A4FC5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3F3FCE8D-74D4-48B5-B908-08B2BA4AE5E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3F3FCE8D-74D4-48B5-B908-08B2BA4AE5E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3F3FCE8D-74D4-48B5-B908-08B2BA4AE5E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3F3FCE8D-74D4-48B5-B908-08B2BA4AE5E6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

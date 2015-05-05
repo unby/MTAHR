@@ -30,6 +30,7 @@ namespace ManagementGui.View.TreeViewUserAndTasks.Common
         public void Dispose()
         {
             this.OnDispose();
+            GC.SuppressFinalize(this);
         }
 
         /// <summary>
