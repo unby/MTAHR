@@ -15,7 +15,7 @@
         Title="{Binding Title}"
         Icon="/mainicon.ico" 
          WindowStartupLocation="CenterScreen" 
-        BorderThickness="2" BorderBrush="{DynamicResource VS2012WindowBorderBrush}">
+        BorderThickness="2" BorderBrush="CornflowerBlue">
 
     <Window.Resources>
         <ResourceDictionary>
@@ -55,7 +55,7 @@
             </MenuItem>
             <MenuItem Name="Personal" Header="Персонал">
                 <MenuItem Header="Создать пользователя" Click="NewUserCreateOnClick"></MenuItem>
-                <MenuItem Header="Импорт сотрудников (*.xls)" Click="ImportPersonsOnXLS"></MenuItem>
+                <!--<MenuItem Header="Импорт сотрудников (*.xls)" Click="ImportPersonsOnXLS"></MenuItem>-->
             </MenuItem>
             <MenuItem Name="Task" Header="Задачи">
                 <MenuItem Header="Новая задача" Click="NewTaskOnClick"></MenuItem>
@@ -93,6 +93,7 @@
                     <ListBox.ContextMenu>
                         <ContextMenu>
                             <MenuItem Header="Добавить сотрудника" Click="NewUserCreateOnClick"/>
+                            <MenuItem Header="Добавить из списка" Click="AddUserFromListOnClick"/>
                         </ContextMenu>
                     </ListBox.ContextMenu>
                     <ListBox.ItemContainerStyle>
@@ -211,12 +212,12 @@
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="40"/>
-                                    <ColumnDefinition Width="200"/>
+                                    <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
-                                <Path Data="{Binding Path=Image}" Stretch="Uniform" Width="28" Height="28" 
+                                <Path Data="{Binding Path=Image}" Stretch="Uniform" Width="16" Height="16" 
                     Fill="{Binding RelativeSource={RelativeSource AncestorType=ListBoxItem, Mode=FindAncestor}, Path=Foreground}" />
                                 <StackPanel Grid.Column="1" Margin="5">
-                                    <TextBlock Text="{Binding Path=Name, FallbackValue=Name}" FontFamily="Segoe UI Light" FontSize="20" 
+                                    <TextBlock Text="{Binding Path=Name, FallbackValue=Name}" FontFamily="Segoe UI Light" FontSize="13" 
                             Foreground="{Binding RelativeSource={RelativeSource AncestorType=ListBoxItem, Mode=FindAncestor}, Path=Foreground}" />
                                 </StackPanel>
                             </Grid>

@@ -6,7 +6,7 @@ namespace BaseType.Migrations
     using System.Linq;
     // Sql("alter table [dbo].[WorkFiles] ALTER COLUMN [FileId] add rowguidcol ");
     // Sql("alter table [dbo].[WorkFiles] ADD [Data] varbinary(max) FILESTREAM NOT NULL");
-    internal sealed class Configuration : DbMigrationsConfiguration<ApplicationDbContext>
+    public sealed class Configuration : DbMigrationsConfiguration<ApplicationDbContext>
     {
         public Configuration()
         {

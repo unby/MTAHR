@@ -175,35 +175,35 @@ namespace ManagementGui.Admin
             }
         }
 
-        private  void SaveUser()
+        private async void SaveUser()
         {
             try
             {
-                if (Current != null)
+                if (Current == null) return;
+                if (EntityValidate.CostumValidator(Current))
                 {
-                    if (EntityValidate.CostumValidator(Current))
+                    if (string.IsNullOrEmpty(Current.PasswordHash))
                     {
-                        //Context.Users.Where(w => w.Id == Current.Id).Update(u =>new User
-                        //{
-                        //    BirthDate = Current.BirthDate,IsWork = Current.IsWork,Name = Current.Name,
-                        //    MiddleName = Current.MiddleName,Email = Current.MiddleName,Post = Current.Post,
-                        //    Comment = Current.Comment,PhoneNumber = Current.PhoneNumber,LoginName = Current.LoginName,SID = Current.SID,
-                        //    Surname = Current.Surname,SystemRole = Current.SystemRole
-                        //});
-                        
-                        Context.Users.AddOrUpdate(Current);
-                         Context.SaveChanges();
+                        using (
+                            var manager = new ApplicationUserManager(new ApplicationUserStore(DbHelper.GetDbProvider)))
+                        {
+                            await manager.CreateAsync(Current, Current.Id.ToByteArray().GetMd5());
+                        }
                     }
                     else
-                        MessageBox.Show("Корректно заполните инфорамцию о пользователе", "Информация о пользователе",
-                            MessageBoxButton.OK, MessageBoxImage.Stop);
+                    {
+                        Context.Users.AddOrUpdate(Current);
+                        await Context.SaveChangesAsync();
+                    }
+                   
                 }
+                else
+                    MessageBox.Show("Корректно заполните инфорамцию о пользователе", "Информация о пользователе",
+                        MessageBoxButton.OK, MessageBoxImage.Stop);
             }
             catch (Exception ex)
             {
-                MessageBox.Show(string.Format("Данные не сохранены:{1} {0}", ex.Message, Environment.NewLine),
-                    "Информация о пользователе, ошибка выполнения операции", MessageBoxButton.OK,
-                    MessageBoxImage.Error);
+                Logger.MessageBoxException(ex);
             }
         }
 
@@ -231,7 +231,7 @@ namespace ManagementGui.Admin
             set
             {
                     _applicationUser = value;
-                    RaisePropertyChanged("Current");
+                    RaisePropertyChanged();
             }
         }
     }

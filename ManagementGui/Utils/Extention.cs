@@ -11,10 +11,14 @@ namespace ManagementGui.Utils
     public static class Logger
     {
         public static NLog.Logger _log = LogManager.GetCurrentClassLogger();
-        public static void MessageBoxException( Exception except)
+
+        public static void MessageBoxException(Exception except)
         {
-            WriteException("",except);
-            MessageBox.Show(except.Message, except.Source, MessageBoxButton.OK, MessageBoxImage.Error);
+            WriteException("", except);
+            if (except.InnerException != null)
+                MessageBox.Show(except.InnerException.Message, except.InnerException.Source, MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+            else MessageBox.Show(except.Message, except.Source, MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
         public static string RemoveEndString(this string str, string sample)
@@ -28,11 +32,15 @@ namespace ManagementGui.Utils
         internal static void WriteException(Exception ex)
         {
             _log.ErrorException("",ex);
+            if(ex.InnerException!=null)
+                _log.ErrorException("", ex.InnerException);
         }
 
         internal static void WriteException(string info, Exception ex)
         {
             _log.ErrorException(info, ex);
+            if (ex.InnerException != null)
+                _log.ErrorException(info, ex.InnerException);
         }
     }
 }

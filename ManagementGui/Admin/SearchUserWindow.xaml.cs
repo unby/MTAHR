@@ -65,7 +65,7 @@ namespace ManagementGui
                                     Surname = row[2],
                                     Email = row[3],
                                     LoginName = row[2] + " " + row[0],
-                                    PasswordHash = Guid.NewGuid().ToString()
+                                    
                                 });
                                 countImportContacts++;
                                 continue;
@@ -90,7 +90,7 @@ namespace ManagementGui
                                     Surname = row[2],
                                     Email = row[3],
                                     LoginName = row[2]+" "+row[0],
-                                    PasswordHash = Guid.NewGuid().ToString()
+                                    
                                 });
                                 countImportContacts++;
                                 continue;

@@ -73,22 +73,15 @@ namespace ManagementGui.ViewModel
             get { return "Description"; }
         }
 
-        RelayCommand<UserViewTasks> _mouseDoubleClickCommand;
+        RelayCommand<Task> _mouseDoubleClickCommand;
         public ICommand MouseDoubleClickTasksGridCommand
         {
-            get
-            {
-                if (_mouseDoubleClickCommand == null)
-                {
-                    _mouseDoubleClickCommand = new RelayCommand<UserViewTasks>(OpenTask);
-                }
-                return _mouseDoubleClickCommand;
-            }
+            get { return _mouseDoubleClickCommand ?? (_mouseDoubleClickCommand = new RelayCommand<Task>(OpenTask)); }
         }
-        private void OpenTask(UserViewTasks obj)
+        private void OpenTask(Task obj)
         {
-            if (obj != null && obj.IdTask != Guid.Empty)
-                MainWindow.DelegateWindowOpenTask(obj.IdTask);
+            if (SelectedTask!=null)
+                MainWindow.DelegateWindowOpenTask(SelectedTask.IdTask);
         }
 
         private List<Task> _taskList;

@@ -73,29 +73,12 @@ namespace ManagementGui.Config
         {
             var config = ConfigurationManager.OpenExeConfiguration(_spath);
             var section = (DesktopSettings)config.Sections["DesktopSettings"];
-            section.SessionSettings = new SessionSettingsElement()
+            section.SessionSettings = new SessionSettingsElement
             {
                LastProject=id.ToString()
             };
-            //
             config.Save(ConfigurationSaveMode.Full);
         }
-
-		///<summary>Alternate means to SaveConnectionString the current property values to the config file</summary>
-		public void AltSave()
-		{
-			Configuration config = ConfigurationManager.OpenExeConfiguration(_spath);
-			var section = (DesktopSettings)config.Sections["DesktopSettings"];
-			section.LockItem = true;
-			//Copy the object for each top-level property:
-			foreach (ConfigurationProperty prop in section.Properties)
-			{
-				string name = prop.Name;
-				section.SetPropertyValue(section.Properties[name], this[name], false);
-			}
-			config.Save(ConfigurationSaveMode.Full);
-		}
-
 		#endregion Public Methods
 
 		#region Properties
@@ -105,7 +88,6 @@ namespace ManagementGui.Config
 			get { return DefaultInstance; }
 		}
 
-       // [System.Configuration.ConfigurationPropertyAttribute("ConnectionSettings")]
                 [ConfigurationProperty("ConnectionSettings")]
                 public ConnectionSettingsElement ConnectionSettings
                 {
@@ -125,10 +107,10 @@ namespace ManagementGui.Config
                     }
                     set { this["SessionSettings"] = value; }
                 }
-                public sealed class SessionSettingsElement : System.Configuration.ConfigurationElement
+                public sealed class SessionSettingsElement :ConfigurationElement
                 {
 
-                    [System.Configuration.ConfigurationPropertyAttribute("LastProject", IsRequired = true)]
+                    [ConfigurationPropertyAttribute("LastProject", IsRequired = true)]
                     public string LastProject
                     {
                         get

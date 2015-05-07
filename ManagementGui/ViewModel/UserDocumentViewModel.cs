@@ -13,11 +13,13 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using System.Threading.Tasks;
+using BaseType.Utils;
 using GalaSoft.MvvmLight.Command;
 using ManagementGui.Config;
 using BaseType;
 using ManagementGui.Utils;
 using ManagementGui.ViewModel.Validation;
+using Microsoft.AspNet.Identity;
 using RelayCommand = BaseType.Common.RelayCommand;
 
 
@@ -140,15 +142,24 @@ namespace ManagementGui.ViewModel
             get { return _save ?? (_save = new RelayCommand(SaveUser)); }
         }
 
-        private void SaveUser(object obj)
+        private async void SaveUser(object obj)
         {
             try
             {
                 if (string.IsNullOrEmpty(User.PasswordHash))
-                    User.PasswordHash = Guid.NewGuid().ToString();
-                _context.Users.AddOrUpdate(User);
-                _context.SaveChanges();
-                MainWindow.View.Users.Add(User);
+                {
+                    using (var manager = new ApplicationUserManager(new ApplicationUserStore(DbHelper.GetDbProvider)))
+                    {
+                         await manager.CreateAsync(User,User.Id.ToByteArray().GetMd5());
+                         MainWindow.View.Users.Add(User);
+                    }
+                }
+                else
+                {
+                    _context.Users.AddOrUpdate(User);
+                    _context.SaveChanges();
+                    
+                }
             }
             catch (Exception ex)
             {

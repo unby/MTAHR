@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Windows;
 using System.Windows.Input;
 using BaseType;
+using BaseType.Migrations;
 using MahApps.Metro.Controls;
 using ManagementGui.Config;
 using ManagementGui.Utils;
@@ -72,6 +74,11 @@ namespace ManagementGui.View
         private void PasswordPB_OnKeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter) Button_Click(null, null);
+        }
+
+        private void AuthenticationWindows_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            Database.SetInitializer<ApplicationDbContext>(new MigrateDatabaseToLatestVersion<ApplicationDbContext, Configuration>());
         }
     }
 }

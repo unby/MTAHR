@@ -14,6 +14,7 @@ namespace MTHRUtility
         ApplicationDbContext _context=new ApplicationDbContext("MTHRData");
         public UpdateContextStructure()
         {
+            keyAndValues = new KeyAndValues("-updcontext");
         }
 
         public UpdateContextStructure(KeyAndValues keyAndValues)

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using BaseType.Common;
@@ -9,6 +10,20 @@ namespace BaseType.Utils
 {
     public static class ExternalMethod
     {
+        public static string GetMd5(this byte[] data)
+        {
+            using (var md5Hash = MD5.Create())
+            {
+                var md5Bytes = md5Hash.ComputeHash(data);
+                var sBuilder = new StringBuilder();
+                for (int i = 0; i < data.Length; i++)
+                {
+                    sBuilder.Append(md5Bytes[i].ToString("x2"));
+                }
+                return sBuilder.ToString();
+            }
+        }
+
         public static bool EqualsWord(this string[] words, string bigWord)
         {
             return words.Any(word => bigWord != null && bigWord.Contains(word));

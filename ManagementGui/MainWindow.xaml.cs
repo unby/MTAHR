@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using BaseType;
 using BaseType.Report;
@@ -146,12 +147,12 @@ namespace ManagementGui
 
         private void OpenTask(Guid idtask)
         {
-            Task task = DbHelper.GetDbProvider.Tasks.FirstOrDefault(f => f.IdTask == idtask);
+            var task = DbHelper.GetDbProvider.Tasks.FirstOrDefault(f => f.IdTask == idtask);
             if (task == null) return;
             var doc = new LayoutDocument
             {
-                Title = "Новый пользователь",
-                Description = "Новый пользователь",
+                Title = task.NameTask,
+                Description = task.NameTask,
                 Content = new TaskDocument(task)
             };
             OpenOrActiveLayoutDocument(idtask,doc);
@@ -166,12 +167,12 @@ namespace ManagementGui
                     IsWork = true,
                     Id = Guid.NewGuid(),
                     Comment = "Новый пользователь",
-                    PasswordHash = Guid.NewGuid().ToString()
+                    
                 };
                 var doc = new LayoutDocument
                 {
                     Title = "Новый пользователь",
-                    Description = "Новый пользователь",
+                    Description = user.Comment,
                     Content = new UserDocument(user)
                 };
                 View.Users.Add(user);
@@ -348,7 +349,7 @@ namespace ManagementGui
                 };
                 var doc = new LayoutDocument
                 {
-                    Title = task.NameTask.CutString(0, 16),
+                    Title = "Новая задача",
                     Description = task.NameTask,
                     Content = new TaskDocument(task)
                 };
@@ -424,6 +425,32 @@ namespace ManagementGui
             var layoutAnchorable = new LayoutAnchorable { Title = "Новые файлы", Content = new NewFilesMenu() };
 
             AddLayoutAnchorable(NewFilesId, layoutAnchorable);
+        }
+
+        private async void AddUserFromListOnClick(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var window = new View.SearchUserWindow(DataGridSelectionMode.Single);
+                if (window.ShowDialog() != true) return;
+                var selectedUser = window.View.SelectedUsers[0];
+                if (WorkEnviroment.CurrentProject.Members.Any(a => a.IdUser == selectedUser.Id)) return;
+                var member = new Member
+                {
+                    Project = WorkEnviroment.CurrentProject,
+                    User = selectedUser,
+                    Role = Role.User
+                };
+                WorkEnviroment.CurrentProject.Members.Add(member);
+                DbHelper.GetDbProvider.UserRoles.Add(member);
+                await DbHelper.GetDbProvider.SaveChangesAsync();
+                View.Users.Add(selectedUser);
+
+            }
+            catch (Exception ex)
+            {
+                Logger.MessageBoxException(ex);
+            }
         }
     }
 }

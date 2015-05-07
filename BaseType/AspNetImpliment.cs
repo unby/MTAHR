@@ -13,6 +13,7 @@ namespace BaseType
             : base(store)
         {
         }    
+
     }
 
 
