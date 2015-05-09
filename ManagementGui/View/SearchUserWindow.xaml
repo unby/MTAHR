@@ -5,9 +5,11 @@
         xmlns:viewModel="clr-namespace:ManagementGui.ViewModel"
         xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
         xmlns:utils="clr-namespace:BaseType.Utils;assembly=BaseType"
-                       xmlns:properties="clr-namespace:ManagementGui.Utils.AttachedProperty"  
+        xmlns:properties="clr-namespace:ManagementGui.Utils.AttachedProperty"
+        xmlns:xcad="http://schemas.xceed.com/wpf/xaml/avalondock"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         properties:CloseDialog.DialogResult="{Binding IsDialogClose}"
-        Title="Окно поиска пользователей" MinHeight="400" MinWidth="500" ResizeMode="NoResize" SizeToContent="Height" 
+        Title="Окно поиска пользователей" MinHeight="400" MinWidth="500" SizeToContent="Height" 
     Icon="/mainicon.ico">
     <Window.DataContext>
         <viewModel:SearchUserViewModel/>
@@ -23,69 +25,159 @@
         </ObjectDataProvider>
         <utils:EnumDescriptionConverter x:Key="EnumItemsConverter"/>
     </Window.Resources>
-   <Grid>
-       <Grid.RowDefinitions>
-           <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition></RowDefinition>
-            <RowDefinition Height="50"></RowDefinition>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"  MaxHeight="200"></RowDefinition>
+            <RowDefinition Name="CenterRow" Height="*"></RowDefinition>
+            <RowDefinition Height="40" ></RowDefinition>
         </Grid.RowDefinitions>
-       <Grid Grid.Row="0">
-           <Grid.RowDefinitions>
-               <RowDefinition Height="40"></RowDefinition>
-                <RowDefinition Height="40"></RowDefinition>
+        <Grid Grid.Row="0">
+            <Expander Name="Expander" Header="Фильтр поиска" >
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="35"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="70"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="50"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="110"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Label Grid.Row="0" Grid.Column="0" Content="Фамилия:"/>
+                    <Label Grid.Row="0" Grid.Column="2" Content="Имя:"/>
+                    <Label Grid.Row="0"  Grid.Column="4" Content="Почтовый адрес:"/>
+                    <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding SureNameFind}"
+                             controls:TextBoxHelper.ClearTextButton="True"
+                         controls:TextBoxHelper.Watermark="Фамилия"/>
+                    <TextBox Grid.Row="0" Grid.Column="3" Text="{Binding NameFind}"
+                               controls:TextBoxHelper.ClearTextButton="True"
+                         controls:TextBoxHelper.Watermark="Имя"/>
+                    <TextBox Grid.Row="0" Grid.Column="5" Text="{Binding EMailFind}"
+                               controls:TextBoxHelper.ClearTextButton="True"
+                         controls:TextBoxHelper.Watermark="EMail"/>
+                    <Button Margin="4" Grid.Row="1" Grid.Column="4" Command="{Binding Search}">Искать</Button>
+                    <WrapPanel Grid.Row="1" Grid.ColumnSpan="2" Grid.Column="0">
+                        <RadioButton Visibility="Hidden" Name="Allrb" FlowDirection="RightToLeft" Margin="5" IsChecked="{Binding IsAllBase}" Content="По всей базе"/>
+                        <RadioButton Visibility="Hidden" Name="Projectrb" FlowDirection="RightToLeft"   Content="Текущий проект"/>
+                    </WrapPanel>
+                    <WrapPanel Grid.Row="1" Grid.ColumnSpan="2" Grid.Column="2">
+                        <CheckBox Name="IsWorkcb" FlowDirection="RightToLeft" Margin="5" IsChecked="{Binding IsWork}" >Только трудоустроенные</CheckBox>
 
-            </Grid.RowDefinitions>
-           <Grid.ColumnDefinitions>
-               <ColumnDefinition></ColumnDefinition>
-                <ColumnDefinition Width="260" MinWidth="160"></ColumnDefinition>
-            </Grid.ColumnDefinitions>
-           <StackPanel Grid.ColumnSpan="2"  Margin="2" Grid.Row="0" Orientation="Horizontal">
-                <Label Margin="20,3,20,0" FontSize="16">ФИО</Label>
-               <TextBox Width="671" Text="{Binding FioField}"></TextBox>
-           </StackPanel>
-            <StackPanel  Grid.Row="1" Grid.Column="0" Orientation="Horizontal">
-                <controls:ToggleSwitch Margin="16,0,6,0"  HorizontalAlignment="Left" OffLabel="Не работает" OnLabel="Работает" IsChecked="{Binding IsWork}" VerticalAlignment="Stretch" />
-                <controls:ToggleSwitch Margin="6,0,6,0"  HorizontalAlignment="Left" OffLabel="В проекте" OnLabel="В базе" Visibility="{Binding IsVisibleProjectUser}" VerticalAlignment="Stretch" IsChecked="{Binding IsProject}" />
-            </StackPanel>
-            <Button Margin="4" Grid.Row="1" Grid.Column="1" Command="{Binding Search}">Искать</Button>
+                    </WrapPanel>
+                </Grid>
+            </Expander>
         </Grid>
-        <DataGrid Grid.Row="1"
-                  Name="UserSearchGrid"     
-                  RenderOptions.ClearTypeHint="Enabled"
-                  TextOptions.TextFormattingMode="Display"
-                  Margin="5"
-                  IsReadOnly="True"
-                  SelectionUnit="Cell"
-                  ItemsSource="{Binding Users}"
-                  AutoGenerateColumns="False"> 
-            <DataGrid.Columns>
-                <DataGridCheckBoxColumn ElementStyle="{DynamicResource MetroDataGridCheckBox}"
+
+
+        <Grid Grid.Row="1" Margin="5"  >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition MinWidth="300"/>
+                <ColumnDefinition Width="3"/>
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <TabControl  Margin="0,0,3,0" BorderBrush="CadetBlue">
+                <TabControl.Resources>
+                    <Style TargetType="TabItem">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="TabItem">
+                                    <Border Name="Border" BorderThickness="1,1,1,0" BorderBrush="Gainsboro" CornerRadius="4,4,0,0" Margin="2,0">
+                                        <ContentPresenter x:Name="ContentSite"
+                                        VerticalAlignment="Center"
+                                        HorizontalAlignment="Center"
+                                        ContentSource="Header"
+                                        Margin="10,2"/>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsSelected" Value="True">
+                                            <Setter TargetName="Border" Property="Background" Value="LightSkyBlue" />
+                                        </Trigger>
+                                        <Trigger Property="IsSelected" Value="False">
+                                            <Setter TargetName="Border" Property="Background" Value="GhostWhite" />
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </TabControl.Resources>
+                <TabItem Name="SearchResultTI" Header="Результат поиска">
+                   
+                    <DataGrid 
+                                         Name="UserSearchGrid"     
+                                         RenderOptions.ClearTypeHint="Enabled"
+                                         TextOptions.TextFormattingMode="Display"
+                                         Margin="5"
+                                         SelectionUnit="FullRow" 
+                                         IsReadOnly="True"                                       
+                                         SelectedItem="{Binding CurrentUser}"
+                                         ItemsSource="{Binding Users}"
+                                         AutoGenerateColumns="False">
+                        <DataGrid.Columns>
+                            <DataGridCheckBoxColumn ElementStyle="{DynamicResource MetroDataGridCheckBox}"
                                         EditingElementStyle="{DynamicResource MetroDataGridCheckBox}"
                                         Header="Выбрать"
                                         Width="80"
                                         Binding="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow}, Path=IsSelected, Mode=OneWay}" />
-                <DataGridTextColumn Header="Фамилия"
+                            <DataGridTextColumn Header="Фамилия"
                                     MinWidth="100"
                                     Binding="{Binding Surname}" />
-                <DataGridTextColumn Header="Имя"
+                            <DataGridTextColumn Header="Имя"
                                      MinWidth="100"
                                     Binding="{Binding Name}" />
-                <DataGridTextColumn Header="Отчество"
+                            <DataGridTextColumn Header="Отчество"
                                      MinWidth="100"
                                     Binding="{Binding MiddleName}" />
-                <DataGridTextColumn Header="Email"
+                            <DataGridTextColumn Header="Email"
                                      MinWidth="150"
                                     Binding="{Binding Email}" />
-                <DataGridTextColumn Header="Должность"
+                            <DataGridTextColumn Header="Должность"
                                     MinWidth="150"
                                     Binding="{Binding Post}" />
-            </DataGrid.Columns>
-        </DataGrid>
-        <StackPanel Orientation="Horizontal" Margin="6" Grid.Row="2" HorizontalAlignment="Center">
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </TabItem>
+            </TabControl>
+          
+            <GridSplitter HorizontalAlignment="Right" VerticalAlignment="Stretch" Grid.Column="1"  ResizeBehavior="PreviousAndNext" Width="5" Background="Red"/>
+            <ScrollViewer Name="PropertyViewer" Margin="3,3,0,3" Grid.Column="2" MinWidth="250"  >
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <WrapPanel Name="ManageWPanel"  Visibility="Hidden">
+                        <Button  Command="{Binding CreateUser}"  x:Name="BtnCreateUser" HorizontalAlignment="Left" 
+						ToolTip="Создать пользователя" Content="{StaticResource IconAdd}" Width="30" Height="30"/>
+                        <Button ToolTip="Записать" Content="{StaticResource IconSave}" Command="{Binding SaveUser}" 
+						VerticalAlignment="Top" HorizontalAlignment="Right"/>
+                        <Button Name="PasswordResetBtn" Content="Сбросить пароль" Command="{Binding ResetPassword}" />
+                        <Button Name="PointEnterBtn"  Content="Точка входа в БД" Command="{Binding SetLoginDb}"/>
+                    </WrapPanel>
+                    <xctk:PropertyGrid NameColumnWidth="110" Name="UserPropertyGrid" IsEnabled="False" Grid.Row="1" SelectedObject="{Binding CurrentUser,Mode=TwoWay}" AutoGenerateProperties="True">
+                        <xctk:PropertyGrid.PropertyDefinitions>
+                            <xctk:PropertyDefinition IsBrowsable="False">
+                                <xctk:PropertyDefinition.TargetProperties>
+                       EmailConfirmed, SecurityStamp, PhoneNumberConfirmed,
+                       TwoFactorEnabled,LockoutEndDateUtc,LockoutEnabled,
+                       AccessFailedCount,PasswordHash,Claims,Logins,
+                       Members,Roles,UserName,UserTasks
+                                </xctk:PropertyDefinition.TargetProperties>
+                            </xctk:PropertyDefinition>
+                        </xctk:PropertyGrid.PropertyDefinitions>
+                    </xctk:PropertyGrid>
+                </Grid>
+            </ScrollViewer>
+        </Grid>
+
+        <StackPanel Orientation="Horizontal" Margin="6" Grid.Row="2" VerticalAlignment="Bottom" HorizontalAlignment="Center">
             <Button Width="60" Margin="0,0,15,0" Command="{Binding Select}">Выбрать</Button>
             <Button Width="60" Command="{Binding Exit}">Выйти</Button>
         </StackPanel>
 
     </Grid>
-    </controls:MetroWindow>
+</controls:MetroWindow>
 

@@ -218,10 +218,11 @@ namespace ManagementGui.ViewModel
                 date = date.AddDays(DayNotivication);
                 foreach (var member in Task.WorkGroup)
                 {
-                    Task.Notivications.Add(new Notivication
+                    var newNot = new Notivication
                     {
                         NotivicationStatus = NotivicationStatus.Declared,
-                        DateCreate = date,
+                        DateCreate = DateTime.Now,
+                        TimeSend = date,
                         Description =
                             string.Format("По задаче '{0}', требуется предоставить результат к {1}", Task.NameTask,
                                 Task.DateFinish.ToShortDateString()),
@@ -232,7 +233,9 @@ namespace ManagementGui.ViewModel
                         IdTask = Task.IdTask,
                         IdUserFrom = WorkEnviroment.ApplicationUserSession.Id,
                         IdUserTo = member.User.Id,
-                    });
+                    };
+                    Task.Notivications.Add(newNot);
+                    Users.First(f => f.MemberUser.IdUser == member.IdUser).AddUser(newNot);
                 }
             }
             else

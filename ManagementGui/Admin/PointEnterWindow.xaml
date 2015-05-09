@@ -5,18 +5,21 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:ignore="http://www.ignore.com"
-        xmlns:xcad="http://schemas.xceed.com/wpf/xaml/avalondock"
-        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
-        xmlns:properties="clr-namespace:ManagementGui.Utils.AttachedProperty"  
+        xmlns:properties="clr-namespace:ManagementGui.Utils.AttachedProperty"
+        xmlns:baseType="clr-namespace:BaseType;assembly=BaseType"
+        xmlns:admin="clr-namespace:ManagementGui.Admin"
         properties:CloseDialog.DialogResult="{Binding IsDialogClose}"
         mc:Ignorable="d ignore"
         MinWidth="500" MinHeight="300"    
         Title="Управление доступом к информационной системе"
         Icon="/mainicon.ico">
+    <Window.DataContext>
+        <admin:PointEnterViewModel/>
+    </Window.DataContext>
     <Window.Resources>
-        <Style x:Key="gridstyle" TargetType="{x:Type DataGrid}">
+        <!--<Style x:Key="gridstyle" TargetType="{x:Type DataGrid}">
             <EventSetter Event="MouseDoubleClick" Handler="MouseDoubleClick" />
-        </Style>
+        </Style>-->
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -24,14 +27,52 @@
             <RowDefinition  Height="35"></RowDefinition>       
         </Grid.RowDefinitions>
 
-        <DataGrid  AutoGenerateColumns="False" ItemContainerStyle="{StaticResource gridstyle}"  
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="60"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <ListBox>
+                <ListBox Name="CurrentList" SelectedItem="{Binding Current,Mode=TwoWay}" ItemsSource="{Binding UserLogins, Mode=TwoWay}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate DataType="{x:Type baseType:ApplicationUserLogin}">
+                           <WrapPanel>
+                                <TextBlock  Margin="5"  Text="{Binding LoginProvider}"></TextBlock>
+                                <TextBlock  Margin="5"  Text="{Binding ProviderKey}"></TextBlock>
+                            </WrapPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </ListBox>
+            <WrapPanel Grid.Column="1" Orientation="Vertical" VerticalAlignment="Center">
+                <Button Command="{Binding ClearLogins}" Content="&gt;"></Button>
+                <Button Command="{Binding AddLogins}" Content="&lt;"></Button>
+            </WrapPanel>
+
+            <ListBox Grid.Column="2" Name="PointEnterList" SelectedItem="{Binding CurrentPointEnter,Mode=TwoWay}" ItemsSource="{Binding PointEnters, Mode=TwoWay}">
+                    <ListBox.ItemTemplate>
+                    <DataTemplate DataType="{x:Type admin:PointEnter}">
+                            <WrapPanel>
+                            <CheckBox  Margin="5"  IsEnabled="False" IsChecked="{Binding IsFree,Mode=OneWay}"></CheckBox>
+                            <TextBlock Margin="5" Text="{Binding LoginProvider,Mode=TwoWay}"></TextBlock>
+                            <TextBlock  Margin="5"  Text="{Binding ProviderKey,Mode=TwoWay}"></TextBlock>
+                            <TextBlock  Margin="5"  Text="{Binding UserName,Mode=TwoWay}"></TextBlock>
+                            </WrapPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            
+        </Grid>
+       
+        <!--<DataGrid  AutoGenerateColumns="False" ItemContainerStyle="{StaticResource gridstyle}"  
                                           Name="PointEnterTable"  ItemsSource="{Binding UserAndPointEnters}" SelectedItem="{Binding SelectedPointEnter, Mode=TwoWay}"  Margin="0,0,0,0">
             <DataGrid.Columns >
                 <DataGridTextColumn IsReadOnly="True" Header="Сотрудник" Binding="{Binding Path=GetName}"/>
                 <DataGridTextColumn IsReadOnly="True" Header="Имя входа" Binding="{Binding Path=LoginName}"/>
                 <DataGridTextColumn IsReadOnly="True" Header="SID" Binding="{Binding Path=Sid}"/>
             </DataGrid.Columns>
-        </DataGrid>
+        </DataGrid>-->
         <WrapPanel  Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Center">
             <Button Margin="0,5,10,0"  Command="{Binding AcceptCommand}">Выбрать</Button>
             <Button Margin="0,5,10,0" Command="{Binding ClearCommand}" >Очистить</Button>

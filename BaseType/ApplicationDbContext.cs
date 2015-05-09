@@ -27,7 +27,7 @@ namespace BaseType
             : base(connString)
         {
         }
-        
+        public DbSet<ApplicationUserLogin> Logins { get; set; }
         // public DbSet<User> Users { get; set; }
         public DbSet<Project> Projects { get; set; }
         public DbSet<Property> Properties { get; set; }

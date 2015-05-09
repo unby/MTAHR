@@ -41,8 +41,7 @@
                 <MenuItem Header="Новые файлы" Click="ShowNewFilesMenu_OnClick"></MenuItem>
                 <MenuItem Header="Мои проекты" Click="ShowMyProjects_OnClick"></MenuItem>
                 <MenuItem Name="ManageSystemMI" Visibility="{Binding Source={x:Static static:WorkEnviroment.ManageSystemMI}}" Header="Управление системой">
-                     <MenuItem Name="MISistemUserList" Click="MISistemUserList_OnClick" Header="Пользователи модуля 'Управление подразделением'"></MenuItem>
-                    <!--<MenuItem Name="ManageSystem" Click="ManageSystem_OnClick" Header="Управление системой"></MenuItem>-->
+                    <MenuItem Name="MISistemUserList" Click="ManageSystem_OnClick" Header=" Все проекты"></MenuItem>
                 </MenuItem>
             </MenuItem>
             <MenuItem Name="Edit" Header="Правка">

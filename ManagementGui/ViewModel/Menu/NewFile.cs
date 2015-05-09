@@ -55,7 +55,7 @@ namespace ManagementGui.ViewModel.Menu
                     DateEntry = DateTime.Now,
                     IdEntry = Guid.NewGuid(),
                     IdTask = WorkFile.Catalog.IdTask,
-                    Message = string.Format("Пользователь {0} сохранил файл {1} в БД ",WorkEnviroment.ApplicationUserSession.LoginName,WorkFile.FileName),
+                    Message = string.Format("Пользователь {0} сохранил файл {1} в БД ",WorkEnviroment.ApplicationUserSession.UserName,WorkFile.FileName),
                     MessageCode = 1701,
                     MessageType = MessageType.Info
                 });

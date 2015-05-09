@@ -1,35 +1,61 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Data.Entity;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using BaseType;
-using BaseType.Security;
-using BaseType.Utils;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
+using JetBrains.Annotations;
 using ManagementGui.Utils;
 
 namespace ManagementGui.Admin
 {
-    public class PointEnterViewModel : ViewModelBase{
-        public List<UserAndPointEnter> UserAndPointEnters { get; set; }
-        private UserAndPointEnter _selectedPointEnter;
-
-        public UserAndPointEnter SelectedPointEnter
+    public class PointEnterViewModel : ViewModelBase
+    {
+        public PointEnter CurrentPointEnter
         {
-            get { return _selectedPointEnter; }
+            get { return _currentPointEnter; }
             set
             {
-                _selectedPointEnter = value;
-                this.RaisePropertyChanged();
+                _currentPointEnter = value;
+                RaisePropertyChanged();
             }
         }
 
+        public ObservableCollection<PointEnter> PointEnters
+        {
+            get { return _pointEnters; }
+            set { _pointEnters = value;RaisePropertyChanged(); }
+        }
+
+        public ApplicationUserLogin Current
+        {
+            get { return _current; }
+            set
+            {
+                _current = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        public ObservableCollection<ApplicationUserLogin> UserLogins
+        {
+            get { return _userLogins; }
+            set { _userLogins = value;RaisePropertyChanged(); }
+        }
+
         private readonly ApplicationDbContext _dataContextData = DbHelper.GetDbProvider;
-        public ApplicationUser ApplicationUserCurrent { get; set; }
+        public ApplicationUser User { get; set; }
         private bool? _isDialogClose;
-        public bool? IsDialogClose {
+
+        public bool? IsDialogClose
+        {
             get { return _isDialogClose; }
             set
             {
@@ -40,132 +66,232 @@ namespace ManagementGui.Admin
 
         public PointEnterViewModel()
         {
-           UpdateUserAndPointEnters();
         }
-        private void UpdateUserAndPointEnters()
+
+        public PointEnterViewModel(ApplicationUser applicationUser)
         {
-            UserAndPointEnters =
-                _dataContextData.Users.Where(w => w.LoginName != null && w.SID != null)
-                    .Select(s => new UserAndPointEnter {SID = s.SID,LoginName = s.LoginName,UserName = s.Name,UserMidleName = s.MiddleName,UserSurname = s.Surname,UserId = s.Id})
-                    .ToList();
-           
-            var temp =  _dataContextData.Database.SqlQuery<FreePointEnter>(
-                    string.Format(
-                        @"select db.sid, serverdb.isntuser, db.issqluser, serverdb.loginname " +
-                          @"from dbo.sysusers as db,master.dbo.syslogins as serverdb " +
-                            @"where db.sid=serverdb.sid and serverdb.denylogin=0"));
-            foreach (FreePointEnter tPointEnter in temp)
+            User = applicationUser;
+            UserLogins=new ObservableCollection<ApplicationUserLogin>(User.Logins);
+            UpdateUserAndPointEnters();
+        }
+
+        private async void UpdateUserAndPointEnters()
+        {
+            try
             {
-                if (!UserAndPointEnters.Any(x => x.SID.ConvertByteToStringSid().Equals(tPointEnter.sid.ConvertByteToStringSid())))
-                    UserAndPointEnters.Add(new UserAndPointEnter()
-                    {
-                        LoginName = tPointEnter.loginname,
-                        UserName = "",
-                        UserId = Guid.Empty,
-                        SID = tPointEnter.sid,
-                        AuthorizationType = tPointEnter.issqluser == 1 ? Authorization.MsSqlServer : Authorization.WindowsAd
-                    });
+
+            var temp = await _dataContextData.Database.SqlQuery<PointEnter>(
+                string.Format("select logins.ProviderKey, logins.LoginProvider, users.UserName ,users.Id " +
+                              "from AspNetUserLogins as logins join  AspNetUsers as users on users.Id=logins.UserId " +
+                              "where logins.LoginProvider='windows_nt_logon' or logins.LoginProvider='sqlserver_logon' " +
+                              "union select convert(nvarchar(200),db.sid,2) as ProviderKey,CAST(" +
+                              "CASE WHEN serverdb.isntuser = 1 THEN 'windows_nt_logon' ELSE 'sqlserver_logon' " +
+                              "END AS nvarchar) as LoginProvider , serverdb.loginname as UserName,null as id " +
+                              "from dbo.sysusers as db,master.dbo.syslogins as serverdb ,AspNetUserLogins as applogins " +
+                              "where db.sid=serverdb.sid and serverdb.denylogin=0 and applogins.ProviderKey " +
+                              "!= convert(nvarchar(200),db.sid,2) order by id")).ToListAsync();
+            PointEnters = new ObservableCollection<PointEnter>(temp);
+            }
+            catch (Exception ex)
+            {
+                Logger.MessageBoxException(ex);
             }
         }
 
-        
-        #region CRUD
-        #endregion
-
         public ICommand CancelCommand
         {
-        get { return new RelayCommand(() => IsDialogClose = false); }
+            get { return new RelayCommand(() => IsDialogClose = false); }
         }
 
         private RelayCommand _cleart;
 
         public ICommand ClearCommand
         {
-            get
-            {
-                if (_cleart == null)
-                    _cleart = new RelayCommand(Clear);
-                return _cleart;
-            }
+            get { return _cleart ?? (_cleart = new RelayCommand(Clear)); }
         }
 
         private void Clear()
         {
-            if (SelectedPointEnter != null && !string.IsNullOrEmpty(SelectedPointEnter.LoginName) &&
-                !string.IsNullOrEmpty(SelectedPointEnter.Sid))
-            {
-                SelectedPointEnter.LoginName = null;
-                SelectedPointEnter.SID = null;
-            }
+           
             IsDialogClose = true;
         }
 
         private RelayCommand _accept;
+        private PointEnter _currentPointEnter;
+        private ApplicationUserLogin _current;
+        private RelayCommand _clearLogins;
+        private RelayCommand _addLogins;
+        private ObservableCollection<PointEnter> _pointEnters;
+        private ObservableCollection<ApplicationUserLogin> _userLogins;
 
         public ICommand AcceptCommand
         {
-            get
+            get { return _accept ?? (_accept = new RelayCommand(Accept)); }
+        }
+
+        public ICommand ClearLogins
+        {
+            get { return _clearLogins ?? (_clearLogins = new RelayCommand(LoginClear)); }
+        }
+
+        private async void LoginClear()
+        {
+            try
             {
-                if (_accept == null)
-                    _accept = new RelayCommand(Accept);
-                return _accept;
-            }      
+                if (Current == null) return;
+                DbHelper.GetDbProvider.Logins.Remove(Current);
+                await DbHelper.GetDbProvider.SaveChangesAsync();
+                UserLogins.Remove(Current);
+                User.Logins.Remove(Current);
+            }
+            catch (Exception ex)
+            {
+                Logger.MessageBoxException(ex);
+            }
+        }
+
+        public ICommand AddLogins
+        {
+            get { return _addLogins ?? (_addLogins = new RelayCommand(LoginAdd)); }
+        }
+
+        private async void LoginAdd()
+        {
+            try
+            {
+                if (CurrentPointEnter == null) return;
+                if (CurrentPointEnter.Id == null)
+                {
+                    Current = new ApplicationUserLogin()
+                    {
+                        LoginProvider = CurrentPointEnter.LoginProvider,
+                        ProviderKey = CurrentPointEnter.ProviderKey,
+                        UserId = User.Id
+                    };
+                    DbHelper.GetDbProvider.Logins.Add(Current);
+                    await DbHelper.GetDbProvider.SaveChangesAsync();
+                    UserLogins.Add(Current);
+                    User.Logins.Add(Current);
+                }
+                else
+                {
+                    var temp = DbHelper.GetDbProvider.Users.FirstOrDefault(f => f.Id == CurrentPointEnter.Id);
+                    if (temp == null)
+                    {
+                        DbHelper.GetDbProvider.Logins.RemoveRange(await
+                            DbHelper.GetDbProvider.Logins.Where(w => w.UserId == CurrentPointEnter.Id).ToListAsync());
+                        Current = new ApplicationUserLogin()
+                        {
+                            LoginProvider = CurrentPointEnter.LoginProvider,
+                            ProviderKey = CurrentPointEnter.ProviderKey,
+                            UserId = User.Id
+                        };
+                        DbHelper.GetDbProvider.Logins.Add(Current);
+                        await DbHelper.GetDbProvider.SaveChangesAsync();
+                        UserLogins.Add(Current);
+                        User.Logins.Add(Current);
+
+                    }
+                    else
+                    {
+                        if (MessageBox.Show(string.Format("Точка входа {0} занята пользователем {1}, выполнить смену",
+                                CurrentPointEnter.ProviderKey,
+                                temp.UserName), "Смена точек входа БД", MessageBoxButton.YesNo,
+                            MessageBoxImage.Information) != MessageBoxResult.Yes) return;
+
+                        DbHelper.GetDbProvider.Logins.Remove(await
+                            DbHelper.GetDbProvider.Logins.FirstAsync(w => w.ProviderKey == CurrentPointEnter.ProviderKey));
+                        Current = new ApplicationUserLogin()
+                        {
+                            LoginProvider = CurrentPointEnter.LoginProvider,
+                            ProviderKey = CurrentPointEnter.ProviderKey,
+                            UserId = User.Id
+                        };
+                        DbHelper.GetDbProvider.Logins.Add(Current);
+                        await DbHelper.GetDbProvider.SaveChangesAsync();
+                        UserLogins.Add(Current);
+                        User.Logins.Add(Current);
+                    }
+                }
+            }
+
+            catch (Exception ex)
+            {
+                Logger.MessageBoxException(ex);
+            }
         }
 
         private void Accept()
         {
-            IsDialogClose = true;         
+            IsDialogClose = true;
         }
     }
 
-    public class UserAndPointEnter
+    public class PointEnter : INotifyPropertyChanged
     {
-        public override string ToString()
+        private string _providerKey;
+        private Guid? _id;
+        private string _loginProvider;
+        private string _userName;
+        private Uri _image;
+
+        public Guid? Id
         {
-            return GetName+" " +LoginName;
+            get { return _id; }
+            set
+            {
+                _id = value; 
+                OnPropertyChanged();
+              
+            }
         }
 
-        public string GetName { get { return string.Format("{0} {1} {2}", UserSurname, UserName, UserMidleName); } }
-        public string UserSurname { get; set; }
-        public string UserMidleName { get; set; }
-        public Guid UserId { get; set; }
-        public string UserName { get; set; }
-        [Browsable(false)]
-        public byte[] SID { get; set; }
-        public string LoginName { get; set; }
-        public Authorization AuthorizationType { get; set; }
-        public string Sid
+        public string ProviderKey
         {
-            get { return SID.ConvertByteToStringSid(); }
+            get { return _providerKey; }
+            set
+            {
+                _providerKey = value; 
+                OnPropertyChanged();
+            }
         }
 
+        public string LoginProvider
+        {
+            get { return _loginProvider; }
+            set
+            {
+                _loginProvider = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string UserName
+        {
+            get { return _userName; }
+            set
+            {
+                _userName = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool IsFree
+        {
+            get
+            {            
+                return Id==null;
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        [BaseType.Utils.NotifyPropertyChangedInvocator]
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            var handler = PropertyChanged;
+            if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
 
-    public struct FreePointEnter
-    {
-        [Browsable(false)]
-        public byte[] sid { get; set; }
-        public string loginname { get; set; }
-        public int issqluser { get; set; }
-        public int isntuser { get; set; }
-
-        public override string ToString()
-        {
-            return string.Format("{0} ({1})", loginname, issqluser == 1 ? "Учетная запись SQL Server" : "Учетная запись Windows NT");
-        }
-    }
 }
-/*  UserAndPointEnters = new List<UserAndPointEnter>(from pEnter in _dataContextData.PointEnters
-                                                              join User in _dataContextData.Users on pEnter equals User.PointEnterUser into gj
-                                                              from obj in gj.DefaultIfEmpty()
-                                                              where (obj.PointEnterUser.AuthorizationType & (Authorization.WindowsAd | Authorization.MsSqlServer)) != 0
-                                                              select new UserAndPointEnter
-                                                              {
-                                                                  LoginName = obj.PointEnterUser.LoginName,
-                                                                  UserName = obj.Name,
-                                                                  UserSurname = obj.Surname,
-                                                                  UserMidleName = obj.MiddleName,
-                                                                  Id = obj.Id,
-                                                                  SID = obj.PointEnterUser.SID,
-                                                                  AuthorizationType = obj.PointEnterUser.AuthorizationType
-                                                              });*/

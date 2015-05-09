@@ -70,7 +70,7 @@ namespace WebMTHR.Controllers
                 if (member.Participation != StatusParticipation.ToAccept ||
                     member.Participation != StatusParticipation.ItIsAppointed)
                     return  InitTask(member);
-                view.AuthorName = member.User.LoginName;
+                view.AuthorName = member.User.UserName;
                 view.Task = member.Task;
                 view.Comments = member.Task.TaskComments.OrderByDescending(o => o.DateMessage).ToList();
                
@@ -108,7 +108,7 @@ namespace WebMTHR.Controllers
                 if (member.Participation != StatusParticipation.ToAccept ||
                     member.Participation != StatusParticipation.ItIsAppointed)
                     return InitTask(member);               
-                view.AuthorName = member.User.LoginName;
+                view.AuthorName = member.User.UserName;
                 view.Task = member.Task;
                 view.Comments = member.Task.TaskComments.OrderByDescending(o => o.DateMessage).ToList();
 

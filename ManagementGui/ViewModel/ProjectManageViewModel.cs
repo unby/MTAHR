@@ -69,7 +69,7 @@ namespace ManagementGui.ViewModel
         {
             try
             {
-               DesktopSettings.Default.SaveSession(WorkEnviroment.CurrentProject.IdProject);
+                DesktopSettings.Default.SaveSession(CurrentProject.IdProject);
             }
             catch (Exception ex)
             {

@@ -198,7 +198,6 @@
     <Compile Include="ViewModel\Validation\ValidationExceptionBehavior.cs" />
     <Compile Include="ViewModel\Validation\ValidationViewModelBase.cs" />
     <Compile Include="Admin\PointEnterViewModel.cs" />
-    <Compile Include="Admin\SearchUserViewModel.cs" />
     <Compile Include="ViewModel\AuthenticationWindowViewModel.cs" />
     <Compile Include="ViewModel\UserDocumentViewModel.cs" />
     <Compile Include="ViewModel\Utils.cs" />
@@ -245,9 +244,6 @@
     </Compile>
     <Compile Include="View\NotivicationWindow.xaml.cs">
       <DependentUpon>NotivicationWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Admin\SearchUserWindow.xaml.cs">
-      <DependentUpon>SearchUserWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\Report\ConsolidateReport.xaml.cs">
       <DependentUpon>ConsolidateReport.xaml</DependentUpon>
@@ -409,10 +405,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Admin\SearchUserWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="View\Report\ConsolidateReport.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -525,6 +517,7 @@
   <ItemGroup>
     <Folder Include="themes\WPF Themes\" />
     <Folder Include="ViewModel\Extendet\" />
+    <Folder Include="View\SearchUserList\" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="View\Control\RichTextEditor\Images\charactergrowfont.png" />

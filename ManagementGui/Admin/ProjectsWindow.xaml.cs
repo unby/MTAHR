@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Windows;
 using MahApps.Metro.Controls;
+using ManagementGui.View;
 
 namespace ManagementGui.Admin
 {
@@ -20,21 +21,19 @@ namespace ManagementGui.Admin
 
         private void BtnAuthor_OnClick(object sender, RoutedEventArgs e)
         {
-            var userWindow = new SearchUserWindow();
+            var userWindow = new SearchUserWindow(SearchWindowMode.Admin|SearchWindowMode.AllBase);
             try
             {
-                if (userWindow.ShowDialog() == true)
-                {
-                    if (view.Current == null)
-                        view.Current = view.Projects[0];
+                if (userWindow.ShowDialog() != true) return;
+                if (view.Current == null)
+                    view.Current = view.Projects[0];
                     
-                    view.Current.Author = userWindow.View.Current;
-                   // view.ContextData.Entry(view.Current.Author).State=EntityState.Modified;
-                    //view.ContextData.ProjectsWindow.Where(w => w.IdProject == view.Current.IdProject)
-                    //    .Update(u => new Project(){Author = view.Current.Author});
-                    //view.Current.DateUpdate = DateTime.Now;
-                    //view.ContextData.SaveChanges();
-                }
+                view.Current.Author = userWindow.View.CurrentUser;
+                // view.ContextData.Entry(view.Current.Author).State=EntityState.Modified;
+                //view.ContextData.ProjectsWindow.Where(w => w.IdProject == view.Current.IdProject)
+                //    .Update(u => new Project(){Author = view.Current.Author});
+                //view.Current.DateUpdate = DateTime.Now;
+                //view.ContextData.SaveChanges();
             }
             catch (Exception ex)
             {

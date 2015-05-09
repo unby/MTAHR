@@ -14,7 +14,7 @@ namespace BaseType.Utils
             var sb = new StringBuilder();
             foreach (var b in sidBytes)
             {
-                sb.Append(b.ToString("X2"));
+                sb.Append(b.ToString("X1"));
             }
             return sb.ToString();
         }

@@ -100,18 +100,11 @@ namespace ManagementGui.Admin
         }
 
 
-        private RelayCommand _saveAll;
+        private RelayCommand _saveCurrent;
 
-        public ICommand SaveAll
+        public ICommand SaveCurrent
         {
-            get
-            {
-                if (_saveAll == null)
-                {
-                    _saveAll = new RelayCommand(Save);
-                }
-                return _saveAll;
-            }
+            get { return _saveCurrent ?? (_saveCurrent = new RelayCommand(Save)); }
         }
 
         private void Save()

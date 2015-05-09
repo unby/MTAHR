@@ -9,6 +9,7 @@ using BaseType;
 using BaseType.Report;
 using BaseType.Utils;
 using MahApps.Metro.Controls;
+using ManagementGui.Admin;
 using ManagementGui.Config;
 using ManagementGui.Utils;
 using ManagementGui.View;
@@ -307,12 +308,6 @@ namespace ManagementGui
                 Logger.MessageBoxException(ex);
             }
         }
-
-        private void ImportPersonsOnXLS(object sender, RoutedEventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
         private void OpenOrActiveLayoutDocument(Guid id, LayoutDocument doc)
         {
             try
@@ -415,11 +410,6 @@ namespace ManagementGui
             }
         }
 
-        private void MISistemUserList_OnClick(object sender, RoutedEventArgs e)
-        {
-            
-        }
-
         private void ShowNewFilesMenu_OnClick(object sender, RoutedEventArgs e)
         {
             var layoutAnchorable = new LayoutAnchorable { Title = "Новые файлы", Content = new NewFilesMenu() };
@@ -431,7 +421,7 @@ namespace ManagementGui
         {
             try
             {
-                var window = new View.SearchUserWindow(DataGridSelectionMode.Single);
+                var window = new View.SearchUserWindow(SearchWindowMode.AllBase);
                 if (window.ShowDialog() != true) return;
                 var selectedUser = window.View.SelectedUsers[0];
                 if (WorkEnviroment.CurrentProject.Members.Any(a => a.IdUser == selectedUser.Id)) return;
@@ -451,6 +441,12 @@ namespace ManagementGui
             {
                 Logger.MessageBoxException(ex);
             }
+        }
+
+        private void ManageSystem_OnClick(object sender, RoutedEventArgs e)
+        {
+            var window = new ProjectsWindow();
+            window.ShowDialog();
         }
     }
 }

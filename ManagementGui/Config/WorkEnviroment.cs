@@ -4,6 +4,8 @@ using System.Linq;
 using System.Windows;
 using BaseType;
 using BaseType.Common;
+using BaseType.Utils;
+using EntityFramework.Extensions;
 using ManagementGui.Utils;
 using ManagementGui.ViewModel.Menu;
 
@@ -52,13 +54,17 @@ namespace ManagementGui.Config
         {
             try
             {
-                var sid = SqlServerRoles[0].SID;               
-                ApplicationUserSession = DbHelper.GetDbProvider.Users.Single(w => w.SID == sid);
+                var sid = SqlServerRoles[0].SID.ConvertByteToStringSid();
+                ApplicationUserSession = (from login in DbHelper.GetDbProvider.Logins
+                    join user in DbHelper.GetDbProvider.Users on login.UserId equals user.Id
+                    where sid==login.ProviderKey
+                    select user
+                ).First();
                 UserProjects = DbHelper.GetDbProvider.Projects.Where(w=>w.Author.Id==ApplicationUserSession.Id).ToList();
                 if (UserProjects != null && UserProjects.Count > 0)
                 {
                     Guid id;
-                    if (Guid.TryParse(DesktopSettings.Default.SessionSettings.LastProject,out id))
+                    if (Guid.TryParse(ConfigHelper.DesktopSettings.SessionSettings.LastProject,out id))
                         CurrentProject = UserProjects.FirstOrDefault(w => w.IdProject == id) ?? UserProjects[0];
                     else CurrentProject = UserProjects[0];
                 }

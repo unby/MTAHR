@@ -38,7 +38,7 @@ namespace ManagementGui.View.Document
 
         public string Name
         {
-            get { return MemberUser.User.LoginName; }
+            get { return MemberUser.User.UserName; }
         }
 
         public StatusParticipation Status

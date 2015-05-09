@@ -33,55 +33,20 @@ namespace BaseType
         public virtual ICollection<Member> Members { get; set; }
 
         private string _loginName;
-        [Category("Служебная информация")]
-        [DisplayName("Имя точки входа")]
-        [Description("Параметры авторизации пользователя в информационный системе")]
-        [StringLength(50)]
-        public string LoginName
-        {
-            get { return _loginName; }
-            set
-            {
-                _loginName = value;
-                OnPropertyChanged("LoginName");
-                OnPropertyChanged("LoginNameAndSID");
-            }
-        }
+       
 
-        private byte[] _sid;
-        [Browsable(false)]
-        [Category("Служебная информация")]
-        [DisplayName("Идентификатор точки входа")]
-        [Description("Параметры авторизации пользователя в информационный системе")]
-        [MaxLength(600)]
-        public byte[] SID
-        {
-            get { return _sid; }
-            set
-            {
-                _sid = value;
-                OnPropertyChanged("LoginNameAndSID");
-                OnPropertyChanged("SID");
-            }
-        }
+       
 
         public ApplicationUser()
         {
-            this.SecurityStamp = Guid.NewGuid().ToString();
+           
         }
 
         public override string ToString()
         {
             return string.Format("{0} {1} {2} {3}", Surname, Name, MiddleName, Post);
         }
-        [NotMapped]
-        [Category("Служебная информация")]
-        [DisplayName("Идентификатор точки входа")]
-        [Description("Параметры авторизации пользователя в информационный системе")]
-        public string LoginNameAndSID
-        {
-            get { return string.Format("{0} SID:{1}", LoginName, SID.ConvertByteToStringSid()); }
-        }
+
         private Guid _id;
 
         [Key]
