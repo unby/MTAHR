@@ -30,6 +30,7 @@ namespace ManagementGui.View.Document
             set
             {
                 Notivication.NotivicationStatus = value;
+                OnPropertyChanged("Status");
             }
         }
         public string Description

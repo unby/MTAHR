@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using BaseType;
 using BaseType.Common;
+using ManagementGui.Config;
 using ManagementGui.ViewModel.Validation;
 
 namespace ManagementGui.ViewModel
@@ -16,8 +13,7 @@ namespace ManagementGui.ViewModel
 
         public NotivicationViewModel()
         {
-            Notivication=new Notivication(){DateCreate = DateTime.Now};
-            //Notivication.
+            Notivication=new Notivication(){DateCreate =WorkEnviroment.NotivicationStartDateTime};
         }
 
         public NotivicationViewModel(Notivication notivication)
@@ -28,28 +24,23 @@ namespace ManagementGui.ViewModel
         private RelayCommand _save;
         public ICommand Save
         {
-            get
-            {
-                if (_save==null)
-                    _save = new RelayCommand(SaveTask);
-                return _save;
-            }
+            get { return _save ?? (_save = new RelayCommand(SaveTask)); }
         }
 
         private void SaveTask(object obj)
         {
-            IsDialogClose = true;
-            Notivication.DateCreate=DateTime.Now;
+            if (Notivication.NotivicationStatus == NotivicationStatus.Declared)
+            {
+                Notivication.DateCreate = WorkEnviroment.NotivicationStartDateTime;
+                IsDialogClose = true;
+            }
+            else IsDialogClose = false;
+
         }
         private RelayCommand _cancel;
         public ICommand Cancel
         {
-            get
-            {
-                if (_cancel == null)
-                    _cancel = new RelayCommand(CancelTask);
-                return _cancel;
-            }
+            get { return _cancel ?? (_cancel = new RelayCommand(CancelTask)); }
         }
 
         private void CancelTask(object obj)
@@ -77,7 +68,7 @@ namespace ManagementGui.ViewModel
             set
             {
                 Notivication.TimeSend = value;
-                this.RaisePropertyChanged();
+                RaisePropertyChanged();
             }
         }
 

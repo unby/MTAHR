@@ -9,6 +9,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using BaseType;
+using BaseType.Utils;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using JetBrains.Annotations;
@@ -28,10 +29,10 @@ namespace ManagementGui.Admin
             }
         }
 
-        public ObservableCollection<PointEnter> PointEnters
+        public ObservableCollection<PointEnter> FreePointEnters
         {
-            get { return _pointEnters; }
-            set { _pointEnters = value;RaisePropertyChanged(); }
+            get { return _freePointEnters; }
+            set { _freePointEnters = value;RaisePropertyChanged(); }
         }
 
         public ApplicationUserLogin Current
@@ -79,18 +80,30 @@ namespace ManagementGui.Admin
         {
             try
             {
+                var temp = await _dataContextData.Database.SqlQuery<PointEnter>(
+                    string.Format("select convert(nvarchar(200),db.sid,2) as ProviderKey,CAST( "
+                                 +"CASE WHEN serverdb.isntuser = 1 THEN 'windows_nt_logon' ELSE 'sqlserver_logon' "
+                                 +"END AS nvarchar) as LoginProvider , serverdb.loginname as UserName,null as id "
+                                 +"from dbo.sysusers as db,master.dbo.syslogins as serverdb "
+                                 +"where db.sid=serverdb.sid and serverdb.denylogin=0 and "
+                                 +"convert(nvarchar(200),db.sid,2) not in (" +
+                                 "select ProviderKey from AspNetUserLogins where LoginProvider!='windows_nt_logon' " +
+                                 "or LoginProvider!= 'sqlserver_logon') ")).ToListAsync();
+                FreePointEnters = new ObservableCollection<PointEnter>(temp);
 
-            var temp = await _dataContextData.Database.SqlQuery<PointEnter>(
-                string.Format("select logins.ProviderKey, logins.LoginProvider, users.UserName ,users.Id " +
-                              "from AspNetUserLogins as logins join  AspNetUsers as users on users.Id=logins.UserId " +
-                              "where logins.LoginProvider='windows_nt_logon' or logins.LoginProvider='sqlserver_logon' " +
-                              "union select convert(nvarchar(200),db.sid,2) as ProviderKey,CAST(" +
-                              "CASE WHEN serverdb.isntuser = 1 THEN 'windows_nt_logon' ELSE 'sqlserver_logon' " +
-                              "END AS nvarchar) as LoginProvider , serverdb.loginname as UserName,null as id " +
-                              "from dbo.sysusers as db,master.dbo.syslogins as serverdb ,AspNetUserLogins as applogins " +
-                              "where db.sid=serverdb.sid and serverdb.denylogin=0 and applogins.ProviderKey " +
-                              "!= convert(nvarchar(200),db.sid,2) order by id")).ToListAsync();
-            PointEnters = new ObservableCollection<PointEnter>(temp);
+                var tempAll = await (from user in _dataContextData.Users
+                    join pointEnter in _dataContextData.Logins on user.Id equals pointEnter.UserId
+                    select new PointEnter()
+                    {
+                        Email = user.Email,
+                        UserName = user.Surname + " " + user.Name + " " + user.MiddleName,
+                        Id = user.Id,
+                        LoginProvider = pointEnter.LoginProvider,
+                        ProviderKey = pointEnter.ProviderKey
+                    }).ToListAsync();
+
+
+                AllEnterPoint = new List<PointEnter>(tempAll);
             }
             catch (Exception ex)
             {
@@ -121,12 +134,21 @@ namespace ManagementGui.Admin
         private ApplicationUserLogin _current;
         private RelayCommand _clearLogins;
         private RelayCommand _addLogins;
-        private ObservableCollection<PointEnter> _pointEnters;
+        private ObservableCollection<PointEnter> _freePointEnters;
         private ObservableCollection<ApplicationUserLogin> _userLogins;
+        private List<PointEnter> _allEnterPoint;
+        private RelayCommand _refreshList;
+        private ApplicationUserLogin _selectedUserLogin;
 
         public ICommand AcceptCommand
         {
             get { return _accept ?? (_accept = new RelayCommand(Accept)); }
+        }
+
+        public ApplicationUserLogin SelectedUserLogin
+        {
+            get { return _selectedUserLogin; }
+            set { _selectedUserLogin = value; RaisePropertyChanged();}
         }
 
         public ICommand ClearLogins
@@ -138,11 +160,11 @@ namespace ManagementGui.Admin
         {
             try
             {
-                if (Current == null) return;
-                DbHelper.GetDbProvider.Logins.Remove(Current);
+                if (SelectedUserLogin == null) return;
+                DbHelper.GetDbProvider.Logins.Remove(SelectedUserLogin);
                 await DbHelper.GetDbProvider.SaveChangesAsync();
-                UserLogins.Remove(Current);
-                User.Logins.Remove(Current);
+                UserLogins.Remove(SelectedUserLogin);
+                User.Logins.Remove(SelectedUserLogin);
             }
             catch (Exception ex)
             {
@@ -153,6 +175,26 @@ namespace ManagementGui.Admin
         public ICommand AddLogins
         {
             get { return _addLogins ?? (_addLogins = new RelayCommand(LoginAdd)); }
+        }
+
+        public string UserTitle
+        {
+            get { return string.Format("Точка входа: {0}", User.UserFullName()); }
+        }
+
+        public List<PointEnter> AllEnterPoint
+        {
+            get { return _allEnterPoint; }
+            set
+            {
+                _allEnterPoint = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        public ICommand RefreshList
+        {
+            get { return _refreshList ?? (_refreshList = new RelayCommand(UpdateUserAndPointEnters)); }
         }
 
         private async void LoginAdd()
@@ -245,7 +287,7 @@ namespace ManagementGui.Admin
               
             }
         }
-
+        public string Email { get; set; }
         public string ProviderKey
         {
             get { return _providerKey; }

@@ -23,48 +23,78 @@
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition></RowDefinition>
-            <RowDefinition  Height="35"></RowDefinition>       
+            <RowDefinition MinHeight="250" Height="*"></RowDefinition>
+            <RowDefinition Height="30"></RowDefinition>
+            <RowDefinition  Height="4"></RowDefinition>
+            <RowDefinition Height="*" MinHeight="40"></RowDefinition>
         </Grid.RowDefinitions>
+        <Expander Grid.Row="3" Height="{Binding ElementName=RowDefinition,Path=ActualHeight}" Name="ExpanderPl"  Header="Все точки входа">
+            <Grid>
+                <DataGrid 
+                                         Name="UserSearchGrid"     
+                                         RenderOptions.ClearTypeHint="Enabled"
+                                         TextOptions.TextFormattingMode="Display"
+                                         Margin="5"
+                                         SelectionUnit="FullRow" 
+                                         IsReadOnly="True"                                       
+                                         ItemsSource="{Binding AllEnterPoint}"
+                                         AutoGenerateColumns="False">
+                    <DataGrid.Columns>
 
-        <Grid>
+                        <DataGridTextColumn Header="Фамилия"
+                                    MinWidth="250"
+                                    Binding="{Binding UserName}" />
+                        
+                        <DataGridTextColumn Header="Email"
+                                     MinWidth="190"
+                                    Binding="{Binding Email}" />
+                        <DataGridTextColumn Header="Провайдер"
+                                     MinWidth="120"
+                                    Binding="{Binding LoginProvider}" />
+                        <DataGridTextColumn Header="Код"
+                                     MinWidth="150"
+                                    Binding="{Binding ProviderKey}" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </Expander>
+        <GridSplitter Grid.Row="2" Background="Crimson" ></GridSplitter>
+        <Grid Grid.Row="0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
-                <ColumnDefinition Width="60"/>
+                <ColumnDefinition Width="4"/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <ListBox>
-                <ListBox Name="CurrentList" SelectedItem="{Binding Current,Mode=TwoWay}" ItemsSource="{Binding UserLogins, Mode=TwoWay}">
-                    <ListBox.ItemTemplate>
-                        <DataTemplate DataType="{x:Type baseType:ApplicationUserLogin}">
-                           <WrapPanel>
-                                <TextBlock  Margin="5"  Text="{Binding LoginProvider}"></TextBlock>
-                                <TextBlock  Margin="5"  Text="{Binding ProviderKey}"></TextBlock>
-                            </WrapPanel>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
+            <GroupBox Header="{Binding UserTitle}">
+                <ListBox>
+                    <ListBox Name="CurrentList" SelectedItem="{Binding SelectedUserLogin,Mode=TwoWay}" ItemsSource="{Binding UserLogins, Mode=TwoWay}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate DataType="{x:Type baseType:ApplicationUserLogin}">
+                                <WrapPanel>
+                                    <TextBlock  Margin="5" Width="160"  Text="{Binding LoginProvider}"></TextBlock>
+                                    <TextBlock  Margin="5" Width="190" Text="{Binding ProviderKey}"></TextBlock>
+                                </WrapPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
                 </ListBox>
-            </ListBox>
-            <WrapPanel Grid.Column="1" Orientation="Vertical" VerticalAlignment="Center">
-                <Button Command="{Binding ClearLogins}" Content="&gt;"></Button>
-                <Button Command="{Binding AddLogins}" Content="&lt;"></Button>
-            </WrapPanel>
-
-            <ListBox Grid.Column="2" Name="PointEnterList" SelectedItem="{Binding CurrentPointEnter,Mode=TwoWay}" ItemsSource="{Binding PointEnters, Mode=TwoWay}">
+            </GroupBox>
+            <GridSplitter Grid.Column="1" Background="Red" ResizeDirection="Columns"></GridSplitter>
+            <GroupBox Grid.Column="2" Header="Свободные точки входа">
+                <ListBox  Name="PointEnterList" SelectedItem="{Binding CurrentPointEnter,Mode=TwoWay}" ItemsSource="{Binding FreePointEnters, Mode=TwoWay}">
                     <ListBox.ItemTemplate>
-                    <DataTemplate DataType="{x:Type admin:PointEnter}">
+                        <DataTemplate DataType="{x:Type admin:PointEnter}">
                             <WrapPanel>
-                            <CheckBox  Margin="5"  IsEnabled="False" IsChecked="{Binding IsFree,Mode=OneWay}"></CheckBox>
-                            <TextBlock Margin="5" Text="{Binding LoginProvider,Mode=TwoWay}"></TextBlock>
-                            <TextBlock  Margin="5"  Text="{Binding ProviderKey,Mode=TwoWay}"></TextBlock>
-                            <TextBlock  Margin="5"  Text="{Binding UserName,Mode=TwoWay}"></TextBlock>
+                                <TextBlock Margin="5" Width="110" Text="{Binding UserName,Mode=TwoWay}"></TextBlock>
+                                <TextBlock  Width="110" Text="{Binding LoginProvider,Mode=TwoWay}"></TextBlock>
+                                <TextBlock  Margin="5" Width="160"  Text="{Binding ProviderKey,Mode=TwoWay}"></TextBlock>
                             </WrapPanel>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                 </ListBox>
-            
+            </GroupBox>
         </Grid>
-       
+
         <!--<DataGrid  AutoGenerateColumns="False" ItemContainerStyle="{StaticResource gridstyle}"  
                                           Name="PointEnterTable"  ItemsSource="{Binding UserAndPointEnters}" SelectedItem="{Binding SelectedPointEnter, Mode=TwoWay}"  Margin="0,0,0,0">
             <DataGrid.Columns >
@@ -73,10 +103,21 @@
                 <DataGridTextColumn IsReadOnly="True" Header="SID" Binding="{Binding Path=Sid}"/>
             </DataGrid.Columns>
         </DataGrid>-->
-        <WrapPanel  Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Center">
-            <Button Margin="0,5,10,0"  Command="{Binding AcceptCommand}">Выбрать</Button>
-            <Button Margin="0,5,10,0" Command="{Binding ClearCommand}" >Очистить</Button>
-            <Button Margin="0,5,0,0" Command="{Binding CancelCommand}">Отмена</Button>
-        </WrapPanel>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="118"/>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0" Margin="2,0,2,0" Command="{Binding AcceptCommand}" Content="Завершить редактирование"/>
+            <Button Grid.Column="1" Margin="2,0,2,0" Command="{Binding ClearLogins}" Content="Удалить точку входа"/>
+            <Button Grid.Column="3" Margin="2,0,2,0" Command="{Binding AddLogins}" Content="Добавить точку входа"/>
+            <Button Grid.Column="4" Margin="2,0,2,0" Command="{Binding RefreshList}" Content="Обновить списки"/>
+            <!--<Button Margin="0,5,10,0" Command="{Binding ClearCommand}" >Очистить</Button>
+            <Button Margin="0,5,0,0" Command="{Binding CancelCommand}">Отмена</Button>-->
+        </Grid>
     </Grid>
 </controls:MetroWindow>

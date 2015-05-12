@@ -20,23 +20,6 @@
         <viewModel:NotivicationViewModel/>
     </Window.DataContext>
     <Window.Resources>
-        <!--<viewModel:NotivicationViewModel x:Key="NotivicationViewModel"/>
-        <utils:EnumDescriptionConverter x:Key="EnumItemsConverter"/>
-        <ObjectDataProvider x:Key="enumDateFormatData" MethodName="GetValues" ObjectType="{x:Type sys:Enum}">
-                <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="xctk:DateTimeFormat"/>
-                </ObjectDataProvider.MethodParameters>
-            </ObjectDataProvider>
-            <ObjectDataProvider x:Key="enumVisibility" MethodName="GetValues" ObjectType="{x:Type sys:Enum}">
-                <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="Visibility" />
-                </ObjectDataProvider.MethodParameters>
-            </ObjectDataProvider>
-            <ObjectDataProvider x:Key="enumKind" MethodName="GetValues" ObjectType="{x:Type sys:Enum}">
-                <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="sys:DateTimeKind" />
-                </ObjectDataProvider.MethodParameters>
-            </ObjectDataProvider>-->
         <converter:HtmlToFlowDocumentConverter  x:Key="HtmlToFlowDocumentConverter"/>
         <converter:UserToTextConverter x:Key="UserToTextConverter"/>
     </Window.Resources>
@@ -48,7 +31,7 @@
         </Grid.RowDefinitions>
         <StackPanel Orientation="Horizontal" Margin="2">
             <Label> Получатель</Label>
-            <Label Content="{Binding Notivication.To.LoginName}"></Label>
+            <Label Content="{Binding Notivication.To.UserName}"></Label>
         </StackPanel>
         <Grid Grid.Row="1">
             <Grid.RowDefinitions>

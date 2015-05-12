@@ -30,7 +30,6 @@ namespace BaseType
         public DbSet<ApplicationUserLogin> Logins { get; set; }
         // public DbSet<User> Users { get; set; }
         public DbSet<Project> Projects { get; set; }
-        public DbSet<Property> Properties { get; set; }
         public DbSet<Task> Tasks { get; set; }
         public DbSet<AppJurnal> AppJurnal { get; set; }
         public DbSet<TaskComment> TaskComments { get; set; }
@@ -38,7 +37,7 @@ namespace BaseType
         public DbSet<Member> UserRoles { get; set; }
         public DbSet<Notivication> Notivications { get; set; }
         public DbSet<WorkFile> WorkFiles { get; set; }
-        private const string VersionDevelop = "DV.ss1";
+        private const string VersionDevelop = "DV.ss2";
         public string InfoContext { get { return string.Format("{0} {1} {2}",this.GetType(),VersionDevelop,Assembly.GetEntryAssembly().GetName().Version); } }
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

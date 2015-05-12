@@ -46,10 +46,16 @@ namespace ManagementGui.View.Document
             get { return MemberUser.Participation; }
             set
             {
-                if(MemberUser.Participation==StatusParticipation.ToAccept)
+                if (MemberUser.Participation == StatusParticipation.ToAccept)
+                {
+                    OnPropertyChanged("Status");
                     return;
-                if(value==StatusParticipation.ItIsAppointed||value==StatusParticipation.ToNotify)
-                MemberUser.Participation = value;
+                }
+                if (value == StatusParticipation.ItIsAppointed || value == StatusParticipation.ToNotify)
+                {
+                    MemberUser.Participation = value;
+                    OnPropertyChanged("Status");
+                }
             }
         }
         public string Description

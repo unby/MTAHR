@@ -147,8 +147,8 @@
                         <RowDefinition></RowDefinition>
                         <RowDefinition></RowDefinition>
                     </Grid.RowDefinitions>
-                    <WrapPanel Margin="0,5,0,5" Grid.Row="0">
-                        <Button Margin="10,2,10,2" Click="AddUser">Добавить сотрудника</Button>
+                    <WrapPanel Margin="0,2,0,2" Grid.Row="0">
+                        <Button Margin="10,2,10,2" Click="AddUser">Добавить исполнителя</Button>
                         <Button Margin="10,2,10,2" Command="{Binding SetNotivicationAll}">
                             <StackPanel Orientation="Horizontal">
                                 <Label FontSize="12" FontWeight="Bold" >ОПОВЕСТИТЬ ВСЕХ ЧЕРЕЗ</Label>
@@ -302,8 +302,8 @@
                                 <DockPanel LastChildFill="True">
                                     <DockPanel.ContextMenu>
                                         <ContextMenu>
-                                            <MenuItem Header="Добавить участника" Click="AddUser"></MenuItem>
-                                            <MenuItem Header="Убрать участника" Click="RemoveUser"></MenuItem>
+                                            <MenuItem Header="Добавить исполнителя" Click="AddUser"></MenuItem>
+                                            <MenuItem Header="Убрать исполнителя" Click="RemoveUser"></MenuItem>
                                             <MenuItem Header="Добавить уведомление" Click="AddNotivication"></MenuItem>
                                         </ContextMenu>
                                     </DockPanel.ContextMenu>
@@ -312,15 +312,13 @@
                                                Width="{Binding ActualWidth, ElementName=UserTree2}"
                                 ItemsSource="{Binding Source={StaticResource StMembers}}"
                                 SelectedItem="{Binding Status,UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                                IsEnabled="False" VerticalAlignment="Top">
+                                 VerticalAlignment="Top">
                                         <ComboBox.ItemTemplate>
                                             <DataTemplate>
                                                 <Label  Content="{Binding Path=.,Mode=OneWay, Converter={StaticResource EnumItemsConverter}}"
-                                Height="Auto"
-                                Margin="0" 
-                                VerticalAlignment="Center"/>
+                                                         Height="Auto" Margin="0" VerticalAlignment="Center"/>
                                             </DataTemplate>
-                                        </ComboBox.ItemTemplate>
+                                        </ComboBox.ItemTemplate>                                      
                                     </ComboBox>
                                     <TextBlock Text="{Binding Description}" Width="{Binding ActualWidth, ElementName=UserTree3}"  Margin="3"/>
                                 </DockPanel>
@@ -390,16 +388,15 @@
                                         <RowDefinition></RowDefinition>
                                         <RowDefinition></RowDefinition>
                                     </Grid.RowDefinitions>
-                                    <Border >
-                                        <WrapPanel Background="DarkCyan"  Margin="2" Height="35" Orientation="Horizontal">
-                                            <Label Content="Дата: "/>
-                                            <Label Content="{Binding DateMessage, StringFormat='{}{0:dd MMMM yyyy hh:mm tt}'}"></Label>
-                                            <Label Content="Автор: "/>
-                                            <Label Content="{Binding Author.LoginName}"></Label>
+                                    <Border Margin="2" BorderBrush="OrangeRed">
+                                        <WrapPanel  Orientation="Horizontal">
+                                            <TextBlock Margin="5,0,0,0" Text="Дата: "/>
+                                            <TextBlock Text="{Binding DateMessage, StringFormat='{}{0:dd MMMM yyyy hh:mm}'}"></TextBlock>
+                                            <TextBlock Margin="5,0,0,0" Text="Автор: "/>
+                                            <TextBlock Text="{Binding Author.UserName}"></TextBlock>
                                         </WrapPanel>
                                     </Border>
-                                    <!--<FlowDocumentScrollViewer  Document="{Binding Message, Converter={StaticResource HtmlToFlowDocConverter}}"/>-->
-                                    <TextBlock Margin="0,0,2,0" Grid.Row="1" MaxHeight="60" Text="{Binding Message}" TextWrapping="Wrap" />
+                                    <TextBlock Grid.Row="1" Text="{Binding Message}"></TextBlock>
                                 </Grid>
                             </DataTemplate>
                         </ListBox.ItemTemplate>

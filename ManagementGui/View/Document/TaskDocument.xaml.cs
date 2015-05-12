@@ -8,8 +8,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Markup;
 using BaseType;
-using BaseType.Migrations;
 using ManagementGui.Config;
+using ManagementGui.MainWindowView.ViewModel;
 using ManagementGui.Utils;
 using ManagementGui.ViewModel;
 using Task = BaseType.Task;
@@ -53,7 +53,6 @@ namespace ManagementGui.View.Document
             };
             CBTypeComment.ItemsSource = cbTypeSource;
             CBTypeComment.SelectedIndex = 0;
-                //.Grid.TableStyle.Borders.Bottom = New GridBorder(GridBorderStyle.Solid, Color.SteelBlue,GridBorderWeight.Thin) Me.Grid.TableStyle.Borders.Right = New GridBorder(GridBorderStyle.Solid, Color.SteelBlue,GridBorderWeight.Thin)
         }
 
         public int PreheviosVariant = -1;
@@ -99,34 +98,59 @@ namespace ManagementGui.View.Document
 
         private void AddNotivication(object sender, RoutedEventArgs e)
         {
-            var userViewModel = UsersAndNotifications.SelectedItem as UserTreeViewModel;
+            Notivication notivication = null;
             try
             {
-                if (userViewModel == null) return;
-                var notivication=new Notivication()
+                var userViewModel = UsersAndNotifications.SelectedItem as UserTreeViewModel;
+                if (userViewModel != null)
+                    notivication = new Notivication()
+                    {
+                        From = WorkEnviroment.ApplicationUserSession,
+                        IdNotivication = Guid.NewGuid(),
+                        To = userViewModel.MemberUser.User,
+                        IdUserTo = userViewModel.MemberUser.IdUser,
+                        IdUserFrom = WorkEnviroment.ApplicationUserSession.Id,
+                        Task = View.Task,
+                        IdTask = View.Task.IdTask,
+                        NotivicationStatus = NotivicationStatus.Declared,
+                        DateCreate = DateTime.Now.AddDays(2),
+                        TimeSend = WorkEnviroment.GetSendDefaultTime
+                    };
+                else
                 {
-                    From = WorkEnviroment.ApplicationUserSession,
-                    IdNotivication = Guid.NewGuid(),
-                    To = userViewModel.MemberUser.User,
-                    IdUserTo = userViewModel.MemberUser.IdUser,
-                    IdUserFrom =  WorkEnviroment.ApplicationUserSession.Id,
-                    Task = View.Task,
-                    IdTask = View.Task.IdTask,
-                    DateCreate = DateTime.Now.AddDays(2),
-                    TimeSend = WorkEnviroment.GetSendDefaultTime
-                };
-                var window=new NotivicationWindow(notivication);
+                    var notivicationVm = UsersAndNotifications.SelectedItem as TreeViewItemViewModel;
+                    if (notivicationVm != null)
+                    {
+                        userViewModel = notivicationVm.Parent as UserTreeViewModel;
+                        if (userViewModel != null)
+                            notivication = new Notivication()
+                            {
+                                From = WorkEnviroment.ApplicationUserSession,
+                                IdNotivication = Guid.NewGuid(),
+                                To = userViewModel.MemberUser.User,
+                                IdUserTo = userViewModel.MemberUser.IdUser,
+                                IdUserFrom = WorkEnviroment.ApplicationUserSession.Id,
+                                Task = View.Task,
+                                IdTask = View.Task.IdTask,
+                                NotivicationStatus = NotivicationStatus.Declared,
+                                DateCreate = DateTime.Now.AddDays(2),
+                                TimeSend = WorkEnviroment.GetSendDefaultTime
+                            };
+                    }
+                }
+                if (notivication == null) return;
+                var window = new NotivicationWindow(notivication);
                 if (window.ShowDialog() != true) return;
-                if(View.Task.Notivications!=null)
+                if (View.Task.Notivications != null)
                     View.Task.Notivications.Add(window.ViewModel.Notivication);
                 else
                 {
-                    View.Task.Notivications=new List<Notivication> {window.ViewModel.Notivication};
+                    View.Task.Notivications = new List<Notivication> {window.ViewModel.Notivication};
                 }
                 userViewModel.AddUser(window.ViewModel.Notivication);
                 View.SaveModel();
                 View.Task.Author = WorkEnviroment.ApplicationUserSession.Id;
-                       
+
                 DbHelper.GetDbProvider.SaveChanges();
             }
             catch (Exception ex)
@@ -220,7 +244,6 @@ namespace ManagementGui.View.Document
                 {
                     View.Task.Notivications = new List<Notivication> {window.ViewModel.Notivication};
                 }
-                View.SaveModel();
                 DbHelper.GetDbProvider.Notivications.AddOrUpdate(notivicationTreeViewModel.Notivication);
                 View.SaveModel();
                 DbHelper.GetDbProvider.SaveChanges();
@@ -235,10 +258,9 @@ namespace ManagementGui.View.Document
         {
             try
             {
-
-            var userViewModel = UsersAndNotifications.SelectedItem as UserTreeViewModel;
+                var userViewModel = UsersAndNotifications.SelectedItem as UserTreeViewModel;
                 if (userViewModel == null) return;
-                foreach (NotivicationTreeViewModel item in userViewModel.Children)
+                foreach (var item in userViewModel.Children.Cast<NotivicationTreeViewModel>())
                 {
                     DbHelper.GetDbProvider.Notivications.Remove(item.Notivication);
                 }
