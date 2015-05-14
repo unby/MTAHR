@@ -141,6 +141,7 @@ namespace BaseType
         [Category("Личная информация")]
         [DisplayName("День рождения сотрудника")]
         [Description("День рождения сотрудника")]
+        [Column(TypeName = "DateTime2")]
         public DateTime? BirthDate
         {
             get { return _birthDate; }
@@ -224,6 +225,13 @@ namespace BaseType
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
             }
         }
+
+        [Column(TypeName = "DateTime2")]
+        public override DateTime? LockoutEndDateUtc { get; set; }
+        [MaxLength(800)]
+        public override  string PasswordHash { get; set; }
+        [MaxLength(200)]
+        public override string SecurityStamp { get; set; }
 
         #region Method
 

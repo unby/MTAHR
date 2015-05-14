@@ -78,21 +78,9 @@
     <Compile Include="Common\LenghtMessage.cs" />
     <Compile Include="Common\RelayCommand.cs" />
     <Compile Include="Common\RoundStack.cs" />
-    <Compile Include="Migrations\201503210624153_ss1.cs" />
-    <Compile Include="Migrations\201503210624153_ss1.Designer.cs">
-      <DependentUpon>201503210624153_ss1.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201503251825027_ss11.cs" />
-    <Compile Include="Migrations\201503251825027_ss11.Designer.cs">
-      <DependentUpon>201503251825027_ss11.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201504041202281_ss7.cs" />
-    <Compile Include="Migrations\201504041202281_ss7.Designer.cs">
-      <DependentUpon>201504041202281_ss7.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201505020642343_workFile.cs" />
-    <Compile Include="Migrations\201505020642343_workFile.Designer.cs">
-      <DependentUpon>201505020642343_workFile.cs</DependentUpon>
+    <Compile Include="Migrations\201505131920480_baseInstall.cs" />
+    <Compile Include="Migrations\201505131920480_baseInstall.Designer.cs">
+      <DependentUpon>201505131920480_baseInstall.cs</DependentUpon>
     </Compile>
     <Compile Include="ProjectEntity.cs" />
     <Compile Include="MessageType.cs" />
@@ -132,17 +120,8 @@
     <Folder Include="Common\Validation\" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201503210624153_ss1.resx">
-      <DependentUpon>201503210624153_ss1.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201503251825027_ss11.resx">
-      <DependentUpon>201503251825027_ss11.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201504041202281_ss7.resx">
-      <DependentUpon>201504041202281_ss7.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201505020642343_workFile.resx">
-      <DependentUpon>201505020642343_workFile.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201505131920480_baseInstall.resx">
+      <DependentUpon>201505131920480_baseInstall.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

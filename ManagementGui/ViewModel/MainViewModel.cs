@@ -21,8 +21,10 @@ namespace ManagementGui.ViewModel
     public partial class MainViewModel : ViewModelBase
     {
 
-        NotifyObservableCollection<ApplicationUser> _users;
-        public NotifyObservableCollection<ApplicationUser> Users { get { return _users; }
+        ObservableCollection<ApplicationUser> _users;
+        public ObservableCollection<ApplicationUser> Users
+        {
+            get { return _users; }
             set
             {
                 _users = value;
@@ -151,7 +153,7 @@ namespace ManagementGui.ViewModel
 
         public string Title { get
         {
-            return string.Format("Управление подразделением. {0}",
+            return string.Format("Система контроля исполнения. Подразделение: {0}",
                 WorkEnviroment.CurrentProject != null ? WorkEnviroment.CurrentProject.Name : "");
         } }
         public void Update(object obj)
@@ -161,7 +163,7 @@ namespace ManagementGui.ViewModel
                 if (!WorkEnviroment.IsSetSetSession) return;
                 if (WorkEnviroment.CurrentProject == null) return;
                 Users =
-                    new NotifyObservableCollection<ApplicationUser>(
+                    new ObservableCollection<ApplicationUser>(
                         (   from user in DbHelper.GetDbProvider.Users
                             join member in DbHelper.GetDbProvider.UserRoles on user.Id equals member.IdUser
                             where member.IdProject == WorkEnviroment.CurrentProject.IdProject

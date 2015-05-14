@@ -16,9 +16,13 @@ namespace BaseType
 
         [Key][Required]
         public Guid IdTask { get; set; }
+        [Column(TypeName = "DateTime2")]
         public DateTime DateCreate { get; set; }
+        [Column(TypeName = "DateTime2")]
         public DateTime DateFinish { get; set; }
+        [Column(TypeName = "DateTime2")]
         public DateTime DateUpdate { get; set; }
+        [Column(TypeName = "DateTime2")]
         public DateTime? DateClose { get; set; }
         public int TaskRating { get; set; }
         [Required]
@@ -85,6 +89,7 @@ namespace BaseType
         [Required]
         public virtual ApplicationUser Author { get; set; }
         [Required]
+        [Column(TypeName = "DateTime2")]
         public DateTime DateMessage { get; set; }
 }
 }

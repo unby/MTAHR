@@ -59,7 +59,9 @@ namespace ManagementGui.View
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Ошибка подключения к БД", MessageBoxButton.OK, MessageBoxImage.Error);
+               // MessageBox.Show(ex.Message, "Ошибка подключения к БД", MessageBoxButton.OK, MessageBoxImage.Error);
+                Logger.MessageBoxException(ex);
+                PasswordPB.Password = string.Empty;
             }
         }
 

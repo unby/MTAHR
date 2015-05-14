@@ -16,7 +16,9 @@
         Icon="/mainicon.ico" 
          WindowStartupLocation="CenterScreen" 
         BorderThickness="2" BorderBrush="CornflowerBlue">
-
+<Window.DataContext >
+        <viewModel:MainViewModel/>
+</Window.DataContext>
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -74,7 +76,7 @@
         <TabControl SelectionChanged="Users_OnSelected" Grid.Column="0" Grid.Row="2" Name="TabMain" Template="{StaticResource OutlookTab}">
             <TabItem  Header="Подразделение" IsSelected="True">
                 <ListBox Name="TreeUsers" ItemsSource="{Binding Users, Mode=TwoWay}"
-                         Background="{x:Null}" BorderBrush="{x:Null}" >
+                         Background="{x:Null}" BorderBrush="{x:Null}"  >
                     <ListBox.ItemTemplate >
                         <DataTemplate DataType="{x:Type baseType:ApplicationUser}">
                             <StackPanel>
@@ -205,7 +207,7 @@
                 </ScrollViewer>
             </TabItem>
             <TabItem Header="Отчеты">
-                <ListBox Name="ReportList" ItemsSource="{Binding ListReport, Mode=TwoWay}">
+                <ListBox Name="ReportList" ItemsSource="{Binding ListReport, Mode=TwoWay}" >
                     <ListBox.ItemTemplate>
                         <DataTemplate DataType="{x:Type report1:ReportItem}">
                             <Grid>
@@ -224,6 +226,17 @@
                     </ListBox.ItemTemplate>                                    
                     <ListBox.ItemContainerStyle>
                         <Style TargetType="{x:Type ListBoxItem}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding RelativeSource={RelativeSource Self}, Path=Items.Count}" Value="0">
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate>
+                                                <TextBlock>Нет исполнителей</TextBlock>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </DataTrigger>
+                            </Style.Triggers>
                             <Setter Property="SnapsToDevicePixels" Value="True"/>
                             <Setter Property="Padding" Value="4,1"/>
                             <Setter Property="HorizontalContentAlignment" Value="{Binding HorizontalContentAlignment, RelativeSource={RelativeSource FindAncestor, AncestorLevel=1, AncestorType={x:Type ItemsControl}}}"/>

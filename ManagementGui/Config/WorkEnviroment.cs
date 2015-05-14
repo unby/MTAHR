@@ -57,18 +57,26 @@ namespace ManagementGui.Config
                 var sid = SqlServerRoles[0].SID.ConvertByteToStringSid();
                 ApplicationUserSession = (from login in DbHelper.GetDbProvider.Logins
                     join user in DbHelper.GetDbProvider.Users on login.UserId equals user.Id
-                    where sid==login.ProviderKey
+                    where sid == login.ProviderKey
                     select user
-                ).First();
-                UserProjects = DbHelper.GetDbProvider.Projects.Where(w=>w.Author.Id==ApplicationUserSession.Id).ToList();
+                    ).First();
+                UserProjects =
+                    DbHelper.GetDbProvider.Projects.Where(w => w.Author.Id == ApplicationUserSession.Id).ToList();
                 if (UserProjects != null && UserProjects.Count > 0)
                 {
                     Guid id;
-                    if (Guid.TryParse(ConfigHelper.DesktopSettings.SessionSettings.LastProject,out id))
+                    if (Guid.TryParse(ConfigHelper.DesktopSettings.SessionSettings.LastProject, out id))
                         CurrentProject = UserProjects.FirstOrDefault(w => w.IdProject == id) ?? UserProjects[0];
                     else CurrentProject = UserProjects[0];
                 }
                 _isSetSession = true;
+                return _isSetSession;
+            }
+            catch (InvalidOperationException)
+            {
+                MessageBox.Show(
+                    "Проекты не найдены для текущей точки входа, создайте свою учетную запись в системе контроля исполнения","Внимание");
+                _isSetSession = false;
                 return _isSetSession;
             }
             catch (Exception ex)

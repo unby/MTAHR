@@ -16,9 +16,9 @@ namespace BaseType
         [StringLength(350)]
         [Required]
         public string Description { get; set; }
+         [Column(TypeName = "DateTime2")]
         public DateTime DateCreate { get; set; }
-
-        [Required]
+         [Column(TypeName = "DateTime2")]
         public DateTime TimeSend { get; set; }
         [ForeignKey("Task")]
         public Guid IdTask { get; set; }

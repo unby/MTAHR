@@ -6,14 +6,14 @@ namespace BaseType.Migrations
     using System.Data.Entity.Migrations.Infrastructure;
     using System.Resources;
     
-    [GeneratedCode("EntityFramework.Migrations", "6.1.1-30610")]
-    public sealed partial class ss7 : IMigrationMetadata
+    [GeneratedCode("EntityFramework.Migrations", "6.1.2-31219")]
+    public sealed partial class baseInstall : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(ss7));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(baseInstall));
         
         string IMigrationMetadata.Id
         {
-            get { return "201504041202281_ss7"; }
+            get { return "201505131920480_baseInstall"; }
         }
         
         string IMigrationMetadata.Source

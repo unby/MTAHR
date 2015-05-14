@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data;
@@ -8,12 +9,19 @@ using System.Data.SqlTypes;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
+using BaseType.Utils;
 
 namespace BaseType
 {
-    public class WorkFile
+    public class WorkFile : INotifyPropertyChanged
     {
+        private int _size;
+        private string _fileName;
+        private string _comment;
+        private DateTime _dateCreate;
+
         public WorkFile()
         {
         }
@@ -30,15 +38,50 @@ namespace BaseType
         [Required]
         [StringLength(254, ErrorMessage = @"Превышена длина имени файла")]
         // [RegularExpression(@"<>:""/\|?\*", ErrorMessage = @"'<>:""/\|?*' не доступные символы")]
-        public string FileName { get; set; }
+        public string FileName
+        {
+            get { return _fileName; }
+            set
+            {
+                _fileName = value;
+                OnPropertyChanged("FileName");
+            }
+        }
 
         [StringLength(60, ErrorMessage = "Длина комментария превышена (60)")]
-        public string Comment { get; set; }
+        public string Comment
+        {
+            get { return _comment; }
+            set
+            {
+                _comment = value;
+                OnPropertyChanged("Comment");
+            }
+        }
 
-        public DateTime DateCreate { get; set; }
+        [Column(TypeName = "DateTime2")]
+        public DateTime DateCreate
+        {
+            get { return _dateCreate; }
+            set
+            {
+                _dateCreate = value;
+                OnPropertyChanged("DateCreate");
+            }
+        }
+
         public virtual ApplicationUser Author { get; set; }
         public virtual Task Catalog { get; set; }
-        public int Size { get; set; }
+
+        public int Size
+        {
+            get { return _size; }
+            set
+            {
+                _size = value;
+                OnPropertyChanged("Size");
+            }
+        }
 
         [NotMapped]
         public FileInfo FileInfo { get; set; }
@@ -94,14 +137,14 @@ values
                             });
                             cmdInsert.Parameters.Add(new SqlParameter("@fileName", SqlDbType.VarChar, 254)
                             {
-                                Value = FileInfo.Name
+                                Value =FileName= FileInfo.Name
                             });
 
                             cmdInsert.Parameters.Add(new SqlParameter("@dateCreate", SqlDbType.DateTime)
                             {
-                                Value = FileInfo.LastWriteTime
+                                Value =DateCreate= FileInfo.LastWriteTime
                             });
-                            cmdInsert.Parameters.Add(new SqlParameter("@size", SqlDbType.Int) {Value = FileInfo.Length});
+                            cmdInsert.Parameters.Add(new SqlParameter("@size", SqlDbType.Int) {Value =Size= (int)FileInfo.Length});
                             cmdInsert.Parameters.Add(new SqlParameter("@author_Id", SqlDbType.UniqueIdentifier)
                             {
                                 Value = this.Author.Id
@@ -213,14 +256,13 @@ values
             }
         }
 
-
         private static string CheckExistFile(string path, string nameFile)
         {
             if (!Directory.Exists(path))
             {
                 Directory.CreateDirectory(path);
-                return Path.Combine(path,nameFile);
-            }          
+                return Path.Combine(path, nameFile);
+            }
             var name = Path.GetFileNameWithoutExtension(nameFile);
             var ext = Path.GetExtension(nameFile);
             var freeFile = Path.Combine(path, nameFile);
@@ -235,7 +277,6 @@ values
             } while (search);
             return freeFile;
         }
-
 
         public void UnloadingOfFileInFolder(string pathOut, string connStr)
         {
@@ -255,7 +296,7 @@ values
                     try
                     {
                         var cmd = new SqlCommand(
-@"SELECT 
+                            @"SELECT 
     Data
 FROM WorkFiles
 WHERE FileId = @fileId;", conn, trn);
@@ -303,7 +344,7 @@ WHERE FileId = @fileId;", conn, trn);
                 using (SqlTransaction trn = conn.BeginTransaction())
                 {
                     var cmd = new SqlCommand(
-@"SELECT 
+                        @"SELECT 
 Data.PathName() as path
 GET_FILESTREAM_TRANSACTION_CONTEXT ()
 FROM WorkFiles
@@ -356,7 +397,7 @@ WHERE FileId = @fileId;", conn, trn);
                     try
                     {
                         var cmd = new SqlCommand(
-@"SELECT 
+                            @"SELECT 
     Data
 FROM WorkFiles
 WHERE FileId = @fileId;", conn, trn);
@@ -374,7 +415,7 @@ WHERE FileId = @fileId;", conn, trn);
 
                                 throw new EntitySqlException("Bad entity");
                             }
-                           
+
                             reader.GetBytes(0, 0, context, 0, Size);
                         }
                         trn.Commit();
@@ -387,6 +428,15 @@ WHERE FileId = @fileId;", conn, trn);
                 }
             }
             return context;
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        [NotifyPropertyChangedInvocator]
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            var handler = PropertyChanged;
+            if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

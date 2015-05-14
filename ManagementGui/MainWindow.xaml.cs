@@ -80,8 +80,9 @@ namespace ManagementGui
                 if (authenticationWindows.ShowDialog() == true)
                 {
                     InitializeComponent();
-                    View = new MainViewModel();
-                    DataContext = View;
+                    //View = new MainViewModel();
+                    //DataContext = View;
+                    View = DataContext as MainViewModel;
                     Guid id;
                     if (!Guid.TryParse(DesktopSettings.Default.SessionSettings.LastProject, out id))
                         ShowMyProjects_OnClick(null, null);
@@ -176,7 +177,7 @@ namespace ManagementGui
                     Description = user.Comment,
                     Content = new UserDocument(user)
                 };
-                View.Users.Add(user);
+              //  View.Users.Add(user);
                 OpenOrActiveLayoutDocument(user.Id, doc);
             }
             catch (Exception ex)

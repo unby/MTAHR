@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Data.Entity.Migrations;
 using System.Diagnostics;
@@ -9,6 +10,7 @@ using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Input;
 using BaseType.Common;
+using EntityFramework.Extensions;
 using ManagementGui.Config;
 using ManagementGui.Properties;
 using ManagementGui.Utils;
@@ -22,6 +24,16 @@ using MessageBox = System.Windows.MessageBox;
 
 namespace ManagementGui.ViewModel
 {
+    public enum DescriptionsTask
+    {
+        [Description("Комментарий")]
+        Comment,
+        [Description("Итоговый результат")]
+        Result,
+        [Description("Описание")]
+        Description
+    }
+
     public class TaskDocumentViewModel : ValidationViewModelBase
     {
         public ObservableCollection<TaskComment> Comments { get; set; }
@@ -41,9 +53,16 @@ namespace ManagementGui.ViewModel
             if (task.WorkGroup != null)
                 foreach (var members in Task.WorkGroup)
                     Users.Add(new UserTreeViewModel(members, members.IdTask));
-            if (task.Files != null && task.Files.Any())
-                Files = new ObservableCollection<WorkFile>(task.Files);
-          
+            if (task.Files != null)
+            {
+                Files = new ObservableCollection<WorkFile>();
+                foreach (var file in task.Files)
+                {
+                    file.PropertyChanged+=file_Comment_PropertyChanged;
+                    Files.Add(file);
+                }
+            }
+
             if (task.WorkGroup == null || !string.IsNullOrEmpty(task.NameTask)) return;
             if (task.Notivications == null)
             {
@@ -68,11 +87,65 @@ namespace ManagementGui.ViewModel
            
         }
 
+        private static void file_Comment_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (sender == null) return;
+            if (e.PropertyName == "Comment")
+                DbHelper.GetDbProvider.WorkFiles.AddOrUpdate(sender as WorkFile);
+        }
+
+        public DescriptionsTask DescriptionsTask
+        {
+            get { return _descriptionsTask; }
+            set { _descriptionsTask = value; RaisePropertyChanged();}
+        }
+
+        public string StringDescriptionTask
+        {
+            get
+            {
+                switch (DescriptionsTask)
+                {
+                    case DescriptionsTask.Comment:
+                        return Task.Comment;
+                    case DescriptionsTask.Description:
+                        return Task.Description;
+                    default:
+                    case DescriptionsTask.Result:
+                        return Task.Result;
+                }
+            }
+            set
+            {
+                switch (DescriptionsTask)
+                {
+                    case DescriptionsTask.Comment:
+                        Task.Comment = value;
+                        break;
+                    case DescriptionsTask.Description:
+                        Task.Description = value;
+                        break;
+                    default:
+                    case DescriptionsTask.Result:
+                        Task.Result = value;
+                        break;
+                }
+                RaisePropertyChanged();
+            }
+        }
+
         public Task Task { get; set; }
         public StatusTask Status
         {
             get { return Task.Status; }
-            set { Task.Status = value; }
+            set
+            {
+                if(value==Task.Status)return;
+                if (value == StatusTask.Complete)
+                    Task.DateClose = DateTime.Now;
+                Task.Status = value;
+                RaisePropertyChanged();
+            }
         }
         [Range(1, 100, ErrorMessageResourceType = typeof(Resources), ErrorMessageResourceName = "TaskDocumentViewModel_DayNotivication_Error_Message")]
         public int DayNotivication { get; set; }
@@ -134,7 +207,7 @@ namespace ManagementGui.ViewModel
                     foreach (var workFile in SelectedFiles)
                     {
                         workFile.UnloadingOfFileInFolder(dialog.SelectedPath,
-                            DesktopSettings.Default.ConnectionSettings.ToString());
+                            ConfigHelper.DesktopSettings.ConnectionSettings.ToString());
                     }
                     Process.Start(dialog.SelectedPath);
                 }
@@ -147,6 +220,8 @@ namespace ManagementGui.ViewModel
 
         private async void LoadFile(object obj)
         {
+            try
+            {
             if (Task.DateUpdate == DateTime.MinValue)
             {
                 MessageBox.Show("Перед добавлением файлов требуется сохранить задачу в базе данных", "Внимание",
@@ -164,23 +239,28 @@ namespace ManagementGui.ViewModel
             };
             fileDialog.ShowDialog();
             if (fileDialog.FileNames.Length <= 0) return;
-            foreach (var file in fileDialog.FileNames)
+            foreach (WorkFile wFile in from file in fileDialog.FileNames where File.Exists(file) select new WorkFile()
             {
-                if (!File.Exists(file)) continue;
-                var wFile = new WorkFile()
-                {
-                    FileId = Guid.NewGuid(),
-                    Author = WorkEnviroment.ApplicationUserSession,
-                    FileInfo = new FileInfo(file),
-                    Catalog = this.Task,
-                };
+                FileId = Guid.NewGuid(),
+                Author = WorkEnviroment.ApplicationUserSession,
+                FileInfo = new FileInfo(file),
+                Catalog = this.Task,
+            })
+            {
                 await
                     System.Threading.Tasks.Task.Run(
-                        () => wFile.LoadToDb(DesktopSettings.Default.ConnectionSettings.ToString()));
+                        () => wFile.LoadToDb(ConfigHelper.DesktopSettings.ConnectionSettings.ToString()));
                 if (Files == null)
                     Files = new ObservableCollection<WorkFile>();
+                wFile.PropertyChanged += file_Comment_PropertyChanged;
                 Files.Add(wFile);
                 RaisePropertyChanged("Files");
+            }
+
+            }
+            catch (Exception ex)
+            {
+                Logger.MessageBoxException(ex);
             }
         }
 
@@ -199,7 +279,7 @@ namespace ManagementGui.ViewModel
                     foreach (var workFile in Files)
                     {
                         workFile.UnloadingOfFileInFolder(dialog.SelectedPath,
-                            DesktopSettings.Default.ConnectionSettings.ToString());
+                            ConfigHelper.DesktopSettings.ConnectionSettings.ToString());
                     }
                     Process.Start(dialog.SelectedPath);
                 }
@@ -264,6 +344,7 @@ namespace ManagementGui.ViewModel
      
         private ObservableCollection<WorkFile> _selectedFiles;
         private RelayCommand _deleteSelectedFiles;
+        private DescriptionsTask _descriptionsTask;
 
         public ObservableCollection<WorkFile> SelectedFiles
         {
@@ -281,12 +362,13 @@ namespace ManagementGui.ViewModel
             {
                 if (MessageBox.Show("Вы действительно хотите удалить выделенные файлы из базы данных", "Удаление файлов",
                     MessageBoxButton.YesNo, MessageBoxImage.Warning) != MessageBoxResult.Yes) return;
-                DbHelper.GetDbProvider.WorkFiles.RemoveRange(SelectedFiles);
-                SaveTask(null);
-                foreach (var file in SelectedFiles)
+                foreach (var file in SelectedFiles.ToArray())
                 {
+                    DbHelper.GetDbProvider.WorkFiles.Remove(file);
                     Files.Remove(file);
+                    file.PropertyChanged -= file_Comment_PropertyChanged;                 
                 }
+                SaveTask(null);               
                 SelectedFiles.Clear();
             }
             catch (Exception ex)

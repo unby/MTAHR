@@ -121,9 +121,11 @@ namespace BaseType
         }
         [DisplayName("Дата создания")]
         [Description("Дата создания подразделения")]
+        [Column(TypeName = "DateTime2")]
         public DateTime DateCreate { get; set; }
         [DisplayName("Дата редактирования")]
         [Description("Последние изменение")]
+        [Column(TypeName = "DateTime2")]
         public DateTime DateUpdate { get; set; }
 
 

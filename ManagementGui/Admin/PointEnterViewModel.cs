@@ -328,7 +328,7 @@ namespace ManagementGui.Admin
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        [BaseType.Utils.NotifyPropertyChangedInvocator]
+        [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             var handler = PropertyChanged;

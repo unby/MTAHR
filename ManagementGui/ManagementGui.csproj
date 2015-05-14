@@ -283,6 +283,7 @@
     <Compile Include="View\TreeViewUserAndTasks\TreeViewUserAndTasks.xaml.cs">
       <DependentUpon>TreeViewUserAndTasks.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\ViewConverter\BindingProxy.cs" />
     <Compile Include="View\ViewConverter\TwoListSynchronizer.cs" />
     <Compile Include="View\ViewConverter\HtmlToFlowDocumentConverter.cs" />
     <Compile Include="View\ViewConverter\EnumDescriptionConverter.cs" />

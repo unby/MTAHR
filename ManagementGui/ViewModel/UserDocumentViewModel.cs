@@ -226,6 +226,7 @@ namespace ManagementGui.ViewModel
         }
 
         [Required(ErrorMessage = @"Обязательно заполните почтовый адрес.")]
+        [RegularExpression(EntityValidate.MatchEmailPattern, ErrorMessage = "Вы должны вести eMail")]
         public string Email
         {
             get { return User.Email; }

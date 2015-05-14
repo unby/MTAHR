@@ -254,14 +254,15 @@ namespace ManagementGui.ViewModel
 
         private async void UserSave(object obj)
         {
-            bool isSave = false;
             try
             {
                 if (string.IsNullOrEmpty(CurrentUser.PasswordHash))
                 {
                     var manager = new ApplicationUserManager(new ApplicationUserStore(DbHelper.GetDbProvider));
                     await manager.CreateAsync(CurrentUser, CurrentUser.Id.ToByteArray().GetMd5());
-                    isSave = true;
+                    DbHelper.GetDbProvider.Users.AddOrUpdate(CurrentUser);
+                    await DbHelper.GetDbProvider.SaveChangesAsync();
+                    Users.Add(CurrentUser);
                 }
                 else
                 {
@@ -274,12 +275,6 @@ namespace ManagementGui.ViewModel
             catch (Exception ex)
             {
                 Logger.MessageBoxException(ex);
-            }
-            finally
-            {
-                if (isSave)
-                    if(Users!=null)
-                    Users.Add(CurrentUser);
             }
         }
 

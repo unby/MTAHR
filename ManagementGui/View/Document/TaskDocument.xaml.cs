@@ -45,57 +45,7 @@ namespace ManagementGui.View.Document
 
             View = new TaskDocumentViewModel(task);
             DataContext = View;
-            var cbTypeSource = new[]
-            {
-                new ItemKeyValue{Id  =0,Value = "Описание задачи"}, 
-                new ItemKeyValue{Id  =1,Value = "Комментарий"},
-                new ItemKeyValue{Id  =2,Value = "Итоговый результат"},
-            };
-            CBTypeComment.ItemsSource = cbTypeSource;
-            CBTypeComment.SelectedIndex = 0;
         }
-
-        public int PreheviosVariant = -1;
-        private void CBTypeComment_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            switch (CBTypeComment.SelectedIndex)
-            {
-                case 1:
-                    UpdateViewModel();
-                    HtmlEditor.Text = View.Task.Comment;
-                    PreheviosVariant = CBTypeComment.SelectedIndex;
-                    return;
-                case 2:
-                    UpdateViewModel();
-                    HtmlEditor.Text = View.Task.Result;
-                    PreheviosVariant = CBTypeComment.SelectedIndex;
-                    return;
-                default:
-                    UpdateViewModel();
-                    HtmlEditor.Text = View.Task.Description;
-                    PreheviosVariant = CBTypeComment.SelectedIndex;
-                    return;
-            }
-        }
-
-        private void UpdateViewModel()
-        {
-            switch (PreheviosVariant)
-            {
-                case 0:
-                    View.Task.Description = HtmlEditor.Text;
-                    return;
-                case 1:
-                    View.Task.Comment = HtmlEditor.Text;
-                    return;
-                case 2:
-                    View.Task.Result = HtmlEditor.Text;
-                    return;
-                default:
-                    return;
-            }
-        }
-
         private void AddNotivication(object sender, RoutedEventArgs e)
         {
             Notivication notivication = null;
@@ -277,7 +227,6 @@ namespace ManagementGui.View.Document
 
         private async void MessageSave(object sender, RoutedEventArgs e)
         {
-            UpdateViewModel();
             var comment=new TaskComment()
             {
                 TaskCommentId = Guid.NewGuid(),
